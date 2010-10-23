@@ -18,7 +18,7 @@ import javax.persistence.Table;
 
 /**
  *
- * @author dm2474
+ * @author maria
  */
 @Entity
 @Table(name = "CT_USERS")
@@ -34,10 +34,8 @@ public class CtUsers implements Serializable {
     @Basic(optional = false)
     @Column(name = "USER_ID")
     private Integer userId;
-    @Basic(optional = false)
     @Column(name = "USERNAME")
     private String username;
-    @Basic(optional = false)
     @Column(name = "PASSWORD")
     private String password;
 
@@ -46,12 +44,6 @@ public class CtUsers implements Serializable {
 
     public CtUsers(Integer userId) {
         this.userId = userId;
-    }
-
-    public CtUsers(Integer userId, String username, String password) {
-        this.userId = userId;
-        this.username = username;
-        this.password = password;
     }
 
     public Integer getUserId() {

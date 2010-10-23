@@ -56,11 +56,13 @@ public class CTLoginController extends HttpServlet {
         // Forward the request to the appropriate view
         if (session.logInUser(username, password))
         {
+            //System.out.println("user logged in");
             RequestDispatcher rd  = request.getRequestDispatcher("timer.jsp");
             rd.forward(request, response);
         }
         else
         {
+            //System.out.println("user could not log in");
             RequestDispatcher rd = request.getRequestDispatcher("login_fail.jsp");
             rd.forward(request, response);
         }
