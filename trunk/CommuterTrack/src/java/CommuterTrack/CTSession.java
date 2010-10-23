@@ -9,6 +9,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateful;
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -18,6 +23,9 @@ import javax.ejb.Stateful;
 public class CTSession implements CTSessionRemote {
     private Integer user_id;
 
+    @PersistenceContext(unitName = "CommuterTrackPU")
+    private EntityManager em;
+
     @PostConstruct
     public void initialize() {
         user_id = new Integer(0);
@@ -25,18 +33,23 @@ public class CTSession implements CTSessionRemote {
 
     @Override
     public boolean logInUser(String username, String password) {
-        Logger.getLogger(CTSession.class.getName()).log(Level.SEVERE, "username:" + username + ",password:" + password + ",user_id:"+this.user_id, "error");
-        if (user_id != 0)
-        {
-            
-            return true;
-        }
-        else
-        {
-            this.user_id = 1;
-            return false;
-        }
 
+        //Query q = em.createNamedQuery("CtUsers.findByUsername");
+        //q.setParameter("username", username);
+        Query q = em.createNamedQuery("CtUsers.findByUsername");
+        q.setParameter("username", username);
+        try {
+            CtUsers curUser = (CtUsers) q.getSingleResult();
+            if (curUser.getPassword().compareTo(password) == 0) {
+                this.user_id = curUser.getUserId();
+                return true;
+            }
+        } catch (NonUniqueResultException ex) {
+        } catch (NoResultException ex) {
+        }
+        Logger.getLogger(CTSession.class.getName()).log(Level.SEVERE, "username:" + username + ",password:" + password + ",user_id:"+this.user_id, " login failed");
+        this.user_id = 1;
+        return false;
     }
 
     @Override
