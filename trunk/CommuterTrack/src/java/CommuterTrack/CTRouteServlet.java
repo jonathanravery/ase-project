@@ -18,6 +18,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 /**
  *
  * @author COMS 4156
@@ -69,19 +70,20 @@ out.println("<HTML><BODY>");
          * at some point we should restrict functionality to logged in users.
 
         */
+        HttpSession hsn = request.getSession();
         if (session.isLoggedIn())
         {
 
-            out.println("<B><P>user logged in<B>");
+              out.println("<B><P>user " + hsn.getAttribute("user") + "logged in<B>");
 //            RequestDispatcher rd  = request.getRequestDispatcher("timer.jsp");
 //            rd.forward(request, response);
         } else {
 
-            out.println("<B><P>user not logged in<B>");
+              out.println("<B><P>user " + hsn.getAttribute("user") + "not logged in<B>");
 
         }
-
-        session.addARoute(routeDescription, routeStart, routeEnd);
+        String un = (String) hsn.getAttribute("user");
+        session.addARoute(un, routeDescription, routeStart, routeEnd);
 
         out.println("<H1>" + routeDescription + routeStart + routeEnd + "</H1>");
 

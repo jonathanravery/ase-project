@@ -61,7 +61,7 @@ public class CTSession implements CTSessionRemote {
     // "Insert Code > Add Business Method")
 
     @Override
-    public boolean addARoute(String routeDescription, String routeStart, String routeEnd){
+    public boolean addARoute(String user, String routeDescription, String routeStart, String routeEnd){
 
     /*
      TODO: sanatize input
@@ -73,7 +73,7 @@ public class CTSession implements CTSessionRemote {
     c.setDescription(routeDescription);
     c.setRouteStart(routeStart);
     c.setRouteEnd(routeEnd);
-    c.setUsername("DERP D. DERPINGTON");
+    c.setUsername(user);
 
     em.persist(c);
     return true;

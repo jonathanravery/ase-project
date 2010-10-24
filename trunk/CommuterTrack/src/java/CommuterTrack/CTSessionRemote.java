@@ -18,7 +18,7 @@ public interface CTSessionRemote {
 
     boolean isLoggedIn();
 
-    boolean addARoute(String routeDescription, String routeStart, String routeEnd);
+    boolean addARoute(String user, String routeDescription, String routeStart, String routeEnd);
 
 
 

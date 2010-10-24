@@ -18,6 +18,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -52,10 +53,17 @@ public class CTLoginController extends HttpServlet {
             rd.forward(request, response);
             session = null;
         }
+            /* Create an HTTP session
+             * Store the username so we can include it in the addRoute stuff
+             */
+            HttpSession hsn = request.getSession();
+            hsn.setAttribute("user", "none");
 
         // Forward the request to the appropriate view
         if (session.logInUser(username, password))
         {
+            hsn.setAttribute("user", username);
+
             //System.out.println("user logged in");
             RequestDispatcher rd  = request.getRequestDispatcher("timer.jsp");
             rd.forward(request, response);
