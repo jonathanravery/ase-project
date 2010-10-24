@@ -14,6 +14,8 @@ import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.security.*;
+import java.math.*;
 
 /**
  *
@@ -37,6 +39,23 @@ public class CTSession implements CTSessionRemote {
 
         //Query q = em.createNamedQuery("CtUsers.findByUsername");
         //q.setParameter("username", username);
+        //String plaintext = 'your text here';
+        MessageDigest m;
+        try {
+            m = MessageDigest.getInstance("MD5");
+            m.reset();
+            m.update(password.getBytes());
+            byte[] digest = m.digest();
+            BigInteger bigInt = new BigInteger(1, digest);
+            password = bigInt.toString(16);
+
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(CTSession.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+
+
+
         Query q = em.createNamedQuery("CtUsers.findByUsername");
         q.setParameter("username", username);
         try {
