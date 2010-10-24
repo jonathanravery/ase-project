@@ -26,6 +26,7 @@ public class CTSession implements CTSessionRemote {
     @PersistenceContext(unitName = "CommuterTrackPU")
     private EntityManager em;
 
+
     @PostConstruct
     public void initialize() {
         user_id = new Integer(0);
@@ -58,5 +59,24 @@ public class CTSession implements CTSessionRemote {
     }
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
-    
+
+    @Override
+    public boolean addARoute(String routeDescription, String routeStart, String routeEnd){
+
+    /*
+     TODO: sanatize input
+     TODO: get username from session
+     
+     */
+
+    CtRoutes c = new CtRoutes();
+    c.setDescription(routeDescription);
+    c.setRouteStart(routeStart);
+    c.setRouteEnd(routeEnd);
+    c.setUsername("DERP D. DERPINGTON");
+
+    em.persist(c);
+    return true;
+    }
+
 }
