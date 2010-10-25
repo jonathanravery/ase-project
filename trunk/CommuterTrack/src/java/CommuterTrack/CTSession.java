@@ -37,9 +37,7 @@ public class CTSession implements CTSessionRemote {
     @Override
     public boolean logInUser(String username, String password) {
 
-        //Query q = em.createNamedQuery("CtUsers.findByUsername");
-        //q.setParameter("username", username);
-        //String plaintext = 'your text here';
+        // md5 hash the password that came in
         MessageDigest m;
         try {
             m = MessageDigest.getInstance("MD5");

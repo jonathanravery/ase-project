@@ -1,6 +1,6 @@
 <%-- 
-    Document   : index
-    Created on : Oct 20, 2010, 7:00:55 PM
+    Document   : edit_user
+    Created on : Oct 24, 2010, 10:26:09 PM
     Author     : dm2474
 --%>
 
@@ -11,19 +11,16 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>User Settings</title>
     </head>
     <body>
-
-        <h3>Welcome to Commuter Track</h3>
-
-
-        <font color="red">Invalid user name or password</font>
-        <form action="CTLoginController" method="post">
+        <h1>User Settings</h1>
+        <%@ include file="functionbanner.jsp" %>
+         <form action="CTLoginController" method="post">
         Username:<input name="user" type="text"><br>
         Password:<input name="pass" type="password"><br>
-        <input type="hidden" name="method" value="login">
-        <input type="submit" name="Login">
+        <input type="hidden" name="method" value="edituser">
+        <input type="submit" name="Login" value="Edit User">
         </form>
     </body>
 </html>
