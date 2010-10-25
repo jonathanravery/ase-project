@@ -6,7 +6,9 @@
 package CommuterTrack;
 
 import java.io.Serializable;
+import java.util.Collection;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,6 +16,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -34,16 +37,32 @@ public class CtUsers implements Serializable {
     @Basic(optional = false)
     @Column(name = "USER_ID")
     private Integer userId;
+    @Basic(optional = false)
     @Column(name = "USERNAME")
     private String username;
+    @Basic(optional = false)
     @Column(name = "PASSWORD")
     private String password;
-
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "ctUsers")
+    private Collection<CtRoutes> ctRoutesCollection;
+    
+    // method to set both sides of the link of the bidirectional association
+    public void addToRoutes(CtRoutes route) {
+        route.setCtUsers(this);
+        this.ctRoutesCollection.add(route);
+    }
+    
     public CtUsers() {
     }
 
     public CtUsers(Integer userId) {
         this.userId = userId;
+    }
+
+    public CtUsers(Integer userId, String username, String password) {
+        this.userId = userId;
+        this.username = username;
+        this.password = password;
     }
 
     public Integer getUserId() {
@@ -68,6 +87,14 @@ public class CtUsers implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Collection<CtRoutes> getCtRoutesCollection() {
+        return ctRoutesCollection;
+    }
+
+    public void setCtRoutesCollection(Collection<CtRoutes> ctRoutesCollection) {
+        this.ctRoutesCollection = ctRoutesCollection;
     }
 
     @Override
