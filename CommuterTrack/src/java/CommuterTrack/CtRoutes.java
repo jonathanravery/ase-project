@@ -12,13 +12,15 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
  *
- * @author COMS 4156
+ * @author maria
  */
 @Entity
 @Table(name = "CT_ROUTES")
@@ -26,7 +28,6 @@ import javax.persistence.Table;
     @NamedQuery(name = "CtRoutes.findAll", query = "SELECT c FROM CtRoutes c"),
     @NamedQuery(name = "CtRoutes.findByRouteId", query = "SELECT c FROM CtRoutes c WHERE c.routeId = :routeId"),
     @NamedQuery(name = "CtRoutes.findByDescription", query = "SELECT c FROM CtRoutes c WHERE c.description = :description"),
-    @NamedQuery(name = "CtRoutes.findByUsername", query = "SELECT c FROM CtRoutes c WHERE c.username = :username"),
     @NamedQuery(name = "CtRoutes.findByRouteStart", query = "SELECT c FROM CtRoutes c WHERE c.routeStart = :routeStart"),
     @NamedQuery(name = "CtRoutes.findByRouteEnd", query = "SELECT c FROM CtRoutes c WHERE c.routeEnd = :routeEnd")})
 public class CtRoutes implements Serializable {
@@ -40,14 +41,14 @@ public class CtRoutes implements Serializable {
     @Column(name = "DESCRIPTION")
     private String description;
     @Basic(optional = false)
-    @Column(name = "USERNAME")
-    private String username;
-    @Basic(optional = false)
     @Column(name = "ROUTE_START")
     private String routeStart;
     @Basic(optional = false)
     @Column(name = "ROUTE_END")
     private String routeEnd;
+    @JoinColumn(name = "USER_ID", referencedColumnName = "USER_ID")
+    @ManyToOne(optional = false)
+    private CtUsers ctUsers;
 
     public CtRoutes() {
     }
@@ -56,10 +57,9 @@ public class CtRoutes implements Serializable {
         this.routeId = routeId;
     }
 
-    public CtRoutes(Integer routeId, String description, String username, String routeStart, String routeEnd) {
+    public CtRoutes(Integer routeId, String description, String routeStart, String routeEnd) {
         this.routeId = routeId;
         this.description = description;
-        this.username = username;
         this.routeStart = routeStart;
         this.routeEnd = routeEnd;
     }
@@ -80,14 +80,6 @@ public class CtRoutes implements Serializable {
         this.description = description;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public String getRouteStart() {
         return routeStart;
     }
@@ -102,6 +94,14 @@ public class CtRoutes implements Serializable {
 
     public void setRouteEnd(String routeEnd) {
         this.routeEnd = routeEnd;
+    }
+
+    public CtUsers getCtUsers() {
+        return ctUsers;
+    }
+
+    public void setCtUsers(CtUsers ctUsers) {
+        this.ctUsers = ctUsers;
     }
 
     @Override

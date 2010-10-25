@@ -68,7 +68,7 @@ public class CTSession implements CTSessionRemote {
         } catch (NoResultException ex) {
         }
         Logger.getLogger(CTSession.class.getName()).log(Level.SEVERE, "username:" + username + ",password:" + password + ",user_id:"+this.user_id, " login failed");
-        this.user_id = 1;
+        this.user_id = 0;
         return false;
     }
 
@@ -85,17 +85,27 @@ public class CTSession implements CTSessionRemote {
     /*
      TODO: sanatize input
      TODO: get username from session
-     
+     TODO: Mariya suggests using user_id instead of the username
      */
+    if (user_id <= 0) user_id = new Integer(2);
 
     CtRoutes c = new CtRoutes();
     c.setDescription(routeDescription);
     c.setRouteStart(routeStart);
     c.setRouteEnd(routeEnd);
-    c.setUsername(user);
-
-    em.persist(c);
-    return true;
+    
+    Query q = em.createNamedQuery("CtUsers.findByUserId");
+    q.setParameter("userId", user_id);
+    try {
+        CtUsers curUser = (CtUsers) q.getSingleResult();
+        c.setCtUsers(curUser);
+        curUser.addToRoutes(c);
+        //em.persist(curUser);
+        em.merge(curUser);
+    } catch (NonUniqueResultException ex) {
+    } catch (NoResultException ex) {
     }
 
+    return true;
+    }
 }
