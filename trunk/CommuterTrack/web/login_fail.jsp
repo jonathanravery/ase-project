@@ -19,6 +19,7 @@
         <form action="CTLoginController" method="post">
         Username:<input name="user" type="text"><br>
         Password:<input name="pass" type="password"><br>
+        <input type="hidden" name="method" value="login">
         <input type="submit" name="Login">
         </form>
     </body>
