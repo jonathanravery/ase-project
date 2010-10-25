@@ -15,6 +15,7 @@
         <meta http-equiv="expires" content=-1>
         <meta http-equiv="no-cache"
               <%
+              // trying to figure out how to get rid of cacheing
         response.setHeader("Cache-Control","no-cache"); //Forces caches to obtain a new copy of the page from the origin server
         response.setHeader("Cache-Control","no-store"); //Directs caches not to store the page under any circumstance
         response.setDateHeader("Expires", 0); //Causes the proxy cache to see the page as "stale"
@@ -30,8 +31,8 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <h3>Placeholder for the timer page</h3>
+        <h3>timer page</h3>
+        <%@ include file="functionbanner.jsp" %>
         Hello <%= ((String)session.getAttribute("user"))%>!
-        <a href="/CommuterTrack/CTLoginController?method=logout">logout</a>
     </body>
 </html>

@@ -19,7 +19,12 @@
         Username:<input name="user" type="text"><br>
         Password:<input name="pass" type="password"><br>
         <input type="hidden" name="method" value="login">
-        <input type="submit" name="Login">
+        <input type="submit" name="Login" value="Login">
+        </form>
+        <p>
+        <form action="CTLoginController" method="post">
+        <input type="hidden" name="method" value="new">
+        <input type="submit" name="Create a New Account" value="Create a New Account">
         </form>
     </body>
 </html>

@@ -14,7 +14,10 @@
         <title>JSP Page</title>
     </head>
     <body>
+
         <h3>Welcome to Commuter Track</h3>
+
+
         <font color="red">Invalid user name or password</font>
         <form action="CTLoginController" method="post">
         Username:<input name="user" type="text"><br>

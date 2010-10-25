@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package CommuterTrack;
 
 import java.io.IOException;
@@ -24,9 +23,9 @@ import javax.servlet.http.HttpSession;
  *
  * @author dm2474
  */
-@WebServlet(name="CTLoginController", urlPatterns={"/CTLoginController"})
+@WebServlet(name = "CTLoginController", urlPatterns = {"/CTLoginController"})
 public class CTLoginController extends HttpServlet {
-   
+
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
@@ -35,7 +34,7 @@ public class CTLoginController extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         String username;
         String password;
         String method; // the method 'login' or 'logout' that we are running
@@ -47,26 +46,26 @@ public class CTLoginController extends HttpServlet {
         method = request.getParameter("method");
 
         // prevent caching
-        response.addHeader("Pragma","no-cache");
-        response.addIntHeader("Expires",-1);
-        response.addHeader("Cache-Control","no-cache, must-revalidate");
+        response.addHeader("Pragma", "no-cache");
+        response.addIntHeader("Expires", -1);
+        response.addHeader("Cache-Control", "no-cache, must-revalidate");
 
 
         try {
             context = new InitialContext();
-            session = (CTSessionRemote)context.lookup("CommuterTrack.CTSessionRemote");
+            session = (CTSessionRemote) context.lookup("CommuterTrack.CTSessionRemote");
         } catch (NamingException ex) {
             Logger.getLogger(CTLoginController.class.getName()).log(Level.SEVERE, null, ex);
             RequestDispatcher rd = request.getRequestDispatcher("fail.jsp");
             rd.forward(request, response);
             session = null;
         }
-            //hsn.setAttribute("user", "none");
+        //hsn.setAttribute("user", "none");
             /* Create an HTTP session
-             * Store the username so we can include it in the addRoute stuff
-             */
-            HttpSession hsn = null;// = request.getSession();
-            //hsn.setAttribute("user", "none");
+         * Store the username so we can include it in the addRoute stuff
+         */
+        HttpSession hsn = null;// = request.getSession();
+        //hsn.setAttribute("user", "none");
 
 
         if (method.equals("login")) {
@@ -84,11 +83,15 @@ public class CTLoginController extends HttpServlet {
             } else {
                 hsn.invalidate();
                 //System.out.println("user could not log in");
+                
+                /* TODO: instead of redirecting to login_fail, we should likely be seeing an 'error' or 'message' session var.
+                 
+                 */
                 RequestDispatcher rd = request.getRequestDispatcher("login_fail.jsp");
                 rd.forward(request, response);
             }
         } else if (method.equals("logout")) {
-                Logger.getLogger(CTLoginController.class.getName()).log(Level.WARNING,"REACHED LOGOUT","REACHED LOGOUT");
+            Logger.getLogger(CTLoginController.class.getName()).log(Level.WARNING, "REACHED LOGOUT", "REACHED LOGOUT");
 
             try {
                 hsn = request.getSession();
@@ -101,11 +104,15 @@ public class CTLoginController extends HttpServlet {
 
             }
 
-        
 
-        RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
-        rd.forward(request, response);
 
+            RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
+            rd.forward(request, response);
+
+        } else if (method.equals("new")) {
+            Logger.getLogger(CTLoginController.class.getName()).log(Level.WARNING, "REACHED NEW ACCOUNT", "REACHED LOGOUT");
+            RequestDispatcher rd = request.getRequestDispatcher("new_user.jsp");
+            rd.forward(request, response);
         }
     }
 
@@ -119,9 +126,9 @@ public class CTLoginController extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         processRequest(request, response);
-    } 
+    }
 
     /** 
      * Handles the HTTP <code>POST</code> method.
@@ -132,7 +139,7 @@ public class CTLoginController extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         processRequest(request, response);
     }
 
@@ -144,5 +151,4 @@ public class CTLoginController extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-
 }

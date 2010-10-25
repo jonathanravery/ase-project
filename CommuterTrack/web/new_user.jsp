@@ -1,6 +1,6 @@
 <%-- 
-    Document   : index
-    Created on : Oct 20, 2010, 7:00:55 PM
+    Document   : new_user.jsp
+    Created on : Oct 24, 2010, 11:28:34 PM
     Author     : dm2474
 --%>
 
@@ -11,20 +11,16 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>New Account</title>
     </head>
     <body>
-        <h3>Welcome to CommuterTrack</h3>
+        <h1>New Account</h1>
+        <%@ include file="functionbanner.jsp" %>
         <form action="CTLoginController" method="post">
         Username:<input name="user" type="text"><br>
         Password:<input name="pass" type="password"><br>
-        <input type="hidden" name="method" value="login">
-        <input type="submit" name="Login" value="Login">
-        </form>
-        <p>
-        <form action="CTLoginController" method="post">
-        <input type="hidden" name="method" value="new">
-        <input type="submit" name="Create a New Account" value="Create a New Account">
+        <input type="hidden" name="method" value="creatuser">
+        <input type="submit" name="Login" value="Create User">
         </form>
     </body>
 </html>
