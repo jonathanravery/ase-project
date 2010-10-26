@@ -23,8 +23,8 @@ import javax.servlet.http.HttpSession;
  *
  * @author COMS 4156
  */
-@WebServlet(name="CTRouteServlet", urlPatterns={"/CTRouteServlet"})
-public class CTRouteServlet extends HttpServlet {
+@WebServlet(name="CTRouteController", urlPatterns={"/CTRouteController"})
+public class CTRouteController extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -53,7 +53,7 @@ public class CTRouteServlet extends HttpServlet {
             context = new InitialContext();
             session = (CTSessionRemote)context.lookup("CommuterTrack.CTSessionRemote");
         } catch (NamingException ex) {
-            Logger.getLogger(CTLoginController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, null, ex);
             RequestDispatcher rd = request.getRequestDispatcher("fail.jsp");
             rd.forward(request, response);
             session = null;

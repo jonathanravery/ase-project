@@ -1,12 +1,16 @@
+DROP TABLE CT_ROUTES;
+DROP TABLE CT_USERS;
+
 
 CREATE TABLE CT_USERS
 (
 user_id INTEGER PRIMARY KEY NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
 username VARCHAR(32) NOT NULL UNIQUE,
-password VARCHAR(32) NOT NULL
+password VARCHAR(32) NOT NULL,
+active INTEGER NOT NULL
 );
 
-INSERT INTO CT_USERS (username, password) VALUES ('admin', '21232f297a57a5a743894a0e4a801fc3')
+INSERT INTO CT_USERS (username, password,active) VALUES ('admin', '21232f297a57a5a743894a0e4a801fc3',1);
 
 CREATE TABLE CT_ROUTES
 (
@@ -18,4 +22,4 @@ route_start VARCHAR(32) NOT NULL,
 route_end VARCHAR(32) NOT NULL
 );
 
-INSERT INTO CT_ROUTES (user_id, description, route_start, route_end) VALUES (2, 'TEST ROUTE', 'rstart', 'rend');
+INSERT INTO CT_ROUTES (user_id, description, route_start, route_end) VALUES (1, 'TEST ROUTE', 'rstart', 'rend');

@@ -23,8 +23,8 @@ import javax.servlet.http.HttpSession;
  *
  * @author dm2474
  */
-@WebServlet(name = "CTLoginController", urlPatterns = {"/CTLoginController"})
-public class CTLoginController extends HttpServlet {
+@WebServlet(name = "CTUserController", urlPatterns = {"/CTUserController"})
+public class CTUserController extends HttpServlet {
 
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -55,7 +55,7 @@ public class CTLoginController extends HttpServlet {
             context = new InitialContext();
             session = (CTSessionRemote) context.lookup("CommuterTrack.CTSessionRemote");
         } catch (NamingException ex) {
-            Logger.getLogger(CTLoginController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, null, ex);
             RequestDispatcher rd = request.getRequestDispatcher("fail.jsp");
             rd.forward(request, response);
             session = null;
@@ -91,7 +91,7 @@ public class CTLoginController extends HttpServlet {
                 rd.forward(request, response);
             }
         } else if (method.equals("logout")) {
-            Logger.getLogger(CTLoginController.class.getName()).log(Level.WARNING, "REACHED LOGOUT", "REACHED LOGOUT");
+            Logger.getLogger(CTUserController.class.getName()).log(Level.WARNING, "REACHED LOGOUT", "REACHED LOGOUT");
 
             try {
                 hsn = request.getSession();
@@ -99,7 +99,7 @@ public class CTLoginController extends HttpServlet {
                 hsn.invalidate();
 
             } catch (Exception e) {
-                Logger.getLogger(CTLoginController.class.getName()).log(Level.SEVERE, e.toString(), e.toString());
+                Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, e.toString(), e.toString());
 
 
             }
@@ -110,7 +110,7 @@ public class CTLoginController extends HttpServlet {
             rd.forward(request, response);
 
         } else if (method.equals("new")) {
-            Logger.getLogger(CTLoginController.class.getName()).log(Level.WARNING, "REACHED NEW ACCOUNT", "REACHED LOGOUT");
+            Logger.getLogger(CTUserController.class.getName()).log(Level.WARNING, "REACHED NEW ACCOUNT", "REACHED LOGOUT");
             RequestDispatcher rd = request.getRequestDispatcher("new_user.jsp");
             rd.forward(request, response);
         }
