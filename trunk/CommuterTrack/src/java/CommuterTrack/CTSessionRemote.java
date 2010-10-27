@@ -14,9 +14,11 @@ import javax.ejb.Remote;
 @Remote
 public interface CTSessionRemote {
 
-    boolean logInUser(String username, String password);
+    CtUser getUser(String username, String password);
 
-    boolean isLoggedIn();
+    boolean addUser(String username, String password, int role);
+
+    boolean editUser(int userId, String username, String pass, int role, int active);
 
     boolean addARoute(String user, String routeDescription, String routeStart, String routeEnd);
 

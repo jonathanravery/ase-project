@@ -20,7 +20,7 @@
         response.setHeader("Cache-Control","no-store"); //Directs caches not to store the page under any circumstance
         response.setDateHeader("Expires", 0); //Causes the proxy cache to see the page as "stale"
         response.setHeader("Pragma","no-cache"); //HTTP 1.0 backward compatibility
-        String userName = (String) session.getAttribute("user");
+        String userName = ((CtUser) session.getAttribute("user")).getUsername();
         if (null == userName) {
              request.setAttribute("Error", "Session has ended.  Please login.");
              RequestDispatcher rd = request.getRequestDispatcher("login_fail.jsp");
@@ -33,6 +33,6 @@
     <body>
         <h3>timer page</h3>
         <%@ include file="functionbanner.jsp" %>
-        Hello <%= ((String)session.getAttribute("user"))%>!
+        Hello <%= ((CtUser)session.getAttribute("user")).getUsername() %>!
     </body>
 </html>

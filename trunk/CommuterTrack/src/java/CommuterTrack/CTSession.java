@@ -23,7 +23,6 @@ import java.math.*;
  */
 @Stateful
 public class CTSession implements CTSessionRemote {
-    private Integer user_id;
 
     @PersistenceContext(unitName = "CommuterTrackPU")
     private EntityManager em;
@@ -31,11 +30,12 @@ public class CTSession implements CTSessionRemote {
 
     @PostConstruct
     public void initialize() {
-        user_id = new Integer(0);
+
     }
 
     @Override
-    public boolean logInUser(String username, String password) {
+    public CtUser getUser(String username, String password) {
+        CtUser curUser = null;
 
         // md5 hash the password that came in
         MessageDigest m;
@@ -54,25 +54,55 @@ public class CTSession implements CTSessionRemote {
 
 
 
-        Query q = em.createNamedQuery("CtUsers.findByUsername");
+        Query q = em.createNamedQuery("CtUser.findByUsername");
         q.setParameter("username", username);
         try {
-            CtUsers curUser = (CtUsers) q.getSingleResult();
-            if (curUser.getPassword().compareTo(password) == 0) {
-                this.user_id = curUser.getUserId();
-                return true;
+            curUser = (CtUser) q.getSingleResult();
+            if ((curUser.getPassword().compareTo(password) == 0) && curUser.getActive() == 1) {
+                return curUser;
             }
         } catch (NonUniqueResultException ex) {
+            return null;
         } catch (NoResultException ex) {
+            return null;
         }
-        Logger.getLogger(CTSession.class.getName()).log(Level.SEVERE, "username:" + username + ",password:" + password + ",user_id:"+this.user_id, " login failed");
-        this.user_id = 0;
-        return false;
+        Logger.getLogger(CTSession.class.getName()).log(Level.SEVERE, "username:" + username + ",password:" + password + ",user_id:"+curUser.getUserId(), " login failed");
+        return curUser;
     }
 
     @Override
-    public boolean isLoggedIn() {
-        return user_id > 0;
+    public boolean addUser(String username, String pass, int role) {
+        MessageDigest m;
+        try {
+            m = MessageDigest.getInstance("MD5");
+            m.reset();
+            m.update(pass.getBytes());
+            byte[] digest = m.digest();
+            BigInteger bigInt = new BigInteger(1, digest);
+            pass = bigInt.toString(16);
+
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(CTSession.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        CtUser newUser = new CtUser();
+        newUser.setUsername(username);
+        newUser.setPassword(pass);
+        newUser.setRole(role);
+        newUser.setActive(1);
+
+        try {
+            em.persist(newUser);
+        } catch (Exception e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean editUser(int userId, String username, String pass, int role, int active) {
+        return false;
     }
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
@@ -85,7 +115,7 @@ public class CTSession implements CTSessionRemote {
      TODO: get username from session
      TODO: Mariya suggests using user_id instead of the username
      */
-    if (user_id <= 0) user_id = new Integer(2);
+   // if (user_id <= 0) user_id = new Integer(2);
 
     CtRoutes c = new CtRoutes();
     c.setDescription(routeDescription);
@@ -93,11 +123,13 @@ public class CTSession implements CTSessionRemote {
     c.setRouteEnd(routeEnd);
     
     Query q = em.createNamedQuery("CtUsers.findByUserId");
-    q.setParameter("userId", user_id);
+    //q.setParameter("userId", user_id);
     try {
-        CtUsers curUser = (CtUsers) q.getSingleResult();
-        c.setCtUsers(curUser);
-        curUser.addToRoutes(c);
+        CtUser curUser = (CtUser) q.getSingleResult();
+        c.setCtUser(curUser);
+        //I'm not sure what this is
+        //but should it really be in CtUser???  - mechanic
+        //curUser.addToRoutes(c);
         //em.persist(curUser);
         em.merge(curUser);
     } catch (NonUniqueResultException ex) {

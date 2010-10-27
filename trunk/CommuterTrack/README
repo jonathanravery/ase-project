@@ -1,0 +1,13 @@
+Notes from 10/26
+
+----------
+User Roles
+----------
+
+The system is now making the assumption that user role 1 is admin, 2 is regular user. All other values are invalid.
+
+--------------
+Updated Design
+--------------
+
+In the document, the logout() method took no parameters. We added the HttpSession to it as a parameter so that we can clear it in that method.

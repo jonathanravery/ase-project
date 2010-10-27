@@ -15,14 +15,17 @@
     </head>
     <body>
         <h3>Welcome to CommuterTrack</h3>
-        <form action="CTLoginController" method="post">
+        <% session.setAttribute("message", session.getAttribute("message") + ""); %>
+        <%= ((String)session.getAttribute("message")) %>
+        <% session.setAttribute("message", ""); %>
+        <form action="CTUserController" method="post">
         Username:<input name="user" type="text"><br>
         Password:<input name="pass" type="password"><br>
         <input type="hidden" name="method" value="login">
         <input type="submit" name="Login" value="Login">
         </form>
         <p>
-        <form action="CTLoginController" method="post">
+        <form action="CTUserController" method="post">
         <input type="hidden" name="method" value="new">
         <input type="submit" name="Create a New Account" value="Create a New Account">
         </form>
