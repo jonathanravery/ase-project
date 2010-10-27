@@ -3,8 +3,9 @@
   <persistence-unit name="CommuterTrackPU" transaction-type="JTA">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <jta-data-source>jdbc/sample</jta-data-source>
-    <class>CommuterTrack.CtUsers</class>
-    <exclude-unlisted-classes>false</exclude-unlisted-classes>
+    <class>CommuterTrack.CtUser</class>
+    <class>CommuterTrack.CtRoutes</class>
+    <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
       <property name="eclipselink.logging.level" value="FINEST"/>
     </properties>

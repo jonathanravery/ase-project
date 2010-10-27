@@ -48,7 +48,7 @@ public class CtRoutes implements Serializable {
     private String routeEnd;
     @JoinColumn(name = "USER_ID", referencedColumnName = "USER_ID")
     @ManyToOne(optional = false)
-    private CtUsers ctUsers;
+    private CtUser ctUsers;
 
     public CtRoutes() {
     }
@@ -96,11 +96,11 @@ public class CtRoutes implements Serializable {
         this.routeEnd = routeEnd;
     }
 
-    public CtUsers getCtUsers() {
+    public CtUser getCtUsers() {
         return ctUsers;
     }
 
-    public void setCtUsers(CtUsers ctUsers) {
+    public void setCtUser(CtUser ctUsers) {
         this.ctUsers = ctUsers;
     }
 

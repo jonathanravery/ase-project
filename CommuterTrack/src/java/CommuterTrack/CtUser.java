@@ -6,9 +6,7 @@
 package CommuterTrack;
 
 import java.io.Serializable;
-import java.util.Collection;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,21 +14,22 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
  *
- * @author maria
+ * @author dm2474
  */
 @Entity
 @Table(name = "CT_USERS")
 @NamedQueries({
-    @NamedQuery(name = "CtUsers.findAll", query = "SELECT c FROM CtUsers c"),
-    @NamedQuery(name = "CtUsers.findByUserId", query = "SELECT c FROM CtUsers c WHERE c.userId = :userId"),
-    @NamedQuery(name = "CtUsers.findByUsername", query = "SELECT c FROM CtUsers c WHERE c.username = :username"),
-    @NamedQuery(name = "CtUsers.findByPassword", query = "SELECT c FROM CtUsers c WHERE c.password = :password")})
-public class CtUsers implements Serializable {
+    @NamedQuery(name = "CtUser.findAll", query = "SELECT c FROM CtUser c"),
+    @NamedQuery(name = "CtUser.findByUserId", query = "SELECT c FROM CtUser c WHERE c.userId = :userId"),
+    @NamedQuery(name = "CtUser.findByUsername", query = "SELECT c FROM CtUser c WHERE c.username = :username"),
+    @NamedQuery(name = "CtUser.findByPassword", query = "SELECT c FROM CtUser c WHERE c.password = :password"),
+    @NamedQuery(name = "CtUser.findByRole", query = "SELECT c FROM CtUser c WHERE c.role = :role"),
+    @NamedQuery(name = "CtUser.findByActive", query = "SELECT c FROM CtUser c WHERE c.active = :active")})
+public class CtUser implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,26 +42,26 @@ public class CtUsers implements Serializable {
     @Basic(optional = false)
     @Column(name = "PASSWORD")
     private String password;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "ctUsers")
-    private Collection<CtRoutes> ctRoutesCollection;
-    
-    // method to set both sides of the link of the bidirectional association
-    public void addToRoutes(CtRoutes route) {
-        route.setCtUsers(this);
-        this.ctRoutesCollection.add(route);
-    }
-    
-    public CtUsers() {
+    @Basic(optional = false)
+    @Column(name = "ROLE")
+    private int role;
+    @Basic(optional = false)
+    @Column(name = "ACTIVE")
+    private int active;
+
+    public CtUser() {
     }
 
-    public CtUsers(Integer userId) {
+    public CtUser(Integer userId) {
         this.userId = userId;
     }
 
-    public CtUsers(Integer userId, String username, String password) {
+    public CtUser(Integer userId, String username, String password, int role, int active) {
         this.userId = userId;
         this.username = username;
         this.password = password;
+        this.role = role;
+        this.active = active;
     }
 
     public Integer getUserId() {
@@ -89,12 +88,20 @@ public class CtUsers implements Serializable {
         this.password = password;
     }
 
-    public Collection<CtRoutes> getCtRoutesCollection() {
-        return ctRoutesCollection;
+    public int getRole() {
+        return role;
     }
 
-    public void setCtRoutesCollection(Collection<CtRoutes> ctRoutesCollection) {
-        this.ctRoutesCollection = ctRoutesCollection;
+    public void setRole(int role) {
+        this.role = role;
+    }
+
+    public int getActive() {
+        return active;
+    }
+
+    public void setActive(int active) {
+        this.active = active;
     }
 
     @Override
@@ -107,10 +114,10 @@ public class CtUsers implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof CtUsers)) {
+        if (!(object instanceof CtUser)) {
             return false;
         }
-        CtUsers other = (CtUsers) object;
+        CtUser other = (CtUser) object;
         if ((this.userId == null && other.userId != null) || (this.userId != null && !this.userId.equals(other.userId))) {
             return false;
         }
@@ -119,7 +126,7 @@ public class CtUsers implements Serializable {
 
     @Override
     public String toString() {
-        return "CommuterTrack.CtUsers[userId=" + userId + "]";
+        return "CommuterTrack.CtUser[userId=" + userId + "]";
     }
 
 }

@@ -71,7 +71,7 @@ out.println("<HTML><BODY>");
 
         */
         HttpSession hsn = request.getSession();
-        if (session.isLoggedIn())
+        if (hsn.getAttribute("user") != null)
         {
 
               out.println("<B><P>user " + hsn.getAttribute("user") + "logged in<B>");

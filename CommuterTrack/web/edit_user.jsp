@@ -16,7 +16,7 @@
     <body>
         <h1>User Settings</h1>
         <%@ include file="functionbanner.jsp" %>
-         <form action="CTLoginController" method="post">
+         <form action="CTUserController" method="post">
         Username:<input name="user" type="text"><br>
         Password:<input name="pass" type="password"><br>
         <input type="hidden" name="method" value="edituser">
