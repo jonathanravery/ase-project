@@ -58,10 +58,16 @@ public class CTSession implements CTSessionRemote {
         q.setParameter("username", username);
         try {
             curUser = (CtUser) q.getSingleResult();
+            // if the password passed in matches the one in the db
             if ((curUser.getPassword().compareTo(password) == 0) && curUser.getActive() == 1) {
                 return curUser;
+            } else {
+                curUser = new CtUser();
+
             }
         } catch (NonUniqueResultException ex) {
+            Logger.getLogger(CTUserController.class.getName()).log(Level.WARNING,ex.toString(), "REACHED "+ex.toString());
+
             return null;
         } catch (NoResultException ex) {
             return null;
