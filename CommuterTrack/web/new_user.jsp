@@ -17,10 +17,13 @@
         <h1>New Account</h1>
         <!-- <%@ include file="functionbanner.jsp" %> -->
         <%= session.getAttribute("message") %>
+        <% session.setAttribute("message", ""); %>
+
         <form action="CTUserController" method="post">
         Username:<input name="user" type="text"><br>
         Password:<input name="pass" type="password"><br>
-        <input type="hidden" name="method" value="creatuser">
+        <input type="hidden" name="method" value="add">
+        <input type="hidden" name="role" value="2">
         <input type="submit" name="Login" value="Create User">
         </form>
     </body>
