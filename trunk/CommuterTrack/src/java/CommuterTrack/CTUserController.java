@@ -6,6 +6,7 @@ package CommuterTrack;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.Context;
@@ -42,6 +43,24 @@ public class CTUserController extends HttpServlet {
 
         // Attempt to get the bean for the user who matches
         return session.getUser(user, pass);
+    }
+
+        List getAllUsers() {
+        final Context context;
+        CTSessionRemote session;
+        CtUser userBean;
+
+        // Get the session bean
+        try {
+            context = new InitialContext();
+            session = (CTSessionRemote) context.lookup("CommuterTrack.CTSessionRemote");
+        } catch (NamingException ex) {
+            Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+
+        // Attempt to get the bean for the user who matches
+        return session.getAllUsers();
     }
 
     boolean logout(HttpSession hsn) {
@@ -118,7 +137,7 @@ public class CTUserController extends HttpServlet {
             userBean = (CtUser)this.loginUser(username, password);
 
             hsn.setAttribute("user", userBean);
-            if (userBean.getUsername()==null) {
+            if (userBean==null) {
                 Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE,"USERBEAN IS NULL", "NULL USERBEAN");
 
                 hsn.setAttribute("message", "<font color=red>Invalid username of password</font>");
@@ -141,7 +160,7 @@ public class CTUserController extends HttpServlet {
                 currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
                 hsn.setAttribute("message", currentMessage + "You have successfully logged out.");
             } catch (Exception e) {
-                Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, e.toString(), e.toString());
+                Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "FAILED TO GET SEESION IN LOGOUT: "+e.toString(), e.toString());
             }
             view = "index.jsp";
         } else if (method.equals("new")) {
@@ -187,17 +206,39 @@ public class CTUserController extends HttpServlet {
             if (view == null && this.addUser(username, password, role)) {
                 hsn.setAttribute("message", "New user added successfully");
                 if (userBean == null) {
+                    Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE,"USERBEAN IS NULL","USERBEAN IS NULL");
                     view = "index.jsp";
                 } else {
+                    Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "USERBEAN IS NOT NULL", "USERBEAN IS NOT  NULL");
+
                     view = "timer.jsp";
                 }
-            } // If we could not add the user
-            else {
+            }
+        } else if (method.equals("viewall")) {
+            // this method is for admins only
+            // it is to retrieve all users
+            //  get the current user and make sure it's role is 1
+            userBean = (CtUser) hsn.getAttribute("user");
+
+            // Make sure if they are setting the role to 1, the user is an admin
+            if (userBean == null || userBean.getRole() != 1) {
+                Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "USERBEAN IS NULL OR RULE IS NOT 1");
+
                 currentMessage = (String) hsn.getAttribute("message");
                 currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
-                hsn.setAttribute("message", currentMessage + "Unable to add the new user");
-                view = "new_user.jsp";
+                hsn.setAttribute("message", currentMessage + "<font color=red>You are not authorized to do that</font>");
+                view = "timer.jsp";
+
+            } else {
+                Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "about to set ctUsers attribute to "+this.getAllUsers().toString());
+
+                hsn.setAttribute("ctUsers", this.getAllUsers());
+                view = "view_users.jsp";
             }
+
+
+
+
         } else {
             view = "fail.jsp";
         }
@@ -211,7 +252,7 @@ public class CTUserController extends HttpServlet {
         rd.forward(request, response);
         }
          */
-                    Logger.getLogger(CTUserController.class.getName()).log(Level.WARNING, "about to forward you to: "+view, "fwding");
+        Logger.getLogger(CTUserController.class.getName()).log(Level.WARNING, "about to forward you to: " + view, "fwding");
 
         RequestDispatcher rd = request.getRequestDispatcher(view);
         rd.forward(request, response);
