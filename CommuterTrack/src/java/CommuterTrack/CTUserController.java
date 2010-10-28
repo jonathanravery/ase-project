@@ -115,13 +115,17 @@ public class CTUserController extends HttpServlet {
             username = request.getParameter("user");
             password = request.getParameter("pass");
 
-            userBean = this.loginUser(username, password);
+            userBean = (CtUser)this.loginUser(username, password);
 
             hsn.setAttribute("user", userBean);
-            if (userBean == null) {
+            if (userBean.getUsername()==null) {
+                Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE,"USERBEAN IS NULL", "NULL USERBEAN");
+
                 hsn.setAttribute("message", "<font color=red>Invalid username of password</font>");
                 view = "index.jsp";
             } else {
+                Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE,"USERBEAN IS NOT NULL");
+
                 view = "timer.jsp";
             }
 
@@ -207,6 +211,8 @@ public class CTUserController extends HttpServlet {
         rd.forward(request, response);
         }
          */
+                    Logger.getLogger(CTUserController.class.getName()).log(Level.WARNING, "about to forward you to: "+view, "fwding");
+
         RequestDispatcher rd = request.getRequestDispatcher(view);
         rd.forward(request, response);
     }
