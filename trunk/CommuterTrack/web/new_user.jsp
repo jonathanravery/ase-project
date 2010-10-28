@@ -15,8 +15,7 @@
     </head>
     <body>
         <h1>New Account</h1>
-        <!-- <%@ include file="functionbanner.jsp" %> -->
-        <%= session.getAttribute("message") %>
+        <% session.getAttribute("message"); %>
         <% session.setAttribute("message", ""); %>
 
         <form action="CTUserController" method="post">
