@@ -23,6 +23,7 @@
     </head>
 
     <body>
+        <%@ include file="functionbanner.jsp" %>
         <h1>View All Users</h1>
 
 
@@ -60,12 +61,25 @@
                         <td><%= indexUser.getUsername() %></td>
                         <td><%= indexUser.getActive() %></td>
                         <td><%= indexUser.getRole() %></td>
-                        <td>delete?</td>
-
-
-
-                                
+                        <td>
+                            <form method="POST" action="CTUserController">
+                                <input type="hidden" name="method" value="viewEditPage">
+                                <input type="hidden" name="userId" value="<%= indexUser.getUserId() %>">
+                                <input type="submit" name="submit" value="Edit">
+                            </form>
                         </td>
+                        <td>
+                            <form method="POST" action="CTUserController">
+                                <input type="hidden" name="method" value="delete">
+                                <input type="hidden" name="userId" value="<%= indexUser.getUserId() %>">
+                                <% if (indexUser.getActive() == 1) { %>
+                                    <input type="submit" name="submit" value="Deactivate">
+                                <% } else { %>
+                                    <input type="submit" name="submit" value="Activate">
+                                <% } %>
+                            </form>
+                        </td>
+
                     </TR>
                     <%
                 }

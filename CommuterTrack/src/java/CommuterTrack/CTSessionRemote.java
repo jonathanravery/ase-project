@@ -17,6 +17,8 @@ public interface CTSessionRemote {
 
     CtUser getUser(String username, String password);
 
+    CtUser getUser(int userId);
+
     List getAllUsers();
 
     boolean addUser(String username, String password, int role);

@@ -14,11 +14,21 @@
         <title>User Settings</title>
     </head>
     <body>
+        <% CtUser user = (CtUser)session.getAttribute("editUser");
+           CtUser userBean = (CtUser)session.getAttribute("user");
+        %>
         <h1>User Settings</h1>
         <%@ include file="functionbanner.jsp" %>
          <form action="CTUserController" method="post">
-        Username:<input name="user" type="text"><br>
-        Password:<input name="pass" type="password"><br>
+             <input type="hidden" name="userId" value="<%= user.getUserId() %>">
+             Username:<input name="user" type="text" value="<%= user.getUsername() %>"><br>
+             New Password:<input name="newpass" type="password" value=""><br>
+             <% if (userBean.getRole() == 1) { %>
+                <select name="role">
+                    <option value="1" <% if ( user.getRole() == 1) { %>selected="1" <% } %> >Admin</option>
+                    <option value="2" <% if ( user.getRole() != 1) { %>selected="1" <% } %> >Regular User</option>
+                </select><br>
+             <% } %>
         <input type="hidden" name="method" value="edituser">
         <input type="submit" name="Login" value="Edit User">
         </form>

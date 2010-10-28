@@ -53,9 +53,6 @@ public class CTSession implements CTSessionRemote {
             Logger.getLogger(CTSession.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-
-
-
         Query q = em.createNamedQuery("CtUser.findByUsername");
         q.setParameter("username", username);
         try {
@@ -70,6 +67,24 @@ public class CTSession implements CTSessionRemote {
         } catch (NonUniqueResultException ex) {
             Logger.getLogger(CTUserController.class.getName()).log(Level.WARNING,ex.toString(), "REACHED "+ex.toString());
 
+            return null;
+        } catch (NoResultException ex) {
+            return null;
+        }
+    }
+
+    @Override
+    public CtUser getUser(int userId) {
+        CtUser curUser = null;
+
+        Query q = em.createNamedQuery("CtUser.findByUserId");
+        q.setParameter("userId", userId);
+
+        try {
+            curUser = (CtUser) q.getSingleResult();
+            return curUser;
+        } catch (NonUniqueResultException ex) {
+            Logger.getLogger(CTUserController.class.getName()).log(Level.WARNING,ex.toString(), "Non-unique user Id");
             return null;
         } catch (NoResultException ex) {
             return null;
@@ -127,7 +142,27 @@ public class CTSession implements CTSessionRemote {
 
     @Override
     public boolean editUser(int userId, String username, String pass, int role, int active) {
-        return false;
+        Logger.getLogger(CTSession.class.getName()).log(Level.WARNING, "in session.edituser userID: "+userId+" username: "+username+" pass: "+pass+" active: "+active+" role: "+role);
+
+        CtUser tmpbean = this.getUser(userId);
+        if (tmpbean == null) {
+            return false;
+        }
+
+        tmpbean.setUsername(username);
+        tmpbean.setRole(role);
+        tmpbean.setActive(active);
+
+        //if a new password was passed in, update with the hash of it.
+        //otherwise leave alone.
+        if (pass!=null && pass.length()>0){
+            tmpbean.setPassword(this.retHash(pass));
+        }// else {
+        //     Logger.getLogger(CTSession.class.getName()).log(Level.WARNING, "in session.edituser userID: "+userId+" username: "+username+" pass: "+pass+" active: "+active+" role: "+role);
+       // }
+
+        em.persist(tmpbean);
+        return true;
     }
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
@@ -162,5 +197,22 @@ public class CTSession implements CTSessionRemote {
     }
 
     return true;
+    }
+
+    private String retHash(String p){
+        MessageDigest m;
+        try {
+            m = MessageDigest.getInstance("MD5");
+            m.reset();
+            m.update(p.getBytes());
+            byte[] digest = m.digest();
+            BigInteger bigInt = new BigInteger(1, digest);
+            p = bigInt.toString(16);
+
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(CTSession.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return p;
     }
 }
