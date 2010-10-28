@@ -16,6 +16,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.security.*;
 import java.math.*;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  *
@@ -62,7 +64,7 @@ public class CTSession implements CTSessionRemote {
             if ((curUser.getPassword().compareTo(password) == 0) && curUser.getActive() == 1) {
                 return curUser;
             } else {
-                curUser = new CtUser();
+                return null;
 
             }
         } catch (NonUniqueResultException ex) {
@@ -72,8 +74,25 @@ public class CTSession implements CTSessionRemote {
         } catch (NoResultException ex) {
             return null;
         }
-        Logger.getLogger(CTSession.class.getName()).log(Level.SEVERE, "username:" + username + ",password:" + password + ",user_id:"+curUser.getUserId(), " login failed");
-        return curUser;
+    }
+
+    @Override
+    public List getAllUsers() {
+
+        List CtUserList;
+
+        Query q = em.createNamedQuery("CtUser.findAll");
+        try{
+            CtUserList =  q.getResultList();
+            return CtUserList;
+
+        } catch (Exception e){
+            
+            Logger.getLogger(CTSession.class.getName()).log(Level.WARNING,"caught an exception looking for all users "+e.toString());
+
+        }
+
+        return null;
     }
 
     @Override

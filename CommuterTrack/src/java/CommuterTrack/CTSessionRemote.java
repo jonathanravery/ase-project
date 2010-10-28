@@ -5,6 +5,7 @@
 
 package CommuterTrack;
 
+import java.util.List;
 import javax.ejb.Remote;
 
 /**
@@ -15,6 +16,8 @@ import javax.ejb.Remote;
 public interface CTSessionRemote {
 
     CtUser getUser(String username, String password);
+
+    List getAllUsers();
 
     boolean addUser(String username, String password, int role);
 
