@@ -11,3 +11,7 @@ Updated Design
 --------------
 
 In the document, the logout() method took no parameters. We added the HttpSession to it as a parameter so that we can clear it in that method.
+
+10/28 In the document, we did not include a function for getting all of the users, which we need for the view users page. We added one.
+
+10/28 In the document, we did not include a function that retrieves a user by the user id, which we need for edit/delete. We added one to the controller and the session bean.

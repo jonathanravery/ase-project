@@ -36,8 +36,12 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <h3>timer page</h3>
         <%@ include file="functionbanner.jsp" %>
+
+        <h3>timer page</h3>
+        <% session.setAttribute("message", session.getAttribute("message") + ""); %>
+        <%= ((String)session.getAttribute("message")) %>
+        <% session.setAttribute("message", ""); %><br>
         Hello <%= ((CtUser)session.getAttribute("user")).getUsername() %>!
     </body>
 </html>

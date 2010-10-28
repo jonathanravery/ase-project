@@ -20,19 +20,28 @@
         response.setHeader("Cache-Control","no-store"); //Directs caches not to store the page under any circumstance
         response.setDateHeader("Expires", 0); //Causes the proxy cache to see the page as "stale"
         response.setHeader("Pragma","no-cache"); //HTTP 1.0 backward compatibility
+
         String userName = ((CtUser) session.getAttribute("user")).getUsername();
+
         if (null == userName) {
-             request.setAttribute("Error", "Session has ended.  Please login.");
-             RequestDispatcher rd = request.getRequestDispatcher("login_fail.jsp");
-             rd.forward(request, response);
+
+            System.out.println("UserName IS NULL");
+
+            // request.setAttribute("Error", "Session has ended.  Please login.");
+             //RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
+             //rd.forward(request, response);
         }
 %>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
     </head>
     <body>
-        <h3>timer page</h3>
         <%@ include file="functionbanner.jsp" %>
+
+        <h3>timer page</h3>
+        <% session.setAttribute("message", session.getAttribute("message") + ""); %>
+        <%= ((String)session.getAttribute("message")) %>
+        <% session.setAttribute("message", ""); %><br>
         Hello <%= ((CtUser)session.getAttribute("user")).getUsername() %>!
     </body>
 </html>
