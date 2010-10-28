@@ -26,8 +26,6 @@ import javax.servlet.http.HttpSession;
 @WebServlet(name = "CTUserController", urlPatterns = {"/CTUserController"})
 public class CTUserController extends HttpServlet {
 
-
-
     CtUser loginUser(String user, String pass) {
         final Context context;
         CTSessionRemote session;
@@ -72,7 +70,8 @@ public class CTUserController extends HttpServlet {
 
         return session.addUser(user, pass, role);
     }
-    /** 
+
+    /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
      * @param response servlet response
@@ -89,10 +88,9 @@ public class CTUserController extends HttpServlet {
         String currentMessage;
         int role;
 
-        
+
         method = request.getParameter("method");
-        if (method == null)
-        {
+        if (method == null) {
             method = "none";
         }
 
@@ -105,27 +103,29 @@ public class CTUserController extends HttpServlet {
         hsn.setAttribute("message", "");
         //hsn.setAttribute("user", "none");
 
+        //debug
+        Logger.getLogger(CTUserController.class.getName()).log(Level.WARNING, "method: " + method, "REACHED LOGOUT");
+
         // If the request is the initial load of the page
+
         if (method.equals("none")) {
             view = "index.jsp";
-        }
-        // If the user submitted a login
-        else if(method.equals("login")) {
+        } // If the user submitted a login
+        else if (method.equals("login")) {
             username = request.getParameter("user");
             password = request.getParameter("pass");
 
             userBean = this.loginUser(username, password);
-            
+
             hsn.setAttribute("user", userBean);
             if (userBean == null) {
                 hsn.setAttribute("message", "<font color=red>Invalid username of password</font>");
                 view = "index.jsp";
-            }
-            else {
+            } else {
                 view = "timer.jsp";
             }
 
-        // If the request is a log out request
+            // If the request is a log out request
         } else if (method.equals("logout")) {
             Logger.getLogger(CTUserController.class.getName()).log(Level.WARNING, "REACHED LOGOUT", "REACHED LOGOUT");
 
@@ -133,13 +133,18 @@ public class CTUserController extends HttpServlet {
                 hsn = request.getSession();
                 this.logout(hsn);
                 hsn = request.getSession();
-                currentMessage = (String)hsn.getAttribute("message");
+                currentMessage = (String) hsn.getAttribute("message");
                 currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
                 hsn.setAttribute("message", currentMessage + "You have successfully logged out.");
             } catch (Exception e) {
                 Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, e.toString(), e.toString());
             }
             view = "index.jsp";
+        } else if (method.equals("new")) {
+            Logger.getLogger(CTUserController.class.getName()).log(Level.WARNING, "REACHED NEW", "REACHED new");
+            hsn.setAttribute("message", "<font color=green>Please enter your user values</font>");
+
+            view = "new_user.jsp";
         } else if (method.equals("add")) {
             // Get the values out of the session
             username = request.getParameter("user");
@@ -148,22 +153,27 @@ public class CTUserController extends HttpServlet {
 
             try {
                 role = Integer.parseInt(request.getParameter("role"));
-            // If role isn't a numeric value, that means that the post was manually edited (or we screwed up somewhere bad
+                // If role isn't a numeric value, that means that the post was manually edited (or we screwed up somewhere bad
             } catch (NumberFormatException nfe) {
+                Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, nfe.toString(), nfe.toString());
+
                 hsn.setAttribute("message", "<font color=red>Please select a role from the drop down menu--don't manually edit the post and try to mess with us</font>");
                 view = "new_user.jsp";
-            // If the role was not posted, then create the new user with a non-admin role
+                // If the role was not posted, then create the new user with a non-admin role
             } catch (NullPointerException npe) {
+                Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, npe.toString(), npe.toString());
+
                 // Role 2 means regular user
                 role = 2;
+
             }
 
-            userBean = (CtUser)hsn.getAttribute("user");
+            userBean = (CtUser) hsn.getAttribute("user");
 
             // Make sure if they are setting the role to 1, the user is an admin
             if (role == 1) {
                 if (userBean == null || userBean.getRole() != 1) {
-                    currentMessage = (String)hsn.getAttribute("message");
+                    currentMessage = (String) hsn.getAttribute("message");
                     currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
                     hsn.setAttribute("message", currentMessage + "<font color=red>You are not authorized to do that</font>");
                     view = "new_user.jsp";
@@ -177,10 +187,9 @@ public class CTUserController extends HttpServlet {
                 } else {
                     view = "timer.jsp";
                 }
-            }
-            // If we could not add the user
+            } // If we could not add the user
             else {
-                currentMessage = (String)hsn.getAttribute("message");
+                currentMessage = (String) hsn.getAttribute("message");
                 currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
                 hsn.setAttribute("message", currentMessage + "Unable to add the new user");
                 view = "new_user.jsp";
@@ -188,16 +197,16 @@ public class CTUserController extends HttpServlet {
         } else {
             view = "fail.jsp";
         }
-/*
-            RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
-            rd.forward(request, response);
+        /*
+        RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
+        rd.forward(request, response);
 
         } else if (method.equals("new")) {
-            Logger.getLogger(CTUserController.class.getName()).log(Level.WARNING, "REACHED NEW ACCOUNT", "REACHED LOGOUT");
-            RequestDispatcher rd = request.getRequestDispatcher("new_user.jsp");
-            rd.forward(request, response);
+        Logger.getLogger(CTUserController.class.getName()).log(Level.WARNING, "REACHED NEW ACCOUNT", "REACHED LOGOUT");
+        RequestDispatcher rd = request.getRequestDispatcher("new_user.jsp");
+        rd.forward(request, response);
         }
- */
+         */
         RequestDispatcher rd = request.getRequestDispatcher(view);
         rd.forward(request, response);
     }
