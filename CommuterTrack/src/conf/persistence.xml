@@ -4,7 +4,8 @@
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <jta-data-source>jdbc/sample</jta-data-source>
     <class>CommuterTrack.CtUser</class>
-    <class>CommuterTrack.CtRoutes</class>
+    <class>CommuterTrack.CtRoute</class>
+    <class>CommuterTrack.CtTrip</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
       <property name="eclipselink.logging.level" value="FINEST"/>

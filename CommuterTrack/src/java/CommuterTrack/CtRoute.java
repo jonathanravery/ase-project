@@ -6,7 +6,9 @@
 package CommuterTrack;
 
 import java.io.Serializable;
+import java.util.Collection;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,6 +18,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -25,12 +28,12 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "CT_ROUTES")
 @NamedQueries({
-    @NamedQuery(name = "CtRoutes.findAll", query = "SELECT c FROM CtRoutes c"),
-    @NamedQuery(name = "CtRoutes.findByRouteId", query = "SELECT c FROM CtRoutes c WHERE c.routeId = :routeId"),
-    @NamedQuery(name = "CtRoutes.findByDescription", query = "SELECT c FROM CtRoutes c WHERE c.description = :description"),
-    @NamedQuery(name = "CtRoutes.findByRouteStart", query = "SELECT c FROM CtRoutes c WHERE c.routeStart = :routeStart"),
-    @NamedQuery(name = "CtRoutes.findByRouteEnd", query = "SELECT c FROM CtRoutes c WHERE c.routeEnd = :routeEnd")})
-public class CtRoutes implements Serializable {
+    @NamedQuery(name = "CtRoute.findAll", query = "SELECT c FROM CtRoute c"),
+    @NamedQuery(name = "CtRoute.findByRouteId", query = "SELECT c FROM CtRoute c WHERE c.routeId = :routeId"),
+    @NamedQuery(name = "CtRoute.findByDescription", query = "SELECT c FROM CtRoute c WHERE c.description = :description"),
+    @NamedQuery(name = "CtRoute.findByRouteStart", query = "SELECT c FROM CtRoute c WHERE c.routeStart = :routeStart"),
+    @NamedQuery(name = "CtRoute.findByRouteEnd", query = "SELECT c FROM CtRoute c WHERE c.routeEnd = :routeEnd")})
+public class CtRoute implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,18 +49,20 @@ public class CtRoutes implements Serializable {
     @Basic(optional = false)
     @Column(name = "ROUTE_END")
     private String routeEnd;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "ctRoute")
+    private Collection<CtTrip> ctTripCollection;
     @JoinColumn(name = "USER_ID", referencedColumnName = "USER_ID")
     @ManyToOne(optional = false)
-    private CtUser ctUsers;
+    private CtUser ctUser;
 
-    public CtRoutes() {
+    public CtRoute() {
     }
 
-    public CtRoutes(Integer routeId) {
+    public CtRoute(Integer routeId) {
         this.routeId = routeId;
     }
 
-    public CtRoutes(Integer routeId, String description, String routeStart, String routeEnd) {
+    public CtRoute(Integer routeId, String description, String routeStart, String routeEnd) {
         this.routeId = routeId;
         this.description = description;
         this.routeStart = routeStart;
@@ -96,12 +101,20 @@ public class CtRoutes implements Serializable {
         this.routeEnd = routeEnd;
     }
 
-    public CtUser getCtUsers() {
-        return ctUsers;
+    public Collection<CtTrip> getCtTripCollection() {
+        return ctTripCollection;
     }
 
-    public void setCtUser(CtUser ctUsers) {
-        this.ctUsers = ctUsers;
+    public void setCtTripCollection(Collection<CtTrip> ctTripCollection) {
+        this.ctTripCollection = ctTripCollection;
+    }
+
+    public CtUser getCtUser() {
+        return ctUser;
+    }
+
+    public void setCtUser(CtUser ctUser) {
+        this.ctUser = ctUser;
     }
 
     @Override
@@ -114,10 +127,10 @@ public class CtRoutes implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof CtRoutes)) {
+        if (!(object instanceof CtRoute)) {
             return false;
         }
-        CtRoutes other = (CtRoutes) object;
+        CtRoute other = (CtRoute) object;
         if ((this.routeId == null && other.routeId != null) || (this.routeId != null && !this.routeId.equals(other.routeId))) {
             return false;
         }
@@ -126,7 +139,7 @@ public class CtRoutes implements Serializable {
 
     @Override
     public String toString() {
-        return "CommuterTrack.CtRoutes[routeId=" + routeId + "]";
+        return "CommuterTrack.CtRoute[routeId=" + routeId + "]";
     }
 
 }

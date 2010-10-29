@@ -16,7 +16,7 @@
     <body>
         <h3>Add a Route</h3>
         <%@ include file="functionbanner.jsp" %>
-        <form action="CTRouteServlet" method="post">
+        <form action="CTRouteController" method="post">
         Route Description:<input name="description" type="text"><br>
         Start Location:<input name="start" type="text"><br>
         End Location:<input name="end" type="text"><br>
