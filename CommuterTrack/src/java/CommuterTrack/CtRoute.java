@@ -30,6 +30,8 @@ import javax.persistence.Table;
 @NamedQueries({
     @NamedQuery(name = "CtRoute.findAll", query = "SELECT c FROM CtRoute c"),
     @NamedQuery(name = "CtRoute.findByRouteId", query = "SELECT c FROM CtRoute c WHERE c.routeId = :routeId"),
+//    @NamedQuery(name = "CtRoute.findByUserId", query = "SELECT c FROM CtRoute c WHERE c.userId = :userId"),
+    @NamedQuery(name = "CtRoute.findByUserId", query = "SELECT c FROM CtRoute c WHERE c.ctUser = :ctUser"),
     @NamedQuery(name = "CtRoute.findByDescription", query = "SELECT c FROM CtRoute c WHERE c.description = :description"),
     @NamedQuery(name = "CtRoute.findByRouteStart", query = "SELECT c FROM CtRoute c WHERE c.routeStart = :routeStart"),
     @NamedQuery(name = "CtRoute.findByRouteEnd", query = "SELECT c FROM CtRoute c WHERE c.routeEnd = :routeEnd")})
@@ -41,6 +43,9 @@ public class CtRoute implements Serializable {
     @Column(name = "ROUTE_ID")
     private Integer routeId;
     @Basic(optional = false)
+//    @Column(name = "USER_ID")
+//    private Integer userId;
+//    @Basic(optional = false)
     @Column(name = "DESCRIPTION")
     private String description;
     @Basic(optional = false)

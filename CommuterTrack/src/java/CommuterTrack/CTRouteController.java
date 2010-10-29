@@ -2,12 +2,12 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package CommuterTrack;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.Context;
@@ -20,13 +20,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 /**
  *
- * @author COMS 4156
+ * @author jdm
  */
-@WebServlet(name="CTRouteController", urlPatterns={"/CTRouteController"})
+@WebServlet(name = "CTRouteController", urlPatterns = {"/CTRouteController"})
 public class CTRouteController extends HttpServlet {
-   
+
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
@@ -35,7 +36,19 @@ public class CTRouteController extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
+
+        String method;
+        String currentMessage;
+
+
+        method = request.getParameter("method");
+        if (method == null) {
+            method = "none";
+        }
+
+
+
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         String routeDescription;
@@ -49,64 +62,70 @@ public class CTRouteController extends HttpServlet {
         routeEnd = request.getParameter("end");
 
 
-
         try {
             context = new InitialContext();
-            session = (CTSessionRemote)context.lookup("CommuterTrack.CTSessionRemote");
+            session = (CTSessionRemote) context.lookup("CommuterTrack.CTSessionRemote");
         } catch (NamingException ex) {
             Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, null, ex);
             RequestDispatcher rd = request.getRequestDispatcher("fail.jsp");
             rd.forward(request, response);
             session = null;
         }
-//        RequestDispatcher rd  = request.getRequestDispatcher(routeDescription + routeStart + routeEnd + ".jsp");
-//        rd.forward(request, response);
-
-        /*TODO: forward user to a .jsp, rather than print HTML directly
-         */
-out.println("<HTML><BODY>");
 
 
-        /*TODO: The Servlet checks whether the user is logged in, but doesnt enforce it, for testing purposes
-         * at some point we should restrict functionality to logged in users.
-
-        */
         HttpSession hsn = request.getSession();
-        /*
-        if (hsn.getAttribute("user") != null)
-        {
 
-              out.println("<B><P>user " + hsn.getAttribute("user") + "logged in<B>");
-//            RequestDispatcher rd  = request.getRequestDispatcher("timer.jsp");
-//            rd.forward(request, response);
+            if (method.equals("viewall")) {
+            CtUser userBean = (CtUser) hsn.getAttribute("user");
+            String view;
+            // Make sure if they are setting the role to 1, the user is an admin
+            if (userBean == null) {
+                Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "USERBEAN IS NULL");
+
+                currentMessage = (String) hsn.getAttribute("message");
+                currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
+                hsn.setAttribute("message", currentMessage + "<font color=red>You are not authorized to do that</font>");
+                view = "index.jsp";
+
+            } else {
+                Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "about to set ctUsers attribute to " + this.getAllRoutes(userBean).toString());
+                hsn.setAttribute("ctRoutes", this.getAllRoutes(userBean));
+                view = "addroute.jsp";
+            }
+
+            RequestDispatcher rd = request.getRequestDispatcher(view);
+            rd.forward(request, response);
+
+            // If it's the edit method
         } else {
 
-              out.println("<B><P>user " + hsn.getAttribute("user") + "not logged in<B>");
+            CtUser user = (CtUser) hsn.getAttribute("user");
+            session.addARoute(user, routeDescription, routeStart, routeEnd);
+            RequestDispatcher rd = request.getRequestDispatcher("addroute.jsp");
+            rd.forward(request, response);
 
         }
-         *
-         */
-        CtUser user = (CtUser) hsn.getAttribute("user");
-        session.addARoute(user, routeDescription, routeStart, routeEnd);
+    }
 
-        out.println("<H1>" + routeDescription + routeStart + routeEnd + "</H1>");
+    List getAllRoutes(CtUser ub) {
+        final Context context;
+        CTSessionRemote session;
 
+        // Get the session bean
+        try {
+            context = new InitialContext();
+            session = (CTSessionRemote) context.lookup("CommuterTrack.CTSessionRemote");
+        } catch (NamingException ex) {
+            Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
 
-        out.println("</BODY></HTML>");
-            /* TODO output your page here
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet CTRouteServlet</title>");  
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet CTRouteServlet at " + request.getContextPath () + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-            */
-    } 
-
+        // Attempt to get the bean for the user who matches
+        return session.getAllRoutes(ub);
+    }
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /** 
+
+    /**
      * Handles the HTTP <code>GET</code> method.
      * @param request servlet request
      * @param response servlet response
@@ -115,11 +134,12 @@ out.println("<HTML><BODY>");
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException,
+            IOException {
         processRequest(request, response);
-    } 
+    }
 
-    /** 
+    /**
      * Handles the HTTP <code>POST</code> method.
      * @param request servlet request
      * @param response servlet response
@@ -128,11 +148,12 @@ out.println("<HTML><BODY>");
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException,
+            IOException {
         processRequest(request, response);
     }
 
-    /** 
+    /**
      * Returns a short description of the servlet.
      * @return a String containing servlet description
      */
@@ -140,5 +161,4 @@ out.println("<HTML><BODY>");
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-
 }
