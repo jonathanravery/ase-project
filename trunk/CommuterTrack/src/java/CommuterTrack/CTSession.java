@@ -168,34 +168,27 @@ public class CTSession implements CTSessionRemote {
     // "Insert Code > Add Business Method")
 
     @Override
-    public boolean addARoute(String user, String routeDescription, String routeStart, String routeEnd){
+    public boolean addARoute(CtUser user, String routeDescription, String routeStart, String routeEnd){
 
     /*
      TODO: sanatize input
-     TODO: get username from session
-     TODO: Mariya suggests using user_id instead of the username
      */
    // if (user_id <= 0) user_id = new Integer(2);
 
-    CtRoutes c = new CtRoutes();
+    CtRoute c = new CtRoute();
     c.setDescription(routeDescription);
     c.setRouteStart(routeStart);
     c.setRouteEnd(routeEnd);
-    
-    Query q = em.createNamedQuery("CtUsers.findByUserId");
-    //q.setParameter("userId", user_id);
-    try {
-        CtUser curUser = (CtUser) q.getSingleResult();
-        c.setCtUser(curUser);
-        //I'm not sure what this is
-        //but should it really be in CtUser???  - mechanic
-        //curUser.addToRoutes(c);
-        //em.persist(curUser);
-        em.merge(curUser);
-    } catch (NonUniqueResultException ex) {
-    } catch (NoResultException ex) {
-    }
 
+    c.setCtUser(user);
+    //I'm not sure what this is
+    //but should it really be in CtUser???  - mechanic
+    // Mariya: since we have a constraint between the tables user and route
+    // this will insure we don't violate the constraint
+    // however we may not really need it. It looks like it works without it too
+    //user.addToRoutes(c);
+    //em.merge(user);
+    em.persist(c);
     return true;
     }
 

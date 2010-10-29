@@ -6,7 +6,9 @@
 package CommuterTrack;
 
 import java.io.Serializable;
+import java.util.Collection;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,11 +16,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
  *
- * @author dm2474
+ * @author maria
  */
 @Entity
 @Table(name = "CT_USERS")
@@ -48,6 +51,8 @@ public class CtUser implements Serializable {
     @Basic(optional = false)
     @Column(name = "ACTIVE")
     private int active;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "ctUser")
+    private Collection<CtRoute> ctRouteCollection;
 
     public CtUser() {
     }
@@ -102,6 +107,14 @@ public class CtUser implements Serializable {
 
     public void setActive(int active) {
         this.active = active;
+    }
+
+    public Collection<CtRoute> getCtRouteCollection() {
+        return ctRouteCollection;
+    }
+
+    public void setCtRouteCollection(Collection<CtRoute> ctRouteCollection) {
+        this.ctRouteCollection = ctRouteCollection;
     }
 
     @Override

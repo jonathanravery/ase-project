@@ -25,7 +25,7 @@ public interface CTSessionRemote {
 
     boolean editUser(int userId, String username, String pass, int role, int active);
 
-    boolean addARoute(String user, String routeDescription, String routeStart, String routeEnd);
+    boolean addARoute(CtUser user, String routeDescription, String routeStart, String routeEnd);
 
 
 

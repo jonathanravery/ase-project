@@ -71,6 +71,7 @@ out.println("<HTML><BODY>");
 
         */
         HttpSession hsn = request.getSession();
+        /*
         if (hsn.getAttribute("user") != null)
         {
 
@@ -82,8 +83,10 @@ out.println("<HTML><BODY>");
               out.println("<B><P>user " + hsn.getAttribute("user") + "not logged in<B>");
 
         }
-        String un = (String) hsn.getAttribute("user");
-        session.addARoute(un, routeDescription, routeStart, routeEnd);
+         *
+         */
+        CtUser user = (CtUser) hsn.getAttribute("user");
+        session.addARoute(user, routeDescription, routeStart, routeEnd);
 
         out.println("<H1>" + routeDescription + routeStart + routeEnd + "</H1>");
 
