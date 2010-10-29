@@ -104,12 +104,36 @@ public class CTSession implements CTSessionRemote {
             return CtUserList;
 
         } catch (Exception e){
-            
+
             Logger.getLogger(CTSession.class.getName()).log(Level.WARNING,"caught an exception looking for all users "+e.toString());
 
         }
 
         return null;
+    }
+
+    @Override
+    public List getAllRoutes(CtUser ub) {
+
+        List CtRouteList;
+        CtRoute ctr;
+        //TODO: just get the routes owned by uid
+
+        Query q = em.createNamedQuery("CtRoute.findByUserId");
+//        q.setParameter("userId", ub.getUserId());
+        q.setParameter("ctUser", ub);
+        try {
+            CtRouteList = q.getResultList();
+            // if the password passed in matches the one in the db
+            return CtRouteList;
+        } catch (NonUniqueResultException ex) {
+            Logger.getLogger(CTUserController.class.getName()).log(Level.WARNING,ex.toString(), "REACHED "+ex.toString());
+
+            return null;
+        } catch (NoResultException ex) {
+            return null;
+        }
+
     }
 
     @Override

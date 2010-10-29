@@ -22,6 +22,8 @@ public interface CTSessionRemote {
 
     List getAllUsers();
 
+    List getAllRoutes(CtUser ub);
+
     boolean addUser(String username, String password, int role);
 
     boolean editUser(int userId, String username, String pass, int role, int active);
