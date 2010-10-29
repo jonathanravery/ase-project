@@ -5,6 +5,7 @@
 
 package CommuterTrack;
 
+import java.util.Date;
 import java.util.List;
 import javax.ejb.Remote;
 
@@ -27,6 +28,6 @@ public interface CTSessionRemote {
 
     boolean addARoute(CtUser user, String routeDescription, String routeStart, String routeEnd);
 
-
+    boolean addTrip(Integer routeId, Date startDate, Date endDate, Integer status);
 
 }

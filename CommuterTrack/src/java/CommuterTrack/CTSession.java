@@ -5,6 +5,7 @@
 
 package CommuterTrack;
 
+//import java.sql.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
@@ -18,6 +19,7 @@ import java.security.*;
 import java.math.*;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Date;
 
 /**
  *
@@ -170,26 +172,26 @@ public class CTSession implements CTSessionRemote {
     @Override
     public boolean addARoute(CtUser user, String routeDescription, String routeStart, String routeEnd){
 
-    /*
-     TODO: sanatize input
-     */
-   // if (user_id <= 0) user_id = new Integer(2);
+        /*
+         TODO: sanatize input
+         */
+       // if (user_id <= 0) user_id = new Integer(2);
 
-    CtRoute c = new CtRoute();
-    c.setDescription(routeDescription);
-    c.setRouteStart(routeStart);
-    c.setRouteEnd(routeEnd);
+        CtRoute c = new CtRoute();
+        c.setDescription(routeDescription);
+        c.setRouteStart(routeStart);
+        c.setRouteEnd(routeEnd);
 
-    c.setCtUser(user);
-    //I'm not sure what this is
-    //but should it really be in CtUser???  - mechanic
-    // Mariya: since we have a constraint between the tables user and route
-    // this will insure we don't violate the constraint
-    // however we may not really need it. It looks like it works without it too
-    //user.addToRoutes(c);
-    //em.merge(user);
-    em.persist(c);
-    return true;
+        c.setCtUser(user);
+        //I'm not sure what this is
+        //but should it really be in CtUser???  - mechanic
+        // Mariya: since we have a constraint between the tables user and route
+        // this will insure we don't violate the constraint
+        // however we may not really need it. It looks like it works without it too
+        //user.addToRoutes(c);
+        //em.merge(user);
+        em.persist(c);
+        return true;
     }
 
     private String retHash(String p){
@@ -207,5 +209,27 @@ public class CTSession implements CTSessionRemote {
         }
 
         return p;
+    }
+
+    @Override
+    public boolean addTrip(Integer routeId, Date startDate, Date endDate, Integer status) {
+        CtTrip trip = new CtTrip();
+        trip.setStartDate(startDate);
+        trip.setEndDate(endDate);
+        trip.setStartTime(startDate);
+        trip.setEndTime(endDate);
+        trip.setStatus(0);
+
+        Query q = em.createNamedQuery("CtRoute.findByRouteId");
+        q.setParameter("routeId", routeId);
+        try {
+            CtRoute route = (CtRoute) q.getSingleResult();
+            trip.setCtRoute(route);
+            em.persist(trip);
+        } catch (NonUniqueResultException ex) {
+        } catch (NoResultException ex) {
+        }
+
+        return false;
     }
 }
