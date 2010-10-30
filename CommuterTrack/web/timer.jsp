@@ -4,6 +4,11 @@
     Author     : dm2474
 --%>
 
+<%@page import="java.util.logging.Logger"%>
+<%@page import="java.util.logging.Level"%>
+<%@page import="javax.naming.InitialContext"%>
+<%@page import="javax.naming.NamingException"%>
+<%@page import="javax.naming.Context"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"
         import="CommuterTrack.*" %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
@@ -22,6 +27,8 @@
         response.setHeader("Pragma","no-cache"); //HTTP 1.0 backward compatibility
 
         String userName = ((CtUser) session.getAttribute("user")).getUsername();
+        boolean userintrip=false;
+
 
         if (null == userName) {
 
@@ -30,6 +37,23 @@
             // request.setAttribute("Error", "Session has ended.  Please login.");
              //RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
              //rd.forward(request, response);
+        }
+
+
+        final Context context;
+        CTSessionRemote sessionbean;
+        CtUser userBean;
+
+        // Get the session bean
+        try {
+            context = new InitialContext();
+            sessionbean = (CTSessionRemote) context.lookup("CommuterTrack.CTSessionRemote");
+
+            userintrip = sessionbean.userInTrip(((CtUser) session.getAttribute("user")).getUserId());
+
+        } catch (Exception ex) {
+            Logger.getLogger(CTTripController.class.getName()).log(Level.SEVERE, null, ex);
+
         }
 %>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -43,5 +67,7 @@
         <%= ((String)session.getAttribute("message")) %>
         <% session.setAttribute("message", ""); %><br>
         Hello <%= ((CtUser)session.getAttribute("user")).getUsername() %>!
+        <p>
+            <% if (userintrip) { out.println("IN TRIP"); } else { out.println(" NOT IN TRIP "); } %>
     </body>
 </html>

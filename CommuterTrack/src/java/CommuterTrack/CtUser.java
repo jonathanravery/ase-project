@@ -32,6 +32,7 @@ import javax.persistence.Table;
     @NamedQuery(name = "CtUser.findByPassword", query = "SELECT c FROM CtUser c WHERE c.password = :password"),
     @NamedQuery(name = "CtUser.findByRole", query = "SELECT c FROM CtUser c WHERE c.role = :role"),
     @NamedQuery(name = "CtUser.findByActive", query = "SELECT c FROM CtUser c WHERE c.active = :active")})
+
 public class CtUser implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id

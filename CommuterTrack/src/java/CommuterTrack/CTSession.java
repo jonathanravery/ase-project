@@ -238,8 +238,6 @@ public class CTSession implements CTSessionRemote {
     @Override
     public boolean addTrip(Integer routeId, Date startDate, Date endDate, Integer status) {
         CtTrip trip = new CtTrip();
-        trip.setStartDate(startDate);
-        trip.setEndDate(endDate);
         trip.setStartTime(startDate);
         trip.setEndTime(endDate);
         trip.setStatus(0);
@@ -253,7 +251,116 @@ public class CTSession implements CTSessionRemote {
         } catch (NonUniqueResultException ex) {
         } catch (NoResultException ex) {
         }
-
+        //TODO: why does this always return false?
         return false;
     }
+
+    @Override
+    public boolean editTrip(Integer tripId,CtRoute routeBean, Date startDate, Date endDate, Integer status) {
+
+        // we are assuming that the right person is editing the right trip... 
+        // confirm that in the servlet level
+        Query q = em.createNamedQuery("CtTrip.findByTripId");
+        q.setParameter("tripId", tripId);
+
+        // get the trip into an entity bean
+        // update and persist
+        try {
+            CtTrip triptoedit = (CtTrip) q.getSingleResult();
+            triptoedit.setCtRoute(routeBean);
+            triptoedit.setStartTime(startDate);
+            triptoedit.setEndTime(endDate);
+            triptoedit.setStatus(status);
+
+            em.persist(triptoedit);
+            return true;
+
+        } catch (Exception e){
+            Logger.getLogger(CTSession.class.getName()).log(Level.SEVERE, "caught exception trying to delete trip "+e.toString());
+            return false;
+        }
+
+    }
+
+    @Override
+    public CtRoute getRoute(Integer routeId){
+        
+        Query q = em.createNamedQuery("CtRoute.findByRouteId");
+        q.setParameter("routeId", routeId);
+
+        
+        try {
+            CtRoute route = (CtRoute) q.getSingleResult();
+            return route;
+        } catch (Exception e) {
+            Logger.getLogger(CTSession.class.getName()).log(Level.SEVERE, "caught exception trying to delete trip " + e.toString());
+            return null;
+        }
+
+
+    }
+
+    @Override
+    public boolean delTrip(Integer tripId) {
+        Query q = em.createNamedQuery("CtTrip.findByTripId");
+        q.setParameter("tripId", tripId);
+
+        // get the trip into an entity bean
+        // and delete
+        try {
+            CtTrip triptodel = (CtTrip) q.getSingleResult();
+            em.remove(triptodel);
+        } catch (Exception e){
+            Logger.getLogger(CTSession.class.getName()).log(Level.SEVERE, "caught exception trying to delete trip "+e.toString());
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public List<CtTrip> getUserTrips(Integer userId){
+
+        List CtTripList;
+
+        Query q = em.createNamedQuery("CtTrip.findByUserId");
+        q.setParameter("userId", userId);
+        try {
+            CtTripList = q.getResultList();
+            return CtTripList;
+        } catch (Exception ex) {
+            Logger.getLogger(CTUserController.class.getName()).log(Level.WARNING,ex.toString(), "caught exception trying to get all user trips "+ex.toString());
+
+            return null;
+        }
+    }
+
+    @Override
+    public List<CtTrip> getAllTrips(){
+        List CtTripList;
+
+        Query q = em.createNamedQuery("CtTrip.findAll");
+        try {
+            CtTripList = q.getResultList();
+            return CtTripList;
+        } catch (Exception ex) {
+            Logger.getLogger(CTUserController.class.getName()).log(Level.WARNING, ex.toString(), "caught exception trying to get all trips " + ex.toString());
+            return null;
+        }
+    }
+    @Override
+    public boolean userInTrip(Integer userId) {
+        Query q = em.createNamedQuery("CtTrip.findByUserAndStatus");
+        q.setParameter("userId", userId);
+        q.setParameter("status", 0);
+        try {
+            List CtTripList = q.getResultList();
+            Logger.getLogger(CTUserController.class.getName()).log(Level.WARNING, "Size of result (in userInTrip) is " + CtTripList.size());
+            Logger.getLogger(CTUserController.class.getName()).log(Level.WARNING, "First result is " + CtTripList.get(0).toString());
+            return CtTripList.size() > 0;
+        } catch (Exception ex) {
+            Logger.getLogger(CTUserController.class.getName()).log(Level.WARNING, ex.toString(), "caught exception trying to get unfinished trips " + ex.toString());
+            return false;
+        }
+    }
+
 }
