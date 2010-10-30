@@ -30,7 +30,6 @@ public class CTUserController extends HttpServlet {
     CtUser loginUser(String user, String pass) {
         final Context context;
         CTSessionRemote session;
-        CtUser userBean;
 
         // Get the session bean
         try {
@@ -132,7 +131,26 @@ public class CTUserController extends HttpServlet {
     }
 
     boolean delUser(int userId) {
-        return false;
+        final Context context;
+        CTSessionRemote session;
+        CtUser userBean = this.getUser(userId);
+
+        // If the user we're trying to delete isn't there, fail.
+        if (userBean == null) {
+            return false;
+        }
+
+        // Get the session bean
+        try {
+            context = new InitialContext();
+            session = (CTSessionRemote) context.lookup("CommuterTrack.CTSessionRemote");
+        } catch (NamingException ex) {
+            Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+
+        // Attempt to edit the bean with all the original values except the active value
+        return session.editUser(userId,userBean.getUsername(),"",userBean.getRole(),0);
     }
 
     /**
@@ -183,7 +201,7 @@ public class CTUserController extends HttpServlet {
             userBean = (CtUser) this.loginUser(username, password);
 
             hsn.setAttribute("user", userBean);
-            if (userBean == null) {
+            if (userBean == null || userBean.getActive() == 0) {
                 Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "USERBEAN IS NULL", "NULL USERBEAN");
 
                 hsn.setAttribute("message", "<font color=red>Invalid username of password</font>");
@@ -264,6 +282,7 @@ public class CTUserController extends HttpServlet {
             // this method is for admins only
             // it is to retrieve all users
             //  get the current user and make sure it's role is 1
+            /*
             userBean = (CtUser) hsn.getAttribute("user");
 
             // Make sure if they are setting the role to 1, the user is an admin
@@ -279,8 +298,10 @@ public class CTUserController extends HttpServlet {
                 Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "about to set ctUsers attribute to " + this.getAllUsers().toString());
 
                 hsn.setAttribute("ctUsers", this.getAllUsers());
+             *
+             */
                 view = "view_users.jsp";
-            }
+            //}
             // If it's the edit method
         } else if (method.equals("viewEditPage")) {
             // Make sure the user is admin or is editing himself
@@ -375,7 +396,43 @@ public class CTUserController extends HttpServlet {
             }
 
         } else if (method.equals("delete")) {
-            // If it's the delete method    
+            userBean = (CtUser)hsn.getAttribute("user");
+            // Make sure the user is an admin
+            if (userBean.getRole() != 1) {
+                Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "Non-admin user trying to deactivate user.");
+                currentMessage = (String) hsn.getAttribute("message");
+                currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
+                hsn.setAttribute("message", currentMessage + "<font color=red>You are not authorized to do that</font");
+                view = "timer.jsp";
+            } else {
+                try {
+                    if (request.getParameter("submit").equals("Deactivate")) {
+                        if (this.delUser(Integer.parseInt(request.getParameter("userId")))) {
+                            currentMessage = (String) hsn.getAttribute("message");
+                            currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
+                            hsn.setAttribute("message", currentMessage + "<font color=green>User deactivated</font");
+                        } else {
+                            throw new Exception();
+                        }
+                    } else {
+                        CtUser actUser = this.getUser(Integer.parseInt(request.getParameter("userId")));
+                        // Relies on the fact that the 'editUser method in this class assumes that we want the user to be active
+                        if (this.editUser(actUser.getUserId(), actUser.getUsername(), "", actUser.getRole())) {
+                            currentMessage = (String) hsn.getAttribute("message");
+                            currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
+                            hsn.setAttribute("message", currentMessage + "<font color=green>User activated</font");
+                        } else {
+                            throw new Exception();
+                        }
+                    }
+                } catch (Exception e) {
+                    Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "Unable to change user active status because of exception or something. (Real helpful, I know)");
+                    currentMessage = (String) hsn.getAttribute("message");
+                    currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
+                    hsn.setAttribute("message", currentMessage + "<font color=red>Unable to change the user's status</font");
+                }
+                view = "view_users.jsp";
+            }
         } else {
             view = "fail.jsp";
         }
