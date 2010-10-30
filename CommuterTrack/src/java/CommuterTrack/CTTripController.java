@@ -29,23 +29,87 @@ import javax.servlet.http.HttpSession;
 public class CTTripController extends HttpServlet {
 
     boolean addTrip(Integer routeId, Date startTime, Date endTime, Integer status) {
-        return false;
+        final Context context;
+        CTSessionRemote session;
+
+        // Get the session bean
+        try {
+            context = new InitialContext();
+            session = (CTSessionRemote) context.lookup("CommuterTrack.CTSessionRemote");
+        } catch (NamingException ex) {
+            Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+
+        return session.addTrip(routeId, startTime, endTime, status);
     }
 
     boolean editTrip(Integer tripId, Integer routeId, Date startTime, Date endTime, Integer status) {
-        return false;
+        final Context context;
+        CTSessionRemote session;
+
+        // Get the session bean
+        try {
+            context = new InitialContext();
+            session = (CTSessionRemote) context.lookup("CommuterTrack.CTSessionRemote");
+        } catch (NamingException ex) {
+            Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+
+        CtRoute route = session.getRoute(routeId);
+        if (route == null) {
+            return false;
+        }
+        return session.editTrip(tripId, route, startTime, endTime, status);
     }
 
     boolean delTrip(Integer tripId) {
-        return false;
+        final Context context;
+        CTSessionRemote session;
+
+        // Get the session bean
+        try {
+            context = new InitialContext();
+            session = (CTSessionRemote) context.lookup("CommuterTrack.CTSessionRemote");
+        } catch (NamingException ex) {
+            Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+
+        return session.delTrip(tripId);
     }
 
     List<CtTrip> getUserTrips(Integer userId) {
-        return null;
+        final Context context;
+        CTSessionRemote session;
+
+        // Get the session bean
+        try {
+            context = new InitialContext();
+            session = (CTSessionRemote) context.lookup("CommuterTrack.CTSessionRemote");
+        } catch (NamingException ex) {
+            Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+
+        return session.getUserTrips(userId);
     }
 
     List<CtTrip> getAllTrips() {
-        return null;
+        final Context context;
+        CTSessionRemote session;
+
+        // Get the session bean
+        try {
+            context = new InitialContext();
+            session = (CTSessionRemote) context.lookup("CommuterTrack.CTSessionRemote");
+        } catch (NamingException ex) {
+            Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+
+        return session.getAllTrips();
     }
     
     /**
@@ -59,6 +123,7 @@ public class CTTripController extends HttpServlet {
             throws ServletException, IOException {
         String method;
         String view;
+        String currentMessage;
         CtUser curUser;
         HttpSession hsn = request.getSession();
 
@@ -68,19 +133,44 @@ public class CTTripController extends HttpServlet {
         method = request.getParameter("method");
 
         if (method == null || method.equals("view")) {
+            Logger.getLogger(CTTripController.class.getName()).log(Level.WARNING, "No method was specified or method is 'view' ");
+            view = "timer.jsp";
+        } else if (method.equals("start")) {
+            try {
+                Date starttime = new Date();
+                Integer routeId = Integer.parseInt(request.getParameter("routeId"));
+                // Make sure the route actually belongs to the user
+                final Context context;
+                CTSessionRemote session;
+                context = new InitialContext();
+                session = (CTSessionRemote) context.lookup("CommuterTrack.CTSessionRemote");
+                CtRoute route = session.getRoute(routeId);
+
+                if (route.getCtUser().getUserId().intValue() != ((CtUser) hsn.getAttribute("user")).getUserId().intValue()) {
+                    Logger.getLogger(CTTripController.class.getName()).log(Level.WARNING, "Trying to add trip to another user ");
+                    currentMessage = (String) hsn.getAttribute("message");
+                    currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
+                    hsn.setAttribute("message", currentMessage + "<font color=red>You are not allowed to do that. Stop playing with the POST.</font>");
+                } else if(this.addTrip(routeId, starttime, null, 0)) {
+                    currentMessage = (String) hsn.getAttribute("message");
+                    currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
+                    hsn.setAttribute("message", currentMessage + "<font color=green>Your trip has been started.</font>");
+                } else {
+                    currentMessage = (String) hsn.getAttribute("message");
+                    currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
+                    hsn.setAttribute("message", currentMessage + "<font color=red>Unable to start your trip.</font>");
+                }
+            } catch (Exception e) {
+                Logger.getLogger(CTTripController.class.getName()).log(Level.WARNING, "Unable to add trip ");
+                currentMessage = (String) hsn.getAttribute("message");
+                currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
+                hsn.setAttribute("message", currentMessage + "<font color=red>Unable to start your trip. (Exception: " + e.toString() + "</font>");
+            }
+
             view = "timer.jsp";
         }
-        /*
-        RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
-        rd.forward(request, response);
 
-        } else if (method.equals("new")) {
-        Logger.getLogger(CTUserController.class.getName()).log(Level.WARNING, "REACHED NEW ACCOUNT", "REACHED LOGOUT");
-        RequestDispatcher rd = request.getRequestDispatcher("new_user.jsp");
-        rd.forward(request, response);
-        }
-         */
-        Logger.getLogger(CTTripController.class.getName()).log(Level.WARNING, "about to forward you to: " + view);
+        Logger.getLogger(CTTripController.class.getName()).log(Level.WARNING, "CTTripController is about to forward you to: " + view);
 
         RequestDispatcher rd = request.getRequestDispatcher(view);
         rd.forward(request, response);
