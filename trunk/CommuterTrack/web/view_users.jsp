@@ -4,6 +4,10 @@
     Author     : dm2474
 --%>
 
+<%@page import="java.util.ArrayList"%>
+<%@page import="javax.naming.InitialContext"%>
+<%@page import="CommuterTrack.CTSessionRemote"%>
+<%@page import="javax.naming.Context"%>
 <%@page import="java.util.List"%>
 <%@page import="java.util.Iterator"%>
 <%@page import="java.util.Set"%>
@@ -42,8 +46,22 @@
         <tr><td>USER ID</td><td>USERNAME</td><td>ACTIVE</td><td>Role</td></tr>
 
         <%
+           final Context context;
+            CTSessionRemote sessionbean;
+            CtUser userBean;
+            List myctuserhash;
 
-               List myctuserhash = (List)session.getAttribute("ctUsers");
+            // Get the session bean
+            try {
+                context = new InitialContext();
+                sessionbean = (CTSessionRemote) context.lookup("CommuterTrack.CTSessionRemote");
+                myctuserhash = sessionbean.getAllUsers();
+            } catch (Exception e) {
+                myctuserhash = new ArrayList();
+                %>
+                <font color="red">ERROR: UNABLE TO LOAD USERS</font>
+                <% }
+
 
                CtUser indexUser=new CtUser();
                 Iterator i = myctuserhash.iterator();

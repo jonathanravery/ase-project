@@ -55,6 +55,8 @@
             Logger.getLogger(CTTripController.class.getName()).log(Level.SEVERE, null, ex);
 
         }
+
+        String submitText = "";
 %>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
@@ -68,6 +70,13 @@
         <% session.setAttribute("message", ""); %><br>
         Hello <%= ((CtUser)session.getAttribute("user")).getUsername() %>!
         <p>
-            <% if (userintrip) { out.println("IN TRIP"); } else { out.println(" NOT IN TRIP "); } %>
+        <form method="POST" action="CTTripController">
+            <% if (userintrip) { submitText = "Stop"; %>
+                <input type="hidden" name="method" value="stop">
+            <% } else { submitText = "Start"; %>
+                <input type="hidden" name="medoth" value="start">
+            <% } %>
+            <input type="submit" name="submit" value="<%= submitText %>">
+        </form>
     </body>
 </html>
