@@ -23,18 +23,18 @@ import javax.persistence.TemporalType;
 
 /**
  *
- * @author maria
+ * @author dm2474
  */
 @Entity
 @Table(name = "CT_TRIPS")
 @NamedQueries({
     @NamedQuery(name = "CtTrip.findAll", query = "SELECT c FROM CtTrip c"),
     @NamedQuery(name = "CtTrip.findByTripId", query = "SELECT c FROM CtTrip c WHERE c.tripId = :tripId"),
-    @NamedQuery(name = "CtTrip.findByStartDate", query = "SELECT c FROM CtTrip c WHERE c.startDate = :startDate"),
     @NamedQuery(name = "CtTrip.findByStartTime", query = "SELECT c FROM CtTrip c WHERE c.startTime = :startTime"),
-    @NamedQuery(name = "CtTrip.findByEndDate", query = "SELECT c FROM CtTrip c WHERE c.endDate = :endDate"),
     @NamedQuery(name = "CtTrip.findByEndTime", query = "SELECT c FROM CtTrip c WHERE c.endTime = :endTime"),
-    @NamedQuery(name = "CtTrip.findByStatus", query = "SELECT c FROM CtTrip c WHERE c.status = :status")})
+    @NamedQuery(name = "CtTrip.findByStatus", query = "SELECT c FROM CtTrip c WHERE c.status = :status"),
+    @NamedQuery(name = "CtTrip.findByUserId", query = "SELECT c FROM CtTrip c JOIN c.ctRoute r JOIN r.ctUser u WHERE u.userId = :userId"),
+    @NamedQuery(name = "CtTrip.findByUserAndStatus", query = "SELECT c FROM CtTrip c JOIN c.ctRoute r JOIN r.ctUser u WHERE u.userId = :userId AND c.status = :status")})
 public class CtTrip implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -42,17 +42,11 @@ public class CtTrip implements Serializable {
     @Basic(optional = false)
     @Column(name = "TRIP_ID")
     private Integer tripId;
-    @Column(name = "START_DATE")
-    @Temporal(TemporalType.DATE)
-    private Date startDate;
     @Column(name = "START_TIME")
-    @Temporal(TemporalType.TIME)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date startTime;
-    @Column(name = "END_DATE")
-    @Temporal(TemporalType.DATE)
-    private Date endDate;
     @Column(name = "END_TIME")
-    @Temporal(TemporalType.TIME)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date endTime;
     @Column(name = "STATUS")
     private Integer status;
@@ -75,28 +69,12 @@ public class CtTrip implements Serializable {
         this.tripId = tripId;
     }
 
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-
     public Date getStartTime() {
         return startTime;
     }
 
     public void setStartTime(Date startTime) {
         this.startTime = startTime;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
     }
 
     public Date getEndTime() {

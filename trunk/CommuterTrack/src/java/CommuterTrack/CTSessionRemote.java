@@ -20,9 +20,9 @@ public interface CTSessionRemote {
 
     CtUser getUser(int userId);
 
-    List getAllUsers();
+    List<CtUser> getAllUsers();
 
-    List getAllRoutes(CtUser ub);
+    List<CtRoute> getAllRoutes(CtUser ub);
 
     boolean addUser(String username, String password, int role);
 
@@ -32,4 +32,15 @@ public interface CTSessionRemote {
 
     boolean addTrip(Integer routeId, Date startDate, Date endDate, Integer status);
 
+    boolean editTrip(Integer tripId, CtRoute routebean, Date startDate, Date endDate, Integer status);
+
+    boolean delTrip(Integer tripId);
+
+    CtRoute getRoute(Integer routeId);
+
+    List<CtTrip> getUserTrips(Integer userId);
+
+    List<CtTrip> getAllTrips();
+
+    boolean userInTrip(Integer userId);
 }
