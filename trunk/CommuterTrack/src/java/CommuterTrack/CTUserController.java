@@ -279,29 +279,7 @@ public class CTUserController extends HttpServlet {
                 }
             }
         } else if (method.equals("viewall")) {
-            // this method is for admins only
-            // it is to retrieve all users
-            //  get the current user and make sure it's role is 1
-            /*
-            userBean = (CtUser) hsn.getAttribute("user");
-
-            // Make sure if they are setting the role to 1, the user is an admin
-            if (userBean == null || userBean.getRole() != 1) {
-                Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "USERBEAN IS NULL OR RULE IS NOT 1");
-
-                currentMessage = (String) hsn.getAttribute("message");
-                currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
-                hsn.setAttribute("message", currentMessage + "<font color=red>You are not authorized to do that</font>");
-                view = "timer.jsp";
-
-            } else {
-                Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "about to set ctUsers attribute to " + this.getAllUsers().toString());
-
-                hsn.setAttribute("ctUsers", this.getAllUsers());
-             *
-             */
-                view = "view_users.jsp";
-            //}
+            view = "view_users.jsp";
             // If it's the edit method
         } else if (method.equals("viewEditPage")) {
             // Make sure the user is admin or is editing himself

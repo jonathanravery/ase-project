@@ -4,6 +4,7 @@
     Author     : dm2474
 --%>
 
+<%@page import="java.util.List"%>
 <%@page import="java.util.logging.Logger"%>
 <%@page import="java.util.logging.Level"%>
 <%@page import="javax.naming.InitialContext"%>
@@ -26,8 +27,10 @@
         response.setDateHeader("Expires", 0); //Causes the proxy cache to see the page as "stale"
         response.setHeader("Pragma","no-cache"); //HTTP 1.0 backward compatibility
 
-        String userName = ((CtUser) session.getAttribute("user")).getUsername();
+        CtUser userBean = (CtUser) session.getAttribute("user");
+        String userName = userBean.getUsername();
         boolean userintrip=false;
+
 
 
         if (null == userName) {
@@ -40,16 +43,18 @@
         }
 
 
+
+
         final Context context;
         CTSessionRemote sessionbean;
-        CtUser userBean;
 
+        List<CtRoute> routeList=null;
         // Get the session bean
         try {
             context = new InitialContext();
             sessionbean = (CTSessionRemote) context.lookup("CommuterTrack.CTSessionRemote");
-
-            userintrip = sessionbean.userInTrip(((CtUser) session.getAttribute("user")).getUserId());
+            userintrip = sessionbean.userInTrip(userBean.getUserId());
+            routeList = sessionbean.getAllRoutes(userBean);
 
         } catch (Exception ex) {
             Logger.getLogger(CTTripController.class.getName()).log(Level.SEVERE, null, ex);
@@ -70,13 +75,31 @@
         <% session.setAttribute("message", ""); %><br>
         Hello <%= ((CtUser)session.getAttribute("user")).getUsername() %>!
         <p>
+
+            <%
+            // if the user doesn't have any routes
+            // simply display an error  "you must all add routes"
+            // otherwise give start form
+
+            if (routeList==null ||routeList.isEmpty()){
+                    out.println("Before USING CommuterTrack, you must add routes!");
+
+                } else {
+        %>
         <form method="POST" action="CTTripController">
+            <select name="routeId">
+                <% for (int i = 0; i < routeList.size(); i++) { %>
+                <option value="<%= routeList.get(i).getRouteId() %>"><%= routeList.get(i).getDescription() %></option>
+                <% } %>
+            </select>
+
             <% if (userintrip) { submitText = "Stop"; %>
                 <input type="hidden" name="method" value="stop">
             <% } else { submitText = "Start"; %>
-                <input type="hidden" name="medoth" value="start">
+                <input type="hidden" name="method" value="start">
             <% } %>
             <input type="submit" name="submit" value="<%= submitText %>">
         </form>
+        <% } // else %>
     </body>
 </html>

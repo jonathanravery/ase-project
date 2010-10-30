@@ -248,6 +248,7 @@ public class CTSession implements CTSessionRemote {
             CtRoute route = (CtRoute) q.getSingleResult();
             trip.setCtRoute(route);
             em.persist(trip);
+            return true;
         } catch (NonUniqueResultException ex) {
         } catch (NoResultException ex) {
         }
@@ -355,7 +356,6 @@ public class CTSession implements CTSessionRemote {
         try {
             List CtTripList = q.getResultList();
             Logger.getLogger(CTUserController.class.getName()).log(Level.WARNING, "Size of result (in userInTrip) is " + CtTripList.size());
-            Logger.getLogger(CTUserController.class.getName()).log(Level.WARNING, "First result is " + CtTripList.get(0).toString());
             return CtTripList.size() > 0;
         } catch (Exception ex) {
             Logger.getLogger(CTUserController.class.getName()).log(Level.WARNING, ex.toString(), "caught exception trying to get unfinished trips " + ex.toString());
