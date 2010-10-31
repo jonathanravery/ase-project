@@ -1,7 +1,7 @@
 <%-- 
     Document   : index
     Created on : Oct 20, 2010, 7:00:55 PM
-    Author     : dm2474
+    Author     : TravelTimers
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -10,10 +10,12 @@
 
 <html>
     <head>
+        <link href="css/commuter.css" rel="stylesheet" type="text/css" media="screen" />
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Fail</title>
     </head>
     <body>
+        <div id="header"></div>
         <h3>Fail.</h3>
     </body>
 </html>

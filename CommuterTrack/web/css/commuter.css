@@ -26,6 +26,7 @@ body {
 }
 
 h1, h2, h3 {
+        clear: both;
 	margin: 0;
 	padding: 0;
 	font-weight: normal;
@@ -95,7 +96,6 @@ a:hover {
 	float: left;
 	text-transform:uppercase;
 }
-}
 
 #menu a {
 
@@ -145,10 +145,12 @@ a:hover {
 table
 {
     border-collapse:collapse;
+    clear: both;
 }
 
-table,th, td
+table, th, td
 {
+    clear: both;
     border: 1px solid black;
     text-align: center;
 }
@@ -157,4 +159,33 @@ th
 {
     background-color: black;
     color: white;
+}
+
+fieldset
+{
+    clear: both;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid #781351;
+    width: 25em;
+}
+
+label
+{
+    clear: both;
+    float: left;
+    width: 4em;
+    text-align: right;
+    margin-right: 0.5em;
+    padding-top:0.4em;
+}
+
+.submit input
+{
+    clear: both;
+    margin-left: 4.5em;
+    color: #000;
+    background: #ffa20f;
+    border: 2px outset #d7b9c9
 }

@@ -10,10 +10,12 @@
 
 <html>
     <head>
+        <link href="css/commuter.css" rel="stylesheet" type="text/css" media="screen" />
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>New Account</title>
     </head>
     <body>
+        <div id="header"></div>
         <h1>New Account</h1>
         <!-- <%@ include file="functionbanner.jsp" %> -->
         <%= session.getAttribute("message") %>

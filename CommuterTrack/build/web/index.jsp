@@ -20,12 +20,15 @@
         <% session.setAttribute("message", session.getAttribute("message") + ""); %>
         <%= ((String)session.getAttribute("message")) %>
         <% session.setAttribute("message", ""); %>
+        <fieldset align="center">
+        <legend>Login</legend>
         <form action="CTUserController" method="post">
-        Username:<input name="user" type="text"><br>
-        Password:<input name="pass" type="password"><br>
+            <label for="user">Username:</label><input id="user" name="user" type="text"><br>
+            <label for="pass">Password:</label><input id="pass" name="pass" type="password"><br>
         <input type="hidden" name="method" value="login">
         <input type="submit" name="Login" value="Login">
         </form>
+        </fieldset>
         <p>
         <form action="CTUserController" method="post">
         <input type="hidden" name="method" value="new">
