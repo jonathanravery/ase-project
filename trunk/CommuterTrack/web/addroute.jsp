@@ -29,10 +29,7 @@
         <%@ include file="functionbanner.jsp" %>
         <h1>View All Routes</h1>
 
-
-
-    <p>
-    <TABLE id="routes-table">
+    <TABLE align="center">
         <tr><th>Route Description</th><th>Start</th><th>End</th><th>Owner</th></tr>
 
         <%
@@ -65,7 +62,6 @@
 
     %></TABLE>
 
-    <p><p>
         <h3>Add a Route</h3>
         <form action="CTRouteController" method="post">
         Route Description:<input name="description" type="text"><br>

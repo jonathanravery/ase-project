@@ -10,19 +10,21 @@
 
 <html>
     <head>
+        <link href="css/commuter.css" rel="stylesheet" type="text/css" media="screen" />
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>User Settings</title>
     </head>
     <body>
+        <div id="header"></div>
         <% CtUser user = (CtUser)session.getAttribute("editUser");
            CtUser userBean = (CtUser)session.getAttribute("user");
         %>
-        <h1>User Settings</h1>
         <%@ include file="functionbanner.jsp" %>
+        <h1>User Settings</h1>        
          <form action="CTUserController" method="post">
              <input type="hidden" name="userId" value="<%= user.getUserId() %>">
-             Username:<input name="user" type="text" value="<%= user.getUsername() %>"><br>
-             New Password:<input name="newpass" type="password" value=""><br>
+             <label for="user">Username:</label><input id="user" name="user" type="text" value="<%= user.getUsername() %>"><br>
+             <label for="newpass">New Password:</label><input id="newpass" name="newpass" type="password" value=""><br>
              <% if (userBean.getRole() == 1) { %>
                 <select name="role">
                     <option value="1" <% if ( user.getRole() == 1) { %>selected="1" <% } %> >Admin</option>
