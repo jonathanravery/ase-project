@@ -39,6 +39,8 @@ public class CTTripController extends HttpServlet {
         } catch (NamingException ex) {
             Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, null, ex);
             return false;
+        } finally {
+            // do stuff
         }
 
         return session.addTrip(routeId, startTime, endTime, status);
@@ -55,6 +57,8 @@ public class CTTripController extends HttpServlet {
         } catch (NamingException ex) {
             Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, null, ex);
             return false;
+        } finally {
+            // do stuff
         }
 
         CtRoute route = session.getRoute(routeId);
@@ -75,6 +79,8 @@ public class CTTripController extends HttpServlet {
         } catch (NamingException ex) {
             Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, null, ex);
             return false;
+        } finally {
+            // do stuff
         }
 
         return session.delTrip(tripId);
@@ -91,6 +97,8 @@ public class CTTripController extends HttpServlet {
         } catch (NamingException ex) {
             Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, null, ex);
             return null;
+        } finally {
+            // do stuff
         }
 
         return session.getUserTrips(userId);
@@ -107,11 +115,13 @@ public class CTTripController extends HttpServlet {
         } catch (NamingException ex) {
             Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, null, ex);
             return null;
+        } finally {
+            // do stuff
         }
 
         return session.getAllTrips();
     }
-    
+  
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
@@ -165,12 +175,46 @@ public class CTTripController extends HttpServlet {
                 currentMessage = (String) hsn.getAttribute("message");
                 currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
                 hsn.setAttribute("message", currentMessage + "<font color=red>Unable to start your trip. (Exception: " + e.toString() + "</font>");
+            } finally {
+            // do stuff
             }
 
             view = "timer.jsp";
+        } else if (method.equals("viewusertrips")) {
+            CtUser userBean = (CtUser) hsn.getAttribute("user");
+            // Make sure if they are setting the role to 1, the user is an admin
+            if (userBean == null) {
+                Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "USERBEAN IS NULL");
+
+                currentMessage = (String) hsn.getAttribute("message");
+                currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
+                hsn.setAttribute("message", currentMessage + "<font color=red>You are not authorized to do that</font>");
+                view = "index.jsp";
+
+            } else {
+                //Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "about to set ctTrips attribute to " + this.getUserTrips(userBean).toString());
+                hsn.setAttribute("ctTrips", this.getUserTrips(userBean.getUserId()));
+                view = "view_trips.jsp";
+            }
+        } else if (method.equals("viewalltrips")) {
+            CtUser userBean = (CtUser) hsn.getAttribute("user");
+            // Make sure if they are setting the role to 1, the user is an admin
+            if (userBean == null || userBean.getRole() != 1) {
+                Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "USERBEAN IS NULL");
+
+                currentMessage = (String) hsn.getAttribute("message");
+                currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
+                hsn.setAttribute("message", currentMessage + "<font color=red>You are not authorized to do that</font>");
+                view = "index.jsp";
+
+            } else {
+                //Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "about to set ctTrips attribute to " + this.getUserTrips(userBean).toString());
+                hsn.setAttribute("ctTrips", this.getAllTrips());
+                view = "view_trips.jsp";
+            }
         }
 
-        Logger.getLogger(CTTripController.class.getName()).log(Level.WARNING, "CTTripController is about to forward you to: " + view);
+        //Logger.getLogger(CTTripController.class.getName()).log(Level.WARNING, "CTTripController is about to forward you to: " + view);
 
         RequestDispatcher rd = request.getRequestDispatcher(view);
         rd.forward(request, response);
