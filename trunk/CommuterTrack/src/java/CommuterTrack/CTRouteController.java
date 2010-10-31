@@ -117,13 +117,19 @@ public class CTRouteController extends HttpServlet {
             String routeStart = request.getParameter("start");
             String routeEnd = request.getParameter("end");
             session.addARoute(user, routeDescription, routeStart, routeEnd);
+            Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "about to set ctUsers attribute to " + this.getUserRoutes(userBean).toString());
+            hsn.setAttribute("ctRoutes", this.getUserRoutes(userBean));
             view = "view_routes.jsp";
+
+
         } else if (method.equals("editRoute")) {
             Integer routeId = Integer.valueOf(request.getParameter("routeId"));
             String routeDescription = request.getParameter("description");
             String routeStart = request.getParameter("start");
             String routeEnd = request.getParameter("end");
             session.updateRoute(routeId, routeDescription, routeStart, routeEnd);
+            Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "about to set ctUsers attribute to " + this.getUserRoutes(userBean).toString());
+            hsn.setAttribute("ctRoutes", this.getUserRoutes(userBean));
             view = "view_routes.jsp";
         }
 
