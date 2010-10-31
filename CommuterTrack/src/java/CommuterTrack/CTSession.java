@@ -113,7 +113,7 @@ public class CTSession implements CTSessionRemote {
     }
 
     @Override
-    public List getAllRoutes(CtUser ub) {
+    public List getUserRoutes(CtUser ub) {
 
         List CtRouteList;
         CtRoute ctr;
@@ -126,6 +126,21 @@ public class CTSession implements CTSessionRemote {
             CtRouteList = q.getResultList();
             // if the password passed in matches the one in the db
             return CtRouteList;
+        } catch (NonUniqueResultException ex) {
+            Logger.getLogger(CTUserController.class.getName()).log(Level.WARNING,ex.toString(), "REACHED "+ex.toString());
+
+            return null;
+        } catch (NoResultException ex) {
+            return null;
+        }
+
+    }
+
+    @Override
+    public List getAllRoutes() {
+        Query q = em.createNamedQuery("CtRoute.findAll");;
+        try {
+            return q.getResultList();
         } catch (NonUniqueResultException ex) {
             Logger.getLogger(CTUserController.class.getName()).log(Level.WARNING,ex.toString(), "REACHED "+ex.toString());
 
@@ -215,6 +230,25 @@ public class CTSession implements CTSessionRemote {
         //user.addToRoutes(c);
         //em.merge(user);
         em.persist(c);
+        return true;
+    }
+
+    @Override
+    public boolean updateRoute(Integer routeId, String routeDescription, String routeStart, String routeEnd){
+
+        /*
+         TODO: sanatize input
+         */
+        Query q = em.createNamedQuery("CtRoute.findByRouteId");
+        q.setParameter("routeId", routeId);
+        CtRoute route = (CtRoute) q.getSingleResult();
+
+
+        route.setDescription(routeDescription);
+        route.setRouteStart(routeStart);
+        route.setRouteEnd(routeEnd);
+
+        em.merge(route);
         return true;
     }
 

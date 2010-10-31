@@ -50,16 +50,8 @@ public class CTRouteController extends HttpServlet {
 
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        String routeDescription;
-        String routeStart;
-        String routeEnd;
         CTSessionRemote session;
         final Context context;
-
-        routeDescription = request.getParameter("description");
-        routeStart = request.getParameter("start");
-        routeEnd = request.getParameter("end");
-
 
         try {
             context = new InitialContext();
@@ -73,40 +65,89 @@ public class CTRouteController extends HttpServlet {
 
 
         HttpSession hsn = request.getSession();
+        CtUser userBean = (CtUser) hsn.getAttribute("user");
+        String view = "index.jsp";
 
-            if (method.equals("viewall")) {
-            CtUser userBean = (CtUser) hsn.getAttribute("user");
-            String view;
-            // Make sure if they are setting the role to 1, the user is an admin
-            if (userBean == null) {
-                Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "USERBEAN IS NULL");
-
-                currentMessage = (String) hsn.getAttribute("message");
-                currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
-                hsn.setAttribute("message", currentMessage + "<font color=red>You are not authorized to do that</font>");
-                view = "index.jsp";
-
-            } else {
-                Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "about to set ctUsers attribute to " + this.getAllRoutes(userBean).toString());
-                hsn.setAttribute("ctRoutes", this.getAllRoutes(userBean));
-                view = "addroute.jsp";
-            }
-
+        if (userBean == null) {
+            Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "USERBEAN IS NULL");
+            currentMessage = (String) hsn.getAttribute("message");
+            currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
+            hsn.setAttribute("message", currentMessage + "<font color=red>You are not authorized to do that</font>");
+            view = "index.jsp";
             RequestDispatcher rd = request.getRequestDispatcher(view);
             rd.forward(request, response);
-
-            // If it's the edit method
-        } else {
-
-            CtUser user = (CtUser) hsn.getAttribute("user");
-            session.addARoute(user, routeDescription, routeStart, routeEnd);
-            RequestDispatcher rd = request.getRequestDispatcher("addroute.jsp");
-            rd.forward(request, response);
-
+            return;
         }
+
+        if (method.equals("viewUserRoutes")) {
+            Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "about to set ctUsers attribute to " + this.getUserRoutes(userBean).toString());
+            hsn.setAttribute("ctRoutes", this.getUserRoutes(userBean));
+            view = "view_routes.jsp";
+        } else if (method.equals("viewAllRoutes")) {
+            if (userBean.getRole() != 1) {
+                Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "Non-admin user trying to access all routes.");
+                currentMessage = (String) hsn.getAttribute("message");
+                currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
+                hsn.setAttribute("message", currentMessage + "<font color=red>You are not authorized to do that</font");
+                view = "timer.jsp";
+            } else {
+                Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "about to set ctUsers attribute to " + this.getAllRoutes().toString());
+                hsn.setAttribute("ctRoutes", this.getAllRoutes());
+                view = "view_routes.jsp";
+            }
+        } else if (method.equals("viewEditRoutePage")) {
+            // TODO: check user role from session
+            // an admin can edit any route
+            // regular user can edit only his own
+            CtRoute route = this.getRoute(Integer.parseInt(request.getParameter("routeId")));
+            // Make sure we actually got something...
+            if (route == null) {
+                Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "The route the user is about to edit does not exist");
+                currentMessage = (String) hsn.getAttribute("message");
+                currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
+                hsn.setAttribute("message", currentMessage + "<font color=red>The route you are trying to edit does not exist</font");
+                view = "view_routes.jsp";
+            } else {
+                hsn.setAttribute("editRoute", route);
+                view = "edit_route.jsp";
+            }
+        } else if (method.equals("addRoute")) {
+            CtUser user = (CtUser) hsn.getAttribute("user");
+            String routeDescription = request.getParameter("description");
+            String routeStart = request.getParameter("start");
+            String routeEnd = request.getParameter("end");
+            session.addARoute(user, routeDescription, routeStart, routeEnd);
+            view = "view_routes.jsp";
+        } else if (method.equals("editRoute")) {
+            Integer routeId = Integer.valueOf(request.getParameter("routeId"));
+            String routeDescription = request.getParameter("description");
+            String routeStart = request.getParameter("start");
+            String routeEnd = request.getParameter("end");
+            session.updateRoute(routeId, routeDescription, routeStart, routeEnd);
+            view = "view_routes.jsp";
+        }
+
+        RequestDispatcher rd = request.getRequestDispatcher(view);
+        rd.forward(request, response);
     }
 
-    List getAllRoutes(CtUser ub) {
+    CtRoute getRoute(Integer routeId) {
+        final Context context;
+        CTSessionRemote session;
+        CtRoute route;
+        // Get the session bean
+        try {
+            context = new InitialContext();
+            session = (CTSessionRemote) context.lookup("CommuterTrack.CTSessionRemote");
+        } catch (NamingException ex) {
+            Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+
+        return session.getRoute(routeId);
+    }
+
+    List getUserRoutes(CtUser ub) {
         final Context context;
         CTSessionRemote session;
 
@@ -120,8 +161,25 @@ public class CTRouteController extends HttpServlet {
         }
 
         // Attempt to get the bean for the user who matches
-        return session.getAllRoutes(ub);
+        return session.getUserRoutes(ub);
     }
+
+    List getAllRoutes() {
+        final Context context;
+        CTSessionRemote session;
+
+        // Get the session bean
+        try {
+            context = new InitialContext();
+            session = (CTSessionRemote) context.lookup("CommuterTrack.CTSessionRemote");
+        } catch (NamingException ex) {
+            Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+
+        return session.getAllRoutes();
+    }
+
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
 
     /**
