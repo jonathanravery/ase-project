@@ -146,6 +146,8 @@ table
 {
     border-collapse:collapse;
     clear: both;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 table, th, td
@@ -168,14 +170,14 @@ fieldset
     margin-left: auto;
     margin-right: auto;
     border: 1px solid #781351;
-    width: 25em;
+    width: 30em;
 }
 
 label
 {
     clear: both;
     float: left;
-    width: 4em;
+    width: 9em;
     text-align: right;
     margin-right: 0.5em;
     padding-top:0.4em;

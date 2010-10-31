@@ -45,7 +45,7 @@
 
     <p>
     <TABLE>
-        <tr><td>USER ID</td><td>USERNAME</td><td>ACTIVE</td><td>Role</td></tr>
+        <tr><th>USER ID</th><th>USERNAME</th><th>ACTIVE</th><th>Role</th><th>Edit</th><th>Deactivate</th></tr>
 
         <%
            final Context context;

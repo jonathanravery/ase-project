@@ -20,7 +20,9 @@
            CtUser userBean = (CtUser)session.getAttribute("user");
         %>
         <%@ include file="functionbanner.jsp" %>
-        <h1>User Settings</h1>        
+        <h1>User Settings</h1>
+        <fieldset>
+        <legend>User settings</legend>
          <form action="CTUserController" method="post">
              <input type="hidden" name="userId" value="<%= user.getUserId() %>">
              <label for="user">Username:</label><input id="user" name="user" type="text" value="<%= user.getUsername() %>"><br>
@@ -34,5 +36,6 @@
         <input type="hidden" name="method" value="edituser">
         <input type="submit" name="Login" value="Edit User">
         </form>
+        </fieldset>
     </body>
 </html>
