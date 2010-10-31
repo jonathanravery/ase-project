@@ -17,6 +17,7 @@
 
 <html>
     <head>
+        <link href="css/commuter.css" rel="stylesheet" type="text/css" media="screen" />
         <meta http-equiv="Pragma" content="no-cache">
         <meta http-equiv="expires" content=-1>
         <meta http-equiv="no-cache"
@@ -67,6 +68,7 @@
         <title>JSP Page</title>
     </head>
     <body>
+        <div id="header"></div>
         <%@ include file="functionbanner.jsp" %>
 
         <h3>timer page</h3>

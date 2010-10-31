@@ -19,19 +19,21 @@
 
 <html>
     <head>
+        <link href="css/commuter.css" rel="stylesheet" type="text/css" media="screen" />
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>CommuterTrack: View All Routes</title>
     </head>
 
     <body>
+        <div id="header"></div>
         <%@ include file="functionbanner.jsp" %>
         <h1>View All Routes</h1>
 
 
 
     <p>
-    <TABLE>
-        <tr><td>Route Description</td><td>Start</td><td>End</td><td>Owner</td></tr>
+    <TABLE id="routes-table">
+        <tr><th>Route Description</th><th>Start</th><th>End</th><th>Owner</th></tr>
 
         <%
 
