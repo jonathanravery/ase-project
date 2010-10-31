@@ -55,7 +55,7 @@
             context = new InitialContext();
             sessionbean = (CTSessionRemote) context.lookup("CommuterTrack.CTSessionRemote");
             userintrip = sessionbean.userInTrip(userBean.getUserId());
-            routeList = sessionbean.getAllRoutes(userBean);
+            routeList = sessionbean.getUserRoutes(userBean);
 
         } catch (Exception ex) {
             Logger.getLogger(CTTripController.class.getName()).log(Level.SEVERE, null, ex);

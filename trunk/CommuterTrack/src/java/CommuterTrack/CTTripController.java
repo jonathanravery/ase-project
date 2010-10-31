@@ -180,7 +180,7 @@ public class CTTripController extends HttpServlet {
             }
 
             view = "timer.jsp";
-        } else if (method.equals("viewusertrips")) {
+        } else if (method.equals("viewUserTrips")) {
             CtUser userBean = (CtUser) hsn.getAttribute("user");
             // Make sure if they are setting the role to 1, the user is an admin
             if (userBean == null) {
@@ -196,7 +196,7 @@ public class CTTripController extends HttpServlet {
                 hsn.setAttribute("ctTrips", this.getUserTrips(userBean.getUserId()));
                 view = "view_trips.jsp";
             }
-        } else if (method.equals("viewalltrips")) {
+        } else if (method.equals("viewAllTrips")) {
             CtUser userBean = (CtUser) hsn.getAttribute("user");
             // Make sure if they are setting the role to 1, the user is an admin
             if (userBean == null || userBean.getRole() != 1) {

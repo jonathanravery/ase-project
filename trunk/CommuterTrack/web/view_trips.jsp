@@ -16,7 +16,7 @@
     <head>
         <link href="css/commuter.css" rel="stylesheet" type="text/css" media="screen" />
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Trips</title>
     </head>
     <body>
         <div id="header"></div>
@@ -33,8 +33,13 @@
         } else {
     %> you are an admin, you may choose to see all trips in the system
         <form method="POST" action="CTTripController">
-            <input type="hidden" name="method" value="viewalltrips">
+            <input type="hidden" name="method" value="viewAllTrips">
             <input type="submit" name="submit" value="View all trips">
+        </form>
+
+        <form method="POST" action="CTTripController">
+            <input type="hidden" name="method" value="viewUserTrips">
+            <input type="submit" name="submit" value="View own trips">
         </form>
     <%
        }
