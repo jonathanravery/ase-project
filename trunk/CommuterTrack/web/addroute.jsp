@@ -63,12 +63,15 @@
     %></TABLE>
 
         <h3>Add a Route</h3>
+        <fieldset>
+        <legend>Add new route</legend>
         <form action="CTRouteController" method="post">
-        Route Description:<input name="description" type="text"><br>
-        Start Location:<input name="start" type="text"><br>
-        End Location:<input name="end" type="text"><br>
+            <label for="description">Route Description:</label><input id="description" name="description" type="text"><br>
+        <label for="start">Start Location:</label><input id="start" name="start" type="text"><br>
+        <label for="end">End Location:</label><input id="end" name="end" type="text"><br>
         <input type="submit" name="AddRoute">
         </form>
+        </fieldset>
 </body>
 
 </html>
