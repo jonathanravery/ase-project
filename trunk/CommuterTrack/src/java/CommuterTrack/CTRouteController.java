@@ -57,7 +57,7 @@ public class CTRouteController extends HttpServlet {
             context = new InitialContext();
             session = (CTSessionRemote) context.lookup("CommuterTrack.CTSessionRemote");
         } catch (NamingException ex) {
-            Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CTRouteController.class.getName()).log(Level.SEVERE, null, ex);
             RequestDispatcher rd = request.getRequestDispatcher("fail.jsp");
             rd.forward(request, response);
             session = null;
@@ -69,7 +69,7 @@ public class CTRouteController extends HttpServlet {
         String view = "index.jsp";
 
         if (userBean == null) {
-            Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "USERBEAN IS NULL");
+            Logger.getLogger(CTRouteController.class.getName()).log(Level.SEVERE, "USERBEAN IS NULL");
             currentMessage = (String) hsn.getAttribute("message");
             currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
             hsn.setAttribute("message", currentMessage + "<font color=red>You are not authorized to do that</font>");
@@ -80,18 +80,18 @@ public class CTRouteController extends HttpServlet {
         }
 
         if (method.equals("viewUserRoutes")) {
-            Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "about to set ctUsers attribute to " + this.getUserRoutes(userBean).toString());
+            Logger.getLogger(CTRouteController.class.getName()).log(Level.SEVERE, "about to set ctUsers attribute to " + this.getUserRoutes(userBean).toString());
             hsn.setAttribute("ctRoutes", this.getUserRoutes(userBean));
             view = "view_routes.jsp";
         } else if (method.equals("viewAllRoutes")) {
             if (userBean.getRole() != 1) {
-                Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "Non-admin user trying to access all routes.");
+                Logger.getLogger(CTRouteController.class.getName()).log(Level.SEVERE, "Non-admin user trying to access all routes.");
                 currentMessage = (String) hsn.getAttribute("message");
                 currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
                 hsn.setAttribute("message", currentMessage + "<font color=red>You are not authorized to do that</font");
                 view = "timer.jsp";
             } else {
-                Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "about to set ctUsers attribute to " + this.getAllRoutes().toString());
+                Logger.getLogger(CTRouteController.class.getName()).log(Level.SEVERE, "about to set ctUsers attribute to " + this.getAllRoutes().toString());
                 hsn.setAttribute("ctRoutes", this.getAllRoutes());
                 view = "view_routes.jsp";
             }
@@ -102,7 +102,7 @@ public class CTRouteController extends HttpServlet {
             CtRoute route = this.getRoute(Integer.parseInt(request.getParameter("routeId")));
             // Make sure we actually got something...
             if (route == null) {
-                Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "The route the user is about to edit does not exist");
+                Logger.getLogger(CTRouteController.class.getName()).log(Level.SEVERE, "The route the user is about to edit does not exist");
                 currentMessage = (String) hsn.getAttribute("message");
                 currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
                 hsn.setAttribute("message", currentMessage + "<font color=red>The route you are trying to edit does not exist</font");
@@ -117,7 +117,7 @@ public class CTRouteController extends HttpServlet {
             String routeStart = request.getParameter("start");
             String routeEnd = request.getParameter("end");
             session.addARoute(user, routeDescription, routeStart, routeEnd);
-            Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "about to set ctUsers attribute to " + this.getUserRoutes(userBean).toString());
+            Logger.getLogger(CTRouteController.class.getName()).log(Level.SEVERE, "about to set ctUsers attribute to " + this.getUserRoutes(userBean).toString());
             hsn.setAttribute("ctRoutes", this.getUserRoutes(userBean));
             view = "view_routes.jsp";
 
@@ -128,7 +128,7 @@ public class CTRouteController extends HttpServlet {
             String routeStart = request.getParameter("start");
             String routeEnd = request.getParameter("end");
             session.updateRoute(routeId, routeDescription, routeStart, routeEnd);
-            Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "about to set ctUsers attribute to " + this.getUserRoutes(userBean).toString());
+            Logger.getLogger(CTRouteController.class.getName()).log(Level.SEVERE, "about to set ctUsers attribute to " + this.getUserRoutes(userBean).toString());
             hsn.setAttribute("ctRoutes", this.getUserRoutes(userBean));
             view = "view_routes.jsp";
         }
@@ -146,7 +146,7 @@ public class CTRouteController extends HttpServlet {
             context = new InitialContext();
             session = (CTSessionRemote) context.lookup("CommuterTrack.CTSessionRemote");
         } catch (NamingException ex) {
-            Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CTRouteController.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
 
@@ -162,7 +162,7 @@ public class CTRouteController extends HttpServlet {
             context = new InitialContext();
             session = (CTSessionRemote) context.lookup("CommuterTrack.CTSessionRemote");
         } catch (NamingException ex) {
-            Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CTRouteController.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
 
@@ -179,7 +179,7 @@ public class CTRouteController extends HttpServlet {
             context = new InitialContext();
             session = (CTSessionRemote) context.lookup("CommuterTrack.CTSessionRemote");
         } catch (NamingException ex) {
-            Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CTRouteController.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
 
