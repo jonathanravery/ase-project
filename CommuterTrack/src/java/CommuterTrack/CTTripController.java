@@ -6,6 +6,8 @@ package CommuterTrack;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -27,6 +29,23 @@ import javax.servlet.http.HttpSession;
  */
 @WebServlet(name = "CTTripController", urlPatterns = {"/CTTripController"})
 public class CTTripController extends HttpServlet {
+
+    CtTrip getTrip(Integer tripId) {
+        final Context context;
+        CTSessionRemote session;
+
+        // Get the session bean
+        try {
+            context = new InitialContext();
+            session = (CTSessionRemote) context.lookup("CommuterTrack.CTSessionRemote");
+        } catch (NamingException ex) {
+            Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        } finally {
+            // do stuff
+        }
+        return session.getTrip(tripId);
+    }
 
     boolean addTrip(Integer routeId, Date startTime, Date endTime, Integer status) {
         final Context context;
@@ -121,6 +140,23 @@ public class CTTripController extends HttpServlet {
 
         return session.getAllTrips();
     }
+
+    List getUserRoutes(CtUser ub) {
+        final Context context;
+        CTSessionRemote session;
+
+        // Get the session bean
+        try {
+            context = new InitialContext();
+            session = (CTSessionRemote) context.lookup("CommuterTrack.CTSessionRemote");
+        } catch (NamingException ex) {
+            Logger.getLogger(CTRouteController.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+
+        // Attempt to get the bean for the user who matches
+        return session.getUserRoutes(ub);
+    }
   
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -137,7 +173,7 @@ public class CTTripController extends HttpServlet {
         CtUser curUser;
         HttpSession hsn = request.getSession();
 
-
+        CtUser userBean = (CtUser) hsn.getAttribute("user");
         view = "fail.jsp";
 
         method = request.getParameter("method");
@@ -181,7 +217,6 @@ public class CTTripController extends HttpServlet {
 
             view = "timer.jsp";
         } else if (method.equals("viewUserTrips")) {
-            CtUser userBean = (CtUser) hsn.getAttribute("user");
             // Make sure if they are setting the role to 1, the user is an admin
             if (userBean == null) {
                 Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "USERBEAN IS NULL");
@@ -197,7 +232,6 @@ public class CTTripController extends HttpServlet {
                 view = "view_trips.jsp";
             }
         } else if (method.equals("viewAllTrips")) {
-            CtUser userBean = (CtUser) hsn.getAttribute("user");
             // Make sure if they are setting the role to 1, the user is an admin
             if (userBean == null || userBean.getRole() != 1) {
                 Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "USERBEAN IS NULL");
@@ -212,6 +246,48 @@ public class CTTripController extends HttpServlet {
                 hsn.setAttribute("ctTrips", this.getAllTrips());
                 view = "view_trips.jsp";
             }
+        } else if (method.equals("viewEditTripPage")) {
+            // TODO: check user role from session
+            // an admin can edit any trip
+            // regular user can edit only his own trips
+            CtTrip trip = this.getTrip(Integer.parseInt(request.getParameter("tripId")));
+            // Make sure we actually got something...
+            if (trip == null) {
+                Logger.getLogger(CTRouteController.class.getName()).log(Level.SEVERE, "The trip the user is about to edit does not exist");
+                currentMessage = (String) hsn.getAttribute("message");
+                currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
+                hsn.setAttribute("message", currentMessage + "<font color=red>The trip you are trying to edit does not exist</font");
+                view = "view_trips.jsp";
+            } else {
+                hsn.setAttribute("ctRoutes", this.getUserRoutes(userBean));
+                hsn.setAttribute("editTrip", trip);
+                view = "edit_trip.jsp";
+            }
+        } else if (method.equals("editTrip")) {
+            Integer tripId = Integer.valueOf(request.getParameter("tripId"));
+            Integer routeId = Integer.valueOf(request.getParameter("routeId"));
+            String start = request.getParameter("start");
+            String end = request.getParameter("end");
+            SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM d HH:mm:ss zzz yyyy");
+            try {
+                Date startTime = new Date();
+                Date endTime = new Date();
+                if (start.compareTo("") != 0) {
+                    startTime = formatter.parse(start);
+                }
+                if (end.compareTo("") != 0) {
+                    endTime = formatter.parse(end);
+                }
+                Integer status = new Integer(2);
+                this.editTrip(tripId, routeId, startTime, endTime, status);
+                Logger.getLogger(CTTripController.class.getName()).log(Level.SEVERE, "setting new dates " + start + ", " + end);
+                Logger.getLogger(CTTripController.class.getName()).log(Level.SEVERE, "setting routeId " + routeId.toString());
+            } catch (ParseException ex) {
+                Logger.getLogger(CTTripController.class.getName()).log(Level.SEVERE, "Could not parse dates " + start + ", " + end, ex);
+            }            
+            Logger.getLogger(CTRouteController.class.getName()).log(Level.SEVERE, "about to set ctTrips attribute to " + this.getUserTrips(userBean.getUserId()).toString());
+            hsn.setAttribute("ctTrips", this.getUserTrips(userBean.getUserId()));
+            view = "view_trips.jsp";
         }
 
         //Logger.getLogger(CTTripController.class.getName()).log(Level.WARNING, "CTTripController is about to forward you to: " + view);

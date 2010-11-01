@@ -69,7 +69,13 @@
                         <td><%= curTrip.getCtRoute().getDescription() %></td>
                         <td><%= curTrip.getStartTime() %></td>
                         <td><%= curTrip.getEndTime() %></td>
-                        <td>Edit</td>
+                        <td>
+                            <form method="POST" action="CTTripController">
+                                <input type="hidden" name="tripId" value="<%= curTrip.getTripId() %>">
+                                <input type="hidden" name="method" value="viewEditTripPage">
+                                <input type="submit" name="submit" value="Edit">
+                            </form>
+                        </td>
                     </TR>
                     <%
                 }

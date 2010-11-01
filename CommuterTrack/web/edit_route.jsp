@@ -38,7 +38,7 @@
             <label for="description">Route Description:</label><input id="description" name="description" type="text" value="<%= route.getDescription() %>"><br>
             <label for="start">Start Location:</label><input id="start" name="start" type="text" value="<%= route.getRouteStart() %>"><br>
             <label for="end">End Location:</label><input id="end" name="end" type="text" value="<%= route.getRouteEnd() %>"><br>
-        <input type="submit" name="Edit Route">
+        <input type="submit" name="editRoute" name="Edit Route">
         </form>
         </fieldset>
 </body>
