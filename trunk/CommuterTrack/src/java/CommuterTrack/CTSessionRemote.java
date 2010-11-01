@@ -36,6 +36,8 @@ public interface CTSessionRemote {
 
     List<CtRoute> getAllRoutes();
 
+    CtTrip getTrip(Integer tripId);
+
     boolean addTrip(Integer routeId, Date startDate, Date endDate, Integer status);
 
     boolean editTrip(Integer tripId, CtRoute routebean, Date startDate, Date endDate, Integer status);

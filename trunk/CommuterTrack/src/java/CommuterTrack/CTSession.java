@@ -270,6 +270,23 @@ public class CTSession implements CTSessionRemote {
     }
 
     @Override
+    public CtTrip getTrip(Integer tripId) {
+        Query q = em.createNamedQuery("CtTrip.findByTripId");
+        q.setParameter("tripId", tripId);
+
+        // get the trip into an entity bean
+        // update and persist
+        try {
+            return (CtTrip) q.getSingleResult();
+
+        } catch (Exception e){
+            Logger.getLogger(CTSession.class.getName()).log(Level.SEVERE, "caught exception trying to delete trip "+e.toString());
+            return null;
+        }
+
+    }
+
+    @Override
     public boolean addTrip(Integer routeId, Date startDate, Date endDate, Integer status) {
         CtTrip trip = new CtTrip();
         trip.setStartTime(startDate);
@@ -291,7 +308,7 @@ public class CTSession implements CTSessionRemote {
     }
 
     @Override
-    public boolean editTrip(Integer tripId,CtRoute routeBean, Date startDate, Date endDate, Integer status) {
+    public boolean editTrip(Integer tripId, CtRoute routeBean, Date startDate, Date endDate, Integer status) {
 
         // we are assuming that the right person is editing the right trip... 
         // confirm that in the servlet level
@@ -307,7 +324,7 @@ public class CTSession implements CTSessionRemote {
             triptoedit.setEndTime(endDate);
             triptoedit.setStatus(status);
 
-            em.persist(triptoedit);
+            em.merge(triptoedit);
             return true;
 
         } catch (Exception e){
