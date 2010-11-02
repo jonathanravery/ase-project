@@ -41,7 +41,12 @@
                 you are not an admin
     <%
         } else {
-    %> you are an admin
+            if (session.getAttribute("message") != null) {
+                out.println((String) session.getAttribute("message"));
+            }
+            session.setAttribute("message", "");
+
+    %> 
 
     <p>
     <TABLE>

@@ -131,7 +131,11 @@ public class CTUserController extends HttpServlet {
         }
 
         // Attempt to get the bean for the user who matches
-        return session.editUser(userId,username,pass,role,1);
+        try {
+            return session.editUser(userId,username,pass,role,1);
+        } catch (Exception e) {
+            return false;
+        }
         
     }
 
@@ -384,6 +388,12 @@ public class CTUserController extends HttpServlet {
                    } else {
                         view = "timer.jsp";
                     }
+                } else {
+                    Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "edit user failed. ='( ");
+                    currentMessage = (String) hsn.getAttribute("message");
+                    currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
+                    hsn.setAttribute("message", currentMessage + "<font color=red>Unable to edit user.</font>");
+                    view = "edit_user.jsp";
                 }
             }
 

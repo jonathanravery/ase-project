@@ -17,18 +17,18 @@
     <head>
         <link href="css/commuter.css" rel="stylesheet" type="text/css" media="screen" />
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Trips</title>
+        <title>Routes</title>
     </head>
     <body>
         <div id="header"></div>
         <%@ include file="functionbanner.jsp" %>
-        <h1>View all trips</h1>
+        <h1>View all Routes</h1>
         <% if (session.getAttribute("message") != null) {
             out.print(session.getAttribute("message"));
             session.setAttribute("message", "");
            } %>
         <%
-            //System.out.println("viewing trips");
+            //System.out.println("viewing routes");
             if (((CtUser) session.getAttribute("user")).getRole() != 1) {
                         // System.exit(1);
 %>

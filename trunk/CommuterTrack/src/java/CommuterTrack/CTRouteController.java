@@ -88,7 +88,7 @@ public class CTRouteController extends HttpServlet {
                 Logger.getLogger(CTRouteController.class.getName()).log(Level.SEVERE, "Non-admin user trying to access all routes.");
                 currentMessage = (String) hsn.getAttribute("message");
                 currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
-                hsn.setAttribute("message", currentMessage + "<font color=red>You are not authorized to do that</font");
+                hsn.setAttribute("message", currentMessage + "<font color=red>You are not authorized to do that</font>");
                 view = "timer.jsp";
             } else {
                 Logger.getLogger(CTRouteController.class.getName()).log(Level.SEVERE, "about to set ctUsers attribute to " + this.getAllRoutes().toString());
@@ -105,7 +105,7 @@ public class CTRouteController extends HttpServlet {
                 Logger.getLogger(CTRouteController.class.getName()).log(Level.SEVERE, "The route the user is about to edit does not exist");
                 currentMessage = (String) hsn.getAttribute("message");
                 currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
-                hsn.setAttribute("message", currentMessage + "<font color=red>The route you are trying to edit does not exist</font");
+                hsn.setAttribute("message", currentMessage + "<font color=red>The route you are trying to edit does not exist</font>");
                 view = "view_routes.jsp";
             } else {
                 hsn.setAttribute("editRoute", route);
@@ -122,18 +122,18 @@ public class CTRouteController extends HttpServlet {
                 if (session.addARoute(user, routeDescription, routeStart, routeEnd)) {
                     currentMessage = (String) hsn.getAttribute("message");
                     currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
-                    hsn.setAttribute("message", currentMessage + "<font color=green>Route added successfully</font");
+                    hsn.setAttribute("message", currentMessage + "<font color=green>Route added successfully</font>");
                 } else {
                     Logger.getLogger(CTRouteController.class.getName()).log(Level.SEVERE, "Adding route returned false");
                     currentMessage = (String) hsn.getAttribute("message");
                     currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
-                    hsn.setAttribute("message", currentMessage + "<font color=red>Unable to add your route</font");
+                    hsn.setAttribute("message", currentMessage + "<font color=red>Unable to add your route</font>");
                 }
             } catch (Exception e) {
                 Logger.getLogger(CTRouteController.class.getName()).log(Level.SEVERE, "Adding route threw exception");
                 currentMessage = (String) hsn.getAttribute("message");
                 currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
-                hsn.setAttribute("message", currentMessage + "<font color=red>Unable to add your route</font");
+                hsn.setAttribute("message", currentMessage + "<font color=red>Unable to add your route</font>");
             }
             Logger.getLogger(CTRouteController.class.getName()).log(Level.SEVERE, "about to set ctUsers attribute to " + this.getUserRoutes(userBean).toString());
             hsn.setAttribute("ctRoutes", this.getUserRoutes(userBean));
@@ -144,10 +144,21 @@ public class CTRouteController extends HttpServlet {
             String routeDescription = request.getParameter("description");
             String routeStart = request.getParameter("start");
             String routeEnd = request.getParameter("end");
-            session.updateRoute(routeId, routeDescription, routeStart, routeEnd);
-            Logger.getLogger(CTRouteController.class.getName()).log(Level.SEVERE, "EDITR: about to set ctUsers attribute to " + this.getUserRoutes(userBean).toString());
-            hsn.setAttribute("ctRoutes", this.getUserRoutes(userBean));
-            view = "view_routes.jsp";
+            if (session.updateRoute(routeId, routeDescription, routeStart, routeEnd)) {
+                Logger.getLogger(CTRouteController.class.getName()).log(Level.SEVERE, "EDITR: about to set ctUsers attribute to " + this.getUserRoutes(userBean).toString());
+                currentMessage = (String) hsn.getAttribute("message");
+                currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
+                hsn.setAttribute("message", currentMessage + "<font color=green>Route updated</font>");
+                hsn.setAttribute("ctRoutes", this.getUserRoutes(userBean));
+                view = "view_routes.jsp";
+            } else {
+                Logger.getLogger(CTRouteController.class.getName()).log(Level.SEVERE, "Edit route failed (returned false)");
+                currentMessage = (String) hsn.getAttribute("message");
+                currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
+                hsn.setAttribute("message", currentMessage + "<font color=red>Unable to update route</font>");
+                view = "edit_route.jsp";
+            }
+            
         } else if (method.equals("deleteRoute")) {
             Integer routeId = Integer.valueOf(request.getParameter("routeId"));
             session.delRoute(routeId);
