@@ -89,11 +89,13 @@
                 } else {
         %>
         <form method="POST" action="CTTripController">
+            <% if (!userintrip) { // show routes only on start %>
             <select name="routeId">
                 <% for (int i = 0; i < routeList.size(); i++) { %>
                 <option value="<%= routeList.get(i).getRouteId() %>"><%= routeList.get(i).getDescription() %></option>
                 <% } %>
             </select>
+            <% } %>
 
             <% if (userintrip) { submitText = "Stop"; %>
                 <input type="hidden" name="method" value="stop">

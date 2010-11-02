@@ -399,8 +399,28 @@ public class CTSession implements CTSessionRemote {
             return null;
         }
     }
+    
+    @Override
+    public CtTrip getActiveTrip(Integer userId) {
+        Query q = em.createNamedQuery("CtTrip.findByUserAndStatus");
+        q.setParameter("userId", userId);
+        q.setParameter("status", 0);
+        try {
+            return (CtTrip) q.getResultList().get(0);
+        } catch (Exception ex) {
+            Logger.getLogger(CTUserController.class.getName()).log(Level.WARNING, ex.toString(), "caught exception trying to get unfinished trips " + ex.toString());
+            return null;
+        }
+    }
+
     @Override
     public boolean userInTrip(Integer userId) {
+        if (getActiveTrip(userId) == null) {
+            return false;
+        } else {
+            return true;
+        }
+        /*
         Query q = em.createNamedQuery("CtTrip.findByUserAndStatus");
         q.setParameter("userId", userId);
         q.setParameter("status", 0);
@@ -412,6 +432,8 @@ public class CTSession implements CTSessionRemote {
             Logger.getLogger(CTUserController.class.getName()).log(Level.WARNING, ex.toString(), "caught exception trying to get unfinished trips " + ex.toString());
             return false;
         }
+         *
+         */
     }
 
 }
