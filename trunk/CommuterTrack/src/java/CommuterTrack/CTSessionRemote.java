@@ -30,6 +30,8 @@ public interface CTSessionRemote {
 
     boolean updateRoute(Integer routeId, String routeDescription, String routeStart, String routeEnd);
 
+    boolean delRoute(Integer routeId);
+
     CtRoute getRoute(Integer routeId);
 
     List<CtRoute> getUserRoutes(CtUser ub);

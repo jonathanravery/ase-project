@@ -40,6 +40,11 @@
             <label for="end">End Location:</label><input id="end" name="end" type="text" value="<%= route.getRouteEnd() %>"><br>
         <input type="submit" name="editRoute" name="Edit Route">
         </form>
+            <form action="CTRouteController" method="post">
+            <input type="hidden" name="method" value="deleteRoute">
+            <input type="hidden" name="routeId" value="<%= route.getRouteId() %>">
+            <input type="submit" name="deleteRoute" value="Delete Route">
+        </form>
         </fieldset>
 </body>
 
