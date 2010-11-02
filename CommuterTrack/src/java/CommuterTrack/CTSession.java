@@ -113,6 +113,23 @@ public class CTSession implements CTSessionRemote {
     }
 
     @Override
+    public boolean delRoute(Integer routeId) {
+
+        Query q = em.createNamedQuery("CtRoute.findByRouteId");
+        q.setParameter("routeId", routeId);
+
+        try {
+            CtRoute routetodel = (CtRoute) q.getSingleResult();
+            em.remove(routetodel);
+        } catch (Exception e){
+            Logger.getLogger(CTSession.class.getName()).log(Level.SEVERE, "caught exception trying to delete route "+e.toString());
+            return false;
+        }
+        return true;
+    }
+
+
+    @Override
     public List getUserRoutes(CtUser ub) {
 
         List CtRouteList;

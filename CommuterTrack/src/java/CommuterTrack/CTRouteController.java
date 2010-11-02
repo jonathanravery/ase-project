@@ -145,7 +145,13 @@ public class CTRouteController extends HttpServlet {
             String routeStart = request.getParameter("start");
             String routeEnd = request.getParameter("end");
             session.updateRoute(routeId, routeDescription, routeStart, routeEnd);
-            Logger.getLogger(CTRouteController.class.getName()).log(Level.SEVERE, "about to set ctUsers attribute to " + this.getUserRoutes(userBean).toString());
+            Logger.getLogger(CTRouteController.class.getName()).log(Level.SEVERE, "EDITR: about to set ctUsers attribute to " + this.getUserRoutes(userBean).toString());
+            hsn.setAttribute("ctRoutes", this.getUserRoutes(userBean));
+            view = "view_routes.jsp";
+        } else if (method.equals("deleteRoute")) {
+            Integer routeId = Integer.valueOf(request.getParameter("routeId"));
+            session.delRoute(routeId);
+            Logger.getLogger(CTRouteController.class.getName()).log(Level.SEVERE, "DELR: about to set ctUsers attribute to " + this.getUserRoutes(userBean).toString());
             hsn.setAttribute("ctRoutes", this.getUserRoutes(userBean));
             view = "view_routes.jsp";
         }
