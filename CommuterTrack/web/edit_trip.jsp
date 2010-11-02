@@ -57,7 +57,9 @@
                 while (i.hasNext()){
                  curRoute = (CtRoute) i.next();
                  %>
-                <option value="<%= curRoute.getRouteId() %>"><%= curRoute.getDescription() %></option>
+                <option value="<%= curRoute.getRouteId() %>" <% if (trip.getCtRoute().getRouteId().intValue() == curRoute.getRouteId().intValue()) { %> selected <% } %>>
+                    <%= curRoute.getDescription() %>
+                </option>
                 <% } %>
             </select><br>
             <label for="start">Start Time:</label><input id="start" name="start" type="text" value="<%= start %>"><br>

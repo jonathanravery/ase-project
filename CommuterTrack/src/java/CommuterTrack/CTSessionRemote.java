@@ -49,4 +49,6 @@ public interface CTSessionRemote {
     List<CtTrip> getAllTrips();
 
     boolean userInTrip(Integer userId);
+
+    CtTrip getActiveTrip(Integer userId);
 }

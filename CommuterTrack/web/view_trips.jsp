@@ -47,7 +47,7 @@
 
     <p>
     <TABLE align="center">
-        <tr><th>Trip Id</th><th>Route</th><th>Start time</th><th>End time</th><th>Edit</th></tr>
+        <tr><th>Trip Id</th><th>Route</th><th>Start time</th><th>End time</th><th>Status</th><th>Edit</th></tr>
 
         <%
 
@@ -69,6 +69,7 @@
                         <td><%= curTrip.getCtRoute().getDescription() %></td>
                         <td><%= curTrip.getStartTime() %></td>
                         <td><%= curTrip.getEndTime() %></td>
+                        <td><%= curTrip.getStatus().toString() %></td>
                         <td>
                             <form method="POST" action="CTTripController">
                                 <input type="hidden" name="tripId" value="<%= curTrip.getTripId() %>">

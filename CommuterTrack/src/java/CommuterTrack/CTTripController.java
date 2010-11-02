@@ -157,6 +157,23 @@ public class CTTripController extends HttpServlet {
         // Attempt to get the bean for the user who matches
         return session.getUserRoutes(ub);
     }
+
+    CtTrip getActiveTrip(CtUser ub) {
+        final Context context;
+        CTSessionRemote session;
+
+        // Get the session bean
+        try {
+            context = new InitialContext();
+            session = (CTSessionRemote) context.lookup("CommuterTrack.CTSessionRemote");
+        } catch (NamingException ex) {
+            Logger.getLogger(CTRouteController.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+
+        // Attempt to get the bean for the user who matches
+        return session.getActiveTrip(ub.getUserId());
+    }
   
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -216,6 +233,33 @@ public class CTTripController extends HttpServlet {
             }
 
             view = "timer.jsp";
+        } else if (method.equals("stop")) {
+            try {
+                Date stopTime = new Date();
+                CtTrip curTrip = this.getActiveTrip(userBean);
+                if (curTrip == null) {
+                    Logger.getLogger(CTTripController.class.getName()).log(Level.WARNING, "Stopping a non-existing trip ");
+                    currentMessage = (String) hsn.getAttribute("message");
+                    currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
+                    hsn.setAttribute("message", currentMessage + "<font color=red>Trying to stop a non-existing trip.</font>");
+                    view = "timer.jsp";
+                } else {
+                    curTrip.setEndTime(stopTime);
+                    this.editTrip(curTrip.getTripId(), curTrip.getCtRoute().getRouteId(), curTrip.getStartTime(), stopTime, new Integer(1));
+                    hsn.setAttribute("ctRoutes", this.getUserRoutes(userBean));
+                    hsn.setAttribute("editTrip", curTrip);
+                    view = "edit_trip.jsp";
+                }
+            } catch (Exception e) {
+                Logger.getLogger(CTTripController.class.getName()).log(Level.WARNING, "Unable to stop a trip ");
+                currentMessage = (String) hsn.getAttribute("message");
+                currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
+                hsn.setAttribute("message", currentMessage + "<font color=red>Unable to stop your trip. (Exception: " + e.toString() + "</font>");
+                view = "timer.jsp";
+            } finally {
+            // do stuff
+            }
+            
         } else if (method.equals("viewUserTrips")) {
             // Make sure if they are setting the role to 1, the user is an admin
             if (userBean == null) {
