@@ -16,11 +16,17 @@
     </head>
     <body>
         <div id="header"></div>
-        <% CtUser user = (CtUser)session.getAttribute("editUser");
-           CtUser userBean = (CtUser)session.getAttribute("user");
-        %>
         <%@ include file="functionbanner.jsp" %>
         <h1>User Settings</h1>
+        <%  CtUser user = (CtUser)session.getAttribute("editUser");
+            CtUser userBean = (CtUser)session.getAttribute("user");
+            if (session.getAttribute("message")!=null){
+                out.println((String)session.getAttribute("message"));
+            }
+            session.setAttribute("message", "");
+        %>
+        
+        
         <fieldset>
         <legend>User settings</legend>
          <form action="CTUserController" method="post">

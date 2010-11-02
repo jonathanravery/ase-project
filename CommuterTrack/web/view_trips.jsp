@@ -35,7 +35,10 @@
                <!-- you are not an admin -->
     <%
         } else {
-    %> you are an admin, you may choose to see all trips in the system
+            if (session.getAttribute("message") != null) {
+                out.print(session.getAttribute("message"));
+                session.setAttribute("message", "");
+           } %>
         <form method="POST" action="CTTripController">
             <input type="hidden" name="method" value="viewAllTrips">
             <input type="submit" name="submit" value="View all trips">

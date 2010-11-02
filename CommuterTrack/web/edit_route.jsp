@@ -26,10 +26,15 @@
     <body>
         <div id="header"></div>
         <%@ include file="functionbanner.jsp" %>
+        <h3>Edit a Route</h3>
         <%
            CtRoute route = (CtRoute) session.getAttribute("editRoute");
+           if (session.getAttribute("message") != null) {
+            out.print(session.getAttribute("message"));
+            session.setAttribute("message", "");
+           }
         %>
-        <h3>Edit a Route</h3>
+        
         <fieldset>
         <legend>Edit route</legend>
         <form action="CTRouteController" method="post">
