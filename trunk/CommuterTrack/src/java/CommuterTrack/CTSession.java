@@ -20,6 +20,8 @@ import java.math.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -170,6 +172,9 @@ public class CTSession implements CTSessionRemote {
 
     @Override
     public boolean addUser(String username, String pass, int role) {
+
+        if (!this.isLegalInput(username)){ return false; }
+
         MessageDigest m;
         try {
             m = MessageDigest.getInstance("MD5");
@@ -200,6 +205,9 @@ public class CTSession implements CTSessionRemote {
 
     @Override
     public boolean editUser(int userId, String username, String pass, int role, int active) {
+
+        if (!this.isLegalInput(username)){ return false; }
+
         Logger.getLogger(CTSession.class.getName()).log(Level.WARNING, "in session.edituser userID: "+userId+" username: "+username+" pass: "+pass+" active: "+active+" role: "+role);
 
         CtUser tmpbean = this.getUser(userId);
@@ -233,6 +241,10 @@ public class CTSession implements CTSessionRemote {
          */
        // if (user_id <= 0) user_id = new Integer(2);
 
+
+        //check our inputs
+        if (!this.isLegalInput(routeDescription+routeStart+routeEnd)){return false;}
+
         CtRoute c = new CtRoute();
         c.setDescription(routeDescription);
         c.setRouteStart(routeStart);
@@ -256,6 +268,10 @@ public class CTSession implements CTSessionRemote {
         /*
          TODO: sanatize input
          */
+
+        if (!this.isLegalInput(routeDescription+routeStart+routeEnd)){ return false; }
+
+
         Query q = em.createNamedQuery("CtRoute.findByRouteId");
         q.setParameter("routeId", routeId);
         CtRoute route = (CtRoute) q.getSingleResult();
@@ -451,6 +467,26 @@ public class CTSession implements CTSessionRemote {
         }
          *
          */
+    }
+
+    private boolean isLegalInput(String s){
+
+        // this method returns true if s contains nothing but chars
+        String alphachars = "^([a-zA-Z]|\\s|[0-9])*$";
+        Pattern validinput = Pattern.compile(alphachars);
+        Matcher matcher = validinput.matcher(s);
+        boolean found = false;
+
+        while (matcher.find()) {
+            found = true;
+        }
+        if (found) {
+            Logger.getLogger(CTSession.class.getName()).log(Level.WARNING," String "+s+" MATCHES "+alphachars);
+            return true;
+        }
+
+        Logger.getLogger(CTSession.class.getName()).log(Level.WARNING," String "+s+" does NOT match pattern "+alphachars);
+        return false;
     }
 
 }
