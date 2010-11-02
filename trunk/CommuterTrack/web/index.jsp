@@ -17,9 +17,11 @@
     <body>
         <div id="header"></div>
         <h3>Welcome to CommuterTrack</h3>
-        <% session.setAttribute("message", session.getAttribute("message") + ""); %>
-        <%= ((String)session.getAttribute("message")) %>
-        <% session.setAttribute("message", ""); %>
+        <%
+            if (session.getAttribute("message")!=null){
+                out.println((String)session.getAttribute("message"));
+                }
+         session.setAttribute("message", ""); %>
         <fieldset align="center">
         <legend>Login</legend>
         <form action="CTUserController" method="post">

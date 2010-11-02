@@ -166,15 +166,15 @@ public class CTSession implements CTSessionRemote {
             Logger.getLogger(CTSession.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        CtUser newUser = new CtUser();
-        newUser.setUsername(username);
-        newUser.setPassword(pass);
-        newUser.setRole(role);
-        newUser.setActive(1);
-
         try {
+            CtUser newUser = new CtUser();
+            newUser.setUsername(username);
+            newUser.setPassword(pass);
+            newUser.setRole(role);
+            newUser.setActive(1);
             em.persist(newUser);
         } catch (Exception e) {
+            Logger.getLogger(CTSession.class.getName()).log(Level.SEVERE, null, "Exception occurred in the SESSION add user method: " + e.toString());
             return false;
         }
 

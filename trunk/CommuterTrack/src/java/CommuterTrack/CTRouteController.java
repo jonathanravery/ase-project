@@ -116,11 +116,28 @@ public class CTRouteController extends HttpServlet {
             String routeDescription = request.getParameter("description");
             String routeStart = request.getParameter("start");
             String routeEnd = request.getParameter("end");
-            session.addARoute(user, routeDescription, routeStart, routeEnd);
+            // For some reason, the try/catch in the session bean doesn't want to catch this exception, so we'll get it here
+            try {
+                // Add the route and check to see if it was successful
+                if (session.addARoute(user, routeDescription, routeStart, routeEnd)) {
+                    currentMessage = (String) hsn.getAttribute("message");
+                    currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
+                    hsn.setAttribute("message", currentMessage + "<font color=green>Route added successfully</font");
+                } else {
+                    Logger.getLogger(CTRouteController.class.getName()).log(Level.SEVERE, "Adding route returned false");
+                    currentMessage = (String) hsn.getAttribute("message");
+                    currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
+                    hsn.setAttribute("message", currentMessage + "<font color=red>Unable to add your route</font");
+                }
+            } catch (Exception e) {
+                Logger.getLogger(CTRouteController.class.getName()).log(Level.SEVERE, "Adding route threw exception");
+                currentMessage = (String) hsn.getAttribute("message");
+                currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
+                hsn.setAttribute("message", currentMessage + "<font color=red>Unable to add your route</font");
+            }
             Logger.getLogger(CTRouteController.class.getName()).log(Level.SEVERE, "about to set ctUsers attribute to " + this.getUserRoutes(userBean).toString());
             hsn.setAttribute("ctRoutes", this.getUserRoutes(userBean));
             view = "view_routes.jsp";
-
 
         } else if (method.equals("editRoute")) {
             Integer routeId = Integer.valueOf(request.getParameter("routeId"));

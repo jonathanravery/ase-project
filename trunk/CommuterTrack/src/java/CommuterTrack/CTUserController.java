@@ -103,7 +103,12 @@ public class CTUserController extends HttpServlet {
             return false;
         }
 
-        return session.addUser(user, pass, role);
+        try {
+            return session.addUser(user, pass, role);
+        } catch (Exception e) {
+            Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, null, "Exception occurred while trying to add user: " + e);
+            return false;
+        }
     }
 
     boolean editUser(int userId, String username, String pass, int role) {
@@ -266,16 +271,25 @@ public class CTUserController extends HttpServlet {
                     view = "new_user.jsp";
                 }
             }
-            // If there have not been any errors so far and the new user is added successfully
-            if (view == null && this.addUser(username, password, role)) {
-                hsn.setAttribute("message", "New user added successfully");
-                if (userBean == null) {
-                    Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "USERBEAN IS NULL", "USERBEAN IS NULL");
-                    view = "index.jsp";
-                } else {
-                    Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "USERBEAN IS NOT NULL", "USERBEAN IS NOT  NULL");
+            // If there have not been any errors so far
+            if (view == null) {
+                // If we are able to add the user successfully
+                if (this.addUser(username, password, role)) {
+                    hsn.setAttribute("message", "New user added successfully");
+                    if (userBean == null) {
+                        Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "USERBEAN IS NULL", "USERBEAN IS NULL");
+                        view = "index.jsp";
+                    } else {
+                        Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "USERBEAN IS NOT NULL", "USERBEAN IS NOT  NULL");
 
-                    view = "timer.jsp";
+                        view = "timer.jsp";
+                    }
+                } else {
+                    // If the addUser call fails, set the message to a failure notice and stay on the same page
+                    currentMessage = (String) hsn.getAttribute("message");
+                    currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
+                    hsn.setAttribute("message", currentMessage + "<font color=red>Unable to add you as a new user. The username you provided may not be available.</font>");
+                    view = "new_user.jsp";
                 }
             }
         } else if (method.equals("viewall")) {
