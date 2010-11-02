@@ -17,8 +17,10 @@
     <body>
         <div id="header"></div>
         <h1>New Account</h1>
-        <% session.getAttribute("message"); %>
-        <% session.setAttribute("message", ""); %>
+        <% if (session.getAttribute("message") != null) {
+            out.print(session.getAttribute("message"));
+            session.setAttribute("message", "");
+           } %>
 
         <form action="CTUserController" method="post">
         Username:<input name="user" type="text"><br>

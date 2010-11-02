@@ -23,16 +23,19 @@
         <div id="header"></div>
         <%@ include file="functionbanner.jsp" %>
         <h1>View all trips</h1>
-
+        <% if (session.getAttribute("message") != null) {
+            out.print(session.getAttribute("message"));
+            session.setAttribute("message", "");
+           } %>
         <%
-    System.out.println("viewing trips");
-        if (((CtUser) session.getAttribute("user")).getRole() != 1) {
+            //System.out.println("viewing trips");
+            if (((CtUser) session.getAttribute("user")).getRole() != 1) {
                         // System.exit(1);
 %>
-                you are not an admin
+               <!-- you are not an admin -->
     <%
         } else {
-    %> you are an admin, you may choose to see all routes in the system
+    %> <!-- you are an admin, you may choose to see all routes in the system -->
         <form method="POST" action="CTRouteController">
             <input type="hidden" name="method" value="viewAllRoutes">
             <input type="submit" name="submit" value="View all routes">
