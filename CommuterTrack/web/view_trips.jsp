@@ -25,7 +25,8 @@
 
         <%
     System.out.println("viewing trips");
-        if (((CtUser) session.getAttribute("user")).getRole() != 1) {
+        CtUser userBean = (CtUser) session.getAttribute("user");
+        if (userBean.getRole() != 1) {
                         // System.exit(1);
 %>
                 you are not an admin
@@ -60,9 +61,7 @@
                  curTrip = (CtTrip)i.next();
                  System.out.println(curTrip.getTripId().toString());
 
-
-                //iterate through HashMap keys
-               // while (e.hasMoreElements()) {
+                 if (userBean.getRole() == 1 || curTrip.getStatus().intValue() == 2) {
     %>
                     <TR>
                        <td><%= curTrip.getTripId() %></td>
@@ -79,6 +78,7 @@
                         </td>
                     </TR>
                     <%
+                    }
                 }
 
 

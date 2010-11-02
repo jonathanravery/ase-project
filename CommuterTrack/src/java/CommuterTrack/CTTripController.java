@@ -308,27 +308,32 @@ public class CTTripController extends HttpServlet {
                 view = "edit_trip.jsp";
             }
         } else if (method.equals("editTrip")) {
-            Integer tripId = Integer.valueOf(request.getParameter("tripId"));
-            Integer routeId = Integer.valueOf(request.getParameter("routeId"));
-            String start = request.getParameter("start");
-            String end = request.getParameter("end");
-            SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM d HH:mm:ss zzz yyyy");
-            try {
-                Date startTime = new Date();
-                Date endTime = new Date();
-                if (start.compareTo("") != 0) {
-                    startTime = formatter.parse(start);
+            if (request.getParameter("button").equals("Update Trip")) {
+                Integer tripId = Integer.valueOf(request.getParameter("tripId"));
+                Integer routeId = Integer.valueOf(request.getParameter("routeId"));
+                String start = request.getParameter("start");
+                String end = request.getParameter("end");
+                SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM d HH:mm:ss zzz yyyy");
+                try {
+                    Date startTime = new Date();
+                    Date endTime = new Date();
+                    if (start.compareTo("") != 0) {
+                        startTime = formatter.parse(start);
+                    }
+                    if (end.compareTo("") != 0) {
+                        endTime = formatter.parse(end);
+                    }
+                    Integer status = new Integer(2);
+                    this.editTrip(tripId, routeId, startTime, endTime, status);
+                    Logger.getLogger(CTTripController.class.getName()).log(Level.SEVERE, "setting new dates " + start + ", " + end);
+                    Logger.getLogger(CTTripController.class.getName()).log(Level.SEVERE, "setting routeId " + routeId.toString());
+                } catch (ParseException ex) {
+                    Logger.getLogger(CTTripController.class.getName()).log(Level.SEVERE, "Could not parse dates " + start + ", " + end, ex);
                 }
-                if (end.compareTo("") != 0) {
-                    endTime = formatter.parse(end);
-                }
-                Integer status = new Integer(2);
-                this.editTrip(tripId, routeId, startTime, endTime, status);
-                Logger.getLogger(CTTripController.class.getName()).log(Level.SEVERE, "setting new dates " + start + ", " + end);
-                Logger.getLogger(CTTripController.class.getName()).log(Level.SEVERE, "setting routeId " + routeId.toString());
-            } catch (ParseException ex) {
-                Logger.getLogger(CTTripController.class.getName()).log(Level.SEVERE, "Could not parse dates " + start + ", " + end, ex);
-            }            
+            } else { // discard trip
+                Integer tripId = Integer.valueOf(request.getParameter("tripId"));
+                this.delTrip(tripId);
+            }
             Logger.getLogger(CTRouteController.class.getName()).log(Level.SEVERE, "about to set ctTrips attribute to " + this.getUserTrips(userBean.getUserId()).toString());
             hsn.setAttribute("ctTrips", this.getUserTrips(userBean.getUserId()));
             view = "view_trips.jsp";

@@ -64,7 +64,8 @@
             </select><br>
             <label for="start">Start Time:</label><input id="start" name="start" type="text" value="<%= start %>"><br>
             <label for="end">End Time:</label><input id="end" name="end" type="text" value="<%= end %>"><br>
-        <input type="submit" name="editTrip" value="Edit Trip">
+        <input type="submit" name="button" value="Update Trip">
+        <input type="submit" name="button" value="Discard Trip">
         </form>
         </fieldset>
 </body>
