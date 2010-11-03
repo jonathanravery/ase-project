@@ -281,7 +281,7 @@ public class CTSession implements CTSessionRemote {
         route.setRouteStart(routeStart);
         route.setRouteEnd(routeEnd);
 
-        em.merge(route);
+        em.persist(route);
         return true;
     }
 
