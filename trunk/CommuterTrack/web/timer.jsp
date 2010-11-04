@@ -95,14 +95,18 @@
                 <option value="<%= routeList.get(i).getRouteId() %>"><%= routeList.get(i).getDescription() %></option>
                 <% } %>
             </select>
+
+            <p>
             <% } %>
 
             <% if (userintrip) { submitText = "Stop"; %>
                 <input type="hidden" name="method" value="stop">
+                <input type="image" src="red_button.png" name="submit" value="<%= submitText %>">
             <% } else { submitText = "Start"; %>
                 <input type="hidden" name="method" value="start">
+                <input type="image" src="green_button.png" name="submit" value="<%= submitText %>">
             <% } %>
-            <input type="submit" name="submit" value="<%= submitText %>">
+            
         </form>
         <% } // else %>
     </body>
