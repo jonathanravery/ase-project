@@ -73,3 +73,4 @@ INSERT INTO CT_TRIPS (route_id, start_time, end_time, status) VALUES (15, '2010-
 INSERT INTO CT_TRIPS (route_id, start_time, end_time, status) VALUES (15, '2010-10-29 10:55:45.763', '2010-10-29 12:10:23.004',0);
 INSERT INTO CT_TRIPS (route_id, start_time, end_time, status) VALUES (16, '2010-11-03 08:55:45.763', '2010-11-03 10:25:23.004',0);
 
+INSERT INTO CT_TRIPS (route_id, start_time, end_time, status) VALUES (16, '2010-11-04 08:55:45.763', null,0);
