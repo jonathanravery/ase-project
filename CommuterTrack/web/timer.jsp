@@ -71,11 +71,11 @@
         <div id="header"></div>
         <%@ include file="functionbanner.jsp" %>
 
-        <h3>timer page</h3>
+        <h3>Timer Page</h3>
+        Hello <%= ((CtUser)session.getAttribute("user")).getUsername() %>!
         <% session.setAttribute("message", session.getAttribute("message") + ""); %>
         <%= ((String)session.getAttribute("message")) %>
         <% session.setAttribute("message", ""); %><br>
-        Hello <%= ((CtUser)session.getAttribute("user")).getUsername() %>!
         <p>
 
             <%
