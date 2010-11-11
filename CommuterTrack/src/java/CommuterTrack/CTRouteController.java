@@ -119,7 +119,7 @@ public class CTRouteController extends HttpServlet {
             // For some reason, the try/catch in the session bean doesn't want to catch this exception, so we'll get it here
             try {
                 // Add the route and check to see if it was successful
-                if (session.addARoute(user, routeDescription, routeStart, routeEnd)) {
+                if (addRoute(user, routeDescription, routeStart, routeEnd)) {
                     currentMessage = (String) hsn.getAttribute("message");
                     currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
                     hsn.setAttribute("message", currentMessage + "<font color=green>Route added successfully</font>");
@@ -144,7 +144,7 @@ public class CTRouteController extends HttpServlet {
             String routeDescription = request.getParameter("description");
             String routeStart = request.getParameter("start");
             String routeEnd = request.getParameter("end");
-            if (session.updateRoute(routeId, routeDescription, routeStart, routeEnd)) {
+            if (updateRoute(routeId, routeDescription, routeStart, routeEnd)) {
                 Logger.getLogger(CTRouteController.class.getName()).log(Level.SEVERE, "EDITR: about to set ctUsers attribute to " + this.getUserRoutes(userBean).toString());
                 currentMessage = (String) hsn.getAttribute("message");
                 currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
@@ -160,8 +160,8 @@ public class CTRouteController extends HttpServlet {
             }
             
         } else if (method.equals("deleteRoute")) {
-            Integer routeId = Integer.valueOf(request.getParameter("routeId"));
-            session.delRoute(routeId);
+             Integer routeId = Integer.valueOf(request.getParameter("routeId"));
+            deleteRoute(routeId);
             Logger.getLogger(CTRouteController.class.getName()).log(Level.SEVERE, "DELR: about to set ctUsers attribute to " + this.getUserRoutes(userBean).toString());
             hsn.setAttribute("ctRoutes", this.getUserRoutes(userBean));
             view = "view_routes.jsp";
@@ -185,6 +185,74 @@ public class CTRouteController extends HttpServlet {
         }
 
         return session.getRoute(routeId);
+    }
+
+
+    boolean deleteRoute(int routeId) {
+        final Context context;
+        CTSessionRemote session;
+
+        try {
+            context = new InitialContext();
+            session = (CTSessionRemote) context.lookup("CommuterTrack.CTSessionRemote");
+        } catch (NamingException ex) {
+            Logger.getLogger(CTRouteController.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+        try {
+                // Add the route and check to see if it was successful
+
+            return session.delRoute(routeId);
+        } catch (Exception e) {
+            Logger.getLogger(CTRouteController.class.getName()).log(Level.SEVERE, "Updateing route threw exception");
+            return false;
+        }
+
+
+    }
+
+    boolean updateRoute(int routeId, String routeDescription, String routeStart, String routeEnd) {
+        final Context context;
+        CTSessionRemote session;
+
+        try {
+            context = new InitialContext();
+            session = (CTSessionRemote) context.lookup("CommuterTrack.CTSessionRemote");
+        } catch (NamingException ex) {
+            Logger.getLogger(CTRouteController.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+        try {
+            return session.updateRoute(routeId, routeDescription, routeStart, routeEnd);
+        } catch (Exception e) {
+            Logger.getLogger(CTRouteController.class.getName()).log(Level.SEVERE, "Updateing route threw exception");
+            return false;
+        }
+
+
+    }
+
+
+    boolean addRoute(CtUser user,  String desc, String st, String en)
+    {
+        final Context context;
+        CTSessionRemote session;
+
+        try {
+            context = new InitialContext();
+            session = (CTSessionRemote) context.lookup("CommuterTrack.CTSessionRemote");
+        } catch (NamingException ex) {
+            Logger.getLogger(CTRouteController.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+        try {
+                // Add the route and check to see if it was successful
+
+            return session.addARoute(user, desc, st, en);
+        } catch (Exception e) {
+            Logger.getLogger(CTRouteController.class.getName()).log(Level.SEVERE, "Adding route threw exception");
+            return false;
+        }
     }
 
     List getUserRoutes(CtUser ub) {
