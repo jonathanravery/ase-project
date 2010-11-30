@@ -139,6 +139,15 @@ public class CtRoute implements Serializable {
         if ((this.routeId == null && other.routeId != null) || (this.routeId != null && !this.routeId.equals(other.routeId))) {
             return false;
         }
+        if ((this.routeStart == null && other.routeStart != null) || (this.routeStart != null && !this.routeStart.equals(other.routeStart))) {
+            return false;
+        }
+        if ((this.routeEnd == null && other.routeEnd != null) || (this.routeEnd != null && !this.routeEnd.equals(other.routeEnd))) {
+            return false;
+        }
+        if ((this.description == null && other.description != null) || (this.description != null && !this.description.equals(other.description))) {
+            return false;
+        }
         return true;
     }
 
