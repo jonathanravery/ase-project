@@ -243,7 +243,12 @@ public class CTSession implements CTSessionRemote {
 
 
         //check our inputs
-        if (!this.isLegalInput(routeDescription+routeStart+routeEnd)){return false;}
+        if (!this.isLegalInput(routeDescription+routeStart+routeEnd)){
+            return false;
+        }
+        if (user == null) {
+            return false;
+        }
 
         CtRoute c = new CtRoute();
         c.setDescription(routeDescription);
@@ -251,14 +256,12 @@ public class CTSession implements CTSessionRemote {
         c.setRouteEnd(routeEnd);
 
         c.setCtUser(user);
-        //I'm not sure what this is
-        //but should it really be in CtUser???  - mechanic
-        // Mariya: since we have a constraint between the tables user and route
-        // this will insure we don't violate the constraint
-        // however we may not really need it. It looks like it works without it too
-        //user.addToRoutes(c);
-        //em.merge(user);
-        em.persist(c);
+        try {
+            em.persist(c);
+        }
+        catch (Exception ex) {
+            return false;
+        }
         return true;
     }
 
@@ -343,7 +346,7 @@ public class CTSession implements CTSessionRemote {
     @Override
     public boolean editTrip(Integer tripId, CtRoute routeBean, Date startDate, Date endDate, Integer status) {
 
-        // we are assuming that the right person is editing the right trip... 
+        // we are assuming that the right person is editing the right trip...
         // confirm that in the servlet level
         Query q = em.createNamedQuery("CtTrip.findByTripId");
         q.setParameter("tripId", tripId);
@@ -369,11 +372,11 @@ public class CTSession implements CTSessionRemote {
 
     @Override
     public CtRoute getRoute(Integer routeId){
-        
+
         Query q = em.createNamedQuery("CtRoute.findByRouteId");
         q.setParameter("routeId", routeId);
 
-        
+
         try {
             CtRoute route = (CtRoute) q.getSingleResult();
             return route;
@@ -432,7 +435,7 @@ public class CTSession implements CTSessionRemote {
             return null;
         }
     }
-    
+
     @Override
     public CtTrip getActiveTrip(Integer userId) {
         Query q = em.createNamedQuery("CtTrip.findByUserAndStatus");
