@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package CommuterTrack;
 
 import java.sql.DriverManager;
@@ -40,18 +35,9 @@ public class CTSessionTest {
     @BeforeClass
     public static void setUpClass() throws Exception {
         Map properties = new HashMap<String, Object>();
-        //properties.put(EJBContainer.APP_NAME, "CommuterTrack-ejb");
-        //properties.put(EJBContainer.MODULES, new File("CommuterTrack-ejb/build/classes")); //added this
-	//properties.put("org.glassfish.ejb.embedded.glassfish.installation.root", "/home/maria/GlassFiss_Server_3/glassfish"); //and  this
 
         properties.put("org.glassfish.ejb.embedded.glassfish.configuration.file", "test-resource/domain.xml");
         EJBContainer c = javax.ejb.embeddable.EJBContainer.createEJBContainer(properties);
-        //System.out.println("PROVIDER:" + c.PROVIDER);
-
-	//EJBContainer c = EJBContainer.createEJBContainer(properties);
-        //EJBContainer c = EJBContainer.createEJBContainer();
-        //CTSession instance = (CTSession)javax.ejb.embeddable.EJBContainer.createEJBContainer().getContext().lookup("java:global/classes/CTSession");
-        //CTSession instance = (CTSession) c.getContext().lookup("java:global/CommuterTrack/CommuterTrack-ejb/CTSession");
         instance = (CTSessionRemote) c.getContext().lookup("java:global/classes/CTSession");
     }
 
