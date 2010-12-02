@@ -144,12 +144,32 @@ public class CTSessionTest {
     @Test
     public void testDelRoute() throws Exception {
         System.out.println("delRoute");
-        Integer routeId = null;
-        boolean expResult = false;
-        boolean result = instance.delRoute(routeId);
+
+        Integer routeId;
+        boolean expResult;
+        boolean result;
+        routeId = null;
+        expResult = false;
+        result = instance.delRoute(routeId);
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+
+        routeId = new Integer(-1);
+        expResult = false;
+        result = instance.delRoute(routeId);
+        assertEquals(expResult, result);
+
+        routeId = new Integer(2);
+        expResult = false;
+        result = instance.delRoute(routeId);
+        assertEquals(expResult, result);
+
+
+        routeId = new Integer(1);
+        expResult = true;
+        result = instance.delRoute(routeId);
+        assertEquals(expResult, result);
+
+        assertEquals(null,instance.getRoute(routeId));
     }
 
     /**
@@ -322,12 +342,37 @@ public class CTSessionTest {
     @Test
     public void testGetRoute() throws Exception {
         System.out.println("getRoute");
-        Integer routeId = null;
-        CtRoute expResult = null;
-        CtRoute result = instance.getRoute(routeId);
+
+        Integer routeId;
+        CtRoute expResult;
+        CtRoute result;
+        routeId = null;
+        expResult = null;
+        result = instance.getRoute(routeId);
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+
+        routeId = new Integer(-1);
+        expResult = null;
+        result = instance.getRoute(routeId);
+        assertEquals(expResult, result);
+
+        routeId = new Integer(2);
+        expResult = null;
+        result = instance.getRoute(routeId);
+        assertEquals(expResult, result);
+
+
+        routeId = new Integer(1);
+        expResult = new CtRoute();
+        expResult.setRouteId(1);
+        expResult.setDescription("ADMIN TEST ROUTE");
+        expResult.setRouteStart("rstart");
+        expResult.setRouteEnd("rend");
+        result = instance.getRoute(routeId);
+        assertEquals(expResult, result);
+
+        assertEquals(null,instance.getRoute(routeId));
+
     }
 
     /**
