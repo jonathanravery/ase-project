@@ -1,5 +1,12 @@
 <%@page import="CommuterTrack.CtUser"%>
-
+<%
+    if (session.getAttribute("user") == null)
+    {
+        response.sendRedirect("index.jsp");
+    }
+    else
+    {
+%>
 	<div id="menu">
 		<ul>
 			<li><a href="/CommuterTrack/timer.jsp">Timer</a></li>
@@ -18,4 +25,5 @@
 			<li><a href="/CommuterTrack/CTUserController?method=logout">Logout</a></li>
 		</ul>
 	</div>
+<% } %>
 	<!-- end #menu -->

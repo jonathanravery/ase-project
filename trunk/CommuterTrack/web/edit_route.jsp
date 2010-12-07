@@ -4,6 +4,11 @@
     Author     : Travel Timers
 --%>
 
+<% if (session.getAttribute("user") == null) {
+       response.sendRedirect("index.jsp");
+   } else {
+%>
+
 <%@page import="java.util.List"%>
 <%@page import="java.util.Iterator"%>
 <%@page import="java.util.Set"%>
@@ -54,3 +59,4 @@
 </body>
 
 </html>
+<% } %>
