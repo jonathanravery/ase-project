@@ -371,7 +371,17 @@ public class CTTripController extends HttpServlet {
                             endTime = formatter.parse(end);
                         }
                         Integer status = new Integer(2);
-                        this.editTrip(tripId, routeId, startTime, endTime, status);
+                        if (this.editTrip(tripId, routeId, startTime, endTime, status)) {
+                            Logger.getLogger(CTRouteController.class.getName()).log(Level.INFO, "Successfully edited a trip");
+                            currentMessage = (String) hsn.getAttribute("message");
+                            currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
+                            hsn.setAttribute("message", currentMessage + "<font color=green>Trip edited.</font><br>");
+                        } else {
+                            Logger.getLogger(CTRouteController.class.getName()).log(Level.WARNING, "Edit trip failed.");
+                            currentMessage = (String) hsn.getAttribute("message");
+                            currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
+                            hsn.setAttribute("message", currentMessage + "<font color=red>Unable to edit the trip.</font><br>");
+                        }
                         Logger.getLogger(CTTripController.class.getName()).log(Level.SEVERE, "setting new dates " + start + ", " + end);
                         Logger.getLogger(CTTripController.class.getName()).log(Level.SEVERE, "setting routeId " + routeId.toString());
                     } catch (ParseException ex) {
