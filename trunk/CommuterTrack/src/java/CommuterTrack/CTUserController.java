@@ -400,8 +400,16 @@ public class CTUserController extends HttpServlet {
 
         } else if (method.equals("delete")) {
             userBean = (CtUser)hsn.getAttribute("user");
+            // Make sure the user is logged in
+            if (userBean == null) {
+                Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "Unauthenticated user attempting delete/undelete");
+                currentMessage = (String) hsn.getAttribute("message");
+                currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
+                hsn.setAttribute("message", currentMessage + "<font color=red>You are not authorized to do that.</font>");
+                view = "index.jsp";
+            }
             // Make sure the user is an admin
-            if (userBean.getRole() != 1) {
+            else if(userBean.getRole() != 1) {
                 Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "Non-admin user trying to deactivate user.");
                 currentMessage = (String) hsn.getAttribute("message");
                 currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
