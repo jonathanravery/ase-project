@@ -321,8 +321,19 @@ public class CTTripController extends HttpServlet {
                 view = "edit_trip.jsp";
             }
         } else if (method.equals("editTrip")) {
-            if (request.getParameter("button").equals("Update Trip")) {
-                Integer tripId = Integer.valueOf(request.getParameter("tripId"));
+            Integer tripId = Integer.valueOf(request.getParameter("tripId"));
+            // Make sure the user is an admin or owns the trip
+            if (userBean.getRole() != 1 && userBean.getUserId().intValue() !=
+                    getTrip(tripId).getCtRoute().getCtUser().getUserId()) {
+                Logger.getLogger(CTRouteController.class.getName()).log(Level.WARNING, "The user is trying to edit a trip that does not belong to him");
+                Logger.getLogger(CTRouteController.class.getName()).log(Level.WARNING, "(user is " + userBean.getUserId() + ", trip belongs to " + getTrip(tripId).getCtRoute().getCtUser().getUserId() + ")");
+                currentMessage = (String) hsn.getAttribute("message");
+                currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
+                hsn.setAttribute("message", currentMessage + "<font color=red>That trip does not belong to you.</font><br>");
+                hsn.setAttribute("ctTrips", this.getUserTrips(userBean.getUserId()));
+                view = "view_trips.jsp";
+            }
+            else if(request.getParameter("button").equals("Update Trip")) {
                 Integer routeId = Integer.valueOf(request.getParameter("routeId"));
                 String start = request.getParameter("start");
                 String end = request.getParameter("end");
@@ -344,7 +355,6 @@ public class CTTripController extends HttpServlet {
                     Logger.getLogger(CTTripController.class.getName()).log(Level.SEVERE, "Could not parse dates " + start + ", " + end, ex);
                 }
             } else { // discard trip
-                Integer tripId = Integer.valueOf(request.getParameter("tripId"));
                 this.delTrip(tripId);
             }
             Logger.getLogger(CTRouteController.class.getName()).log(Level.SEVERE, "about to set ctTrips attribute to " + this.getUserTrips(userBean.getUserId()).toString());
