@@ -107,6 +107,13 @@ public class CTRouteController extends HttpServlet {
                 currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
                 hsn.setAttribute("message", currentMessage + "<font color=red>The route you are trying to edit does not exist</font>");
                 view = "view_routes.jsp";
+            } else if (route.getCtUser().getUserId().intValue() != userBean.getUserId().intValue()) {
+                Logger.getLogger(CTRouteController.class.getName()).log(Level.SEVERE, "User trying to view the edit route page for a route he doesn't own");
+                currentMessage = (String) hsn.getAttribute("message");
+                currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
+                hsn.setAttribute("message", currentMessage + "<font color=red>You are not authorized to do that</font>");
+                hsn.setAttribute("ctRoutes", this.getUserRoutes(userBean));
+                view = "view_routes.jsp";
             } else {
                 hsn.setAttribute("editRoute", route);
                 view = "edit_route.jsp";
@@ -144,7 +151,15 @@ public class CTRouteController extends HttpServlet {
             String routeDescription = request.getParameter("description");
             String routeStart = request.getParameter("start");
             String routeEnd = request.getParameter("end");
-            if (updateRoute(routeId, routeDescription, routeStart, routeEnd)) {
+            if (getRoute(routeId).getCtUser().getUserId().intValue() != userBean.getUserId().intValue()) {
+                Logger.getLogger(CTRouteController.class.getName()).log(Level.SEVERE, "User trying to edit a route he doesn't own");
+                currentMessage = (String) hsn.getAttribute("message");
+                currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
+                hsn.setAttribute("message", currentMessage + "<font color=red>You are not authorized to do that</font>");
+                hsn.setAttribute("ctRoutes", this.getUserRoutes(userBean));
+                view = "view_routes.jsp";
+            }
+            else if(updateRoute(routeId, routeDescription, routeStart, routeEnd)) {
                 Logger.getLogger(CTRouteController.class.getName()).log(Level.SEVERE, "EDITR: about to set ctUsers attribute to " + this.getUserRoutes(userBean).toString());
                 currentMessage = (String) hsn.getAttribute("message");
                 currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
@@ -160,11 +175,21 @@ public class CTRouteController extends HttpServlet {
             }
             
         } else if (method.equals("deleteRoute")) {
-             Integer routeId = Integer.valueOf(request.getParameter("routeId"));
-            deleteRoute(routeId);
-            Logger.getLogger(CTRouteController.class.getName()).log(Level.SEVERE, "DELR: about to set ctUsers attribute to " + this.getUserRoutes(userBean).toString());
-            hsn.setAttribute("ctRoutes", this.getUserRoutes(userBean));
-            view = "view_routes.jsp";
+            Integer routeId = Integer.valueOf(request.getParameter("routeId"));
+            // Make sure the user actually owns the route
+            if (getRoute(routeId).getCtUser().getUserId().intValue() != userBean.getUserId().intValue()) {
+                Logger.getLogger(CTRouteController.class.getName()).log(Level.SEVERE, "User trying to delete a route he doesn't own");
+                currentMessage = (String) hsn.getAttribute("message");
+                currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
+                hsn.setAttribute("message", currentMessage + "<font color=red>You are not authorized to do that</font>");
+                hsn.setAttribute("ctRoutes", this.getUserRoutes(userBean));
+                view = "view_routes.jsp";
+            } else {
+                deleteRoute(routeId);
+                Logger.getLogger(CTRouteController.class.getName()).log(Level.SEVERE, "DELR: about to set ctUsers attribute to " + this.getUserRoutes(userBean).toString());
+                hsn.setAttribute("ctRoutes", this.getUserRoutes(userBean));
+                view = "view_routes.jsp";
+            }
         }
 
         RequestDispatcher rd = request.getRequestDispatcher(view);
