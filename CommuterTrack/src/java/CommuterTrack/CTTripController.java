@@ -141,7 +141,7 @@ public class CTTripController extends HttpServlet {
         return session.getAllTrips();
     }
 
-    List getUserRoutes(CtUser ub) {
+    List<CtRoute> getUserRoutes(CtUser ub) {
         final Context context;
         CTSessionRemote session;
 
@@ -335,24 +335,42 @@ public class CTTripController extends HttpServlet {
             }
             else if(request.getParameter("button").equals("Update Trip")) {
                 Integer routeId = Integer.valueOf(request.getParameter("routeId"));
-                String start = request.getParameter("start");
-                String end = request.getParameter("end");
-                SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM d HH:mm:ss zzz yyyy");
-                try {
-                    Date startTime = new Date();
-                    Date endTime = new Date();
-                    if (start.compareTo("") != 0) {
-                        startTime = formatter.parse(start);
+                // Make sure the user actually owns the new route (isn't giving the trip to another user)
+                List<CtRoute> routes = getUserRoutes(userBean);
+                boolean ownsRoute = false;
+                for (CtRoute rte : routes) {
+                    if (rte.getRouteId().intValue() == routeId.intValue()) {
+                        ownsRoute = true;
                     }
-                    if (end.compareTo("") != 0) {
-                        endTime = formatter.parse(end);
+                }
+                if (ownsRoute != true) {
+                    Logger.getLogger(CTRouteController.class.getName()).log(Level.WARNING, "The user does not own that route");
+                    currentMessage = (String) hsn.getAttribute("message");
+                    currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
+                    hsn.setAttribute("message", currentMessage + "<font color=red>That route does not belong to you.</font><br>");
+                    hsn.setAttribute("ctTrips", this.getUserTrips(userBean.getUserId()));
+                    view = "view_trips.jsp";
+                }
+                else {
+                    String start = request.getParameter("start");
+                    String end = request.getParameter("end");
+                    SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM d HH:mm:ss zzz yyyy");
+                    try {
+                        Date startTime = new Date();
+                        Date endTime = new Date();
+                        if (start.compareTo("") != 0) {
+                            startTime = formatter.parse(start);
+                        }
+                        if (end.compareTo("") != 0) {
+                            endTime = formatter.parse(end);
+                        }
+                        Integer status = new Integer(2);
+                        this.editTrip(tripId, routeId, startTime, endTime, status);
+                        Logger.getLogger(CTTripController.class.getName()).log(Level.SEVERE, "setting new dates " + start + ", " + end);
+                        Logger.getLogger(CTTripController.class.getName()).log(Level.SEVERE, "setting routeId " + routeId.toString());
+                    } catch (ParseException ex) {
+                        Logger.getLogger(CTTripController.class.getName()).log(Level.SEVERE, "Could not parse dates " + start + ", " + end, ex);
                     }
-                    Integer status = new Integer(2);
-                    this.editTrip(tripId, routeId, startTime, endTime, status);
-                    Logger.getLogger(CTTripController.class.getName()).log(Level.SEVERE, "setting new dates " + start + ", " + end);
-                    Logger.getLogger(CTTripController.class.getName()).log(Level.SEVERE, "setting routeId " + routeId.toString());
-                } catch (ParseException ex) {
-                    Logger.getLogger(CTTripController.class.getName()).log(Level.SEVERE, "Could not parse dates " + start + ", " + end, ex);
                 }
             } else { // discard trip
                 this.delTrip(tripId);
