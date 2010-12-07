@@ -195,7 +195,11 @@ public class CTTripController extends HttpServlet {
 
         method = request.getParameter("method");
 
-        if (method == null || method.equals("view")) {
+        // If the user bean is null, they can't be doing anything with trips, period.
+        if (userBean == null) {
+            view = "index.jsp";
+        }
+        else if(method == null || method.equals("view")) {
             Logger.getLogger(CTTripController.class.getName()).log(Level.WARNING, "No method was specified or method is 'view' ");
             view = "timer.jsp";
         } else if (method.equals("start")) {
