@@ -335,7 +335,7 @@ public class CTUserController extends HttpServlet {
                 Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "USERBEAN IS NULL OR ROLE IS NOT 1 AND USERS DO NOT MATCH");
                 currentMessage = (String) hsn.getAttribute("message");
                 currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
-                hsn.setAttribute("message", currentMessage + "<font color=red>You are not authorized to do that</font");
+                hsn.setAttribute("message", currentMessage + "<font color=red>You are not authorized to do that</font>");
                 view = "timer.jsp";
             } else {
                 Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "About to edit user");
