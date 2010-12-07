@@ -77,7 +77,7 @@
         <%@ include file="functionbanner.jsp" %>
 
         <h3>Timer Page</h3>
-        Hello <%= ((CtUser)session.getAttribute("user")).getUsername() %>!
+        Hello <%= ((CtUser)session.getAttribute("user")).getUsername() %>!<br>
         <% session.setAttribute("message", session.getAttribute("message") + ""); %>
         <%= ((String)session.getAttribute("message")) %>
         <% session.setAttribute("message", ""); %><br>
