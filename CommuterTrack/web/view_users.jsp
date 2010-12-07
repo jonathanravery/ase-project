@@ -4,6 +4,11 @@
     Author     : dm2474
 --%>
 
+<% if (session.getAttribute("user") == null) {
+       response.sendRedirect("index.jsp");
+   } else {
+%>
+
 <%@page import="java.util.ArrayList"%>
 <%@page import="javax.naming.InitialContext"%>
 <%@page import="CommuterTrack.CTSessionRemote"%>
@@ -116,3 +121,4 @@
 </body>
 
 </html>
+<% } %>

@@ -4,6 +4,11 @@
     Author     : dm2474
 --%>
 
+<% if (session.getAttribute("user") == null) {
+       response.sendRedirect("index.jsp");
+   } else {
+%>
+
 <%@page import="java.util.List"%>
 <%@page import="java.util.logging.Logger"%>
 <%@page import="java.util.logging.Level"%>
@@ -111,3 +116,5 @@
         <% } // else %>
     </body>
 </html>
+
+<% } %>

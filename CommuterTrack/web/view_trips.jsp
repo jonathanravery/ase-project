@@ -3,6 +3,12 @@
     Created on : Oct 30, 2010, 10:35:50 PM
     Author     : maria
 --%>
+
+<% if (session.getAttribute("user") == null) {
+       response.sendRedirect("index.jsp");
+   } else {
+%>
+
 <%@page import="java.util.Calendar"%>
 <%@page import="CommuterTrack.CtTrip"%>
 <%@page import="java.util.Iterator"%>
@@ -149,3 +155,4 @@
 </script>
     </body>
 </html>
+<% } %>

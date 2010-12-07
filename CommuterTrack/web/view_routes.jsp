@@ -4,6 +4,11 @@
     Author     : maria
 --%>
 
+<% if (session.getAttribute("user") == null) {
+       response.sendRedirect("index.jsp");
+   } else {
+%>
+
 <%@page import="CommuterTrack.CtRoute"%>
 <%@page import="java.util.Iterator"%>
 <%@page import="java.util.ArrayList"%>
@@ -100,3 +105,5 @@
 
 </body>
 </html>
+
+<% } %>

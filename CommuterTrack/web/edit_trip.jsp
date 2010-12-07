@@ -3,6 +3,12 @@
     Created on : Nov 1, 2010, 6:26:01 PM
     Author     : maria
 --%>
+
+<% if (session.getAttribute("user") == null) {
+       response.sendRedirect("index.jsp");
+   } else {
+%>
+
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.util.List"%>
 <%@page import="java.util.Iterator"%>
@@ -72,3 +78,4 @@
 
 </html>
 
+<% } %>
