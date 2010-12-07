@@ -410,7 +410,7 @@ public class CTUserController extends HttpServlet {
                 try {
                     if (request.getParameter("submit").equals("Deactivate")) {
                         if (this.delUser(Integer.parseInt(request.getParameter("userId")))) {
-                            currentMessage = (String) hsn.getAttribute("message");
+                            currentMessage = (String) hsn.getAttribute("message"); 
                             currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
                             hsn.setAttribute("message", currentMessage + "<font color=green>User deactivated</font");
                         } else {
