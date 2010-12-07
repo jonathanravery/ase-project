@@ -372,7 +372,8 @@ public class CTUserController extends HttpServlet {
                     hsn.setAttribute("message", "<font color=red>you tried something you shouldn't have!</font>");
                     view = "timer.jsp";
                 }
-                if (this.editUser(userid, username, password, role)) {
+
+                else if(this.editUser(userid, username, password, role)) {
                     Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "edit user went good!");
                     hsn.setAttribute("message", "<font color=green>User Edit Successful</font>");
 
