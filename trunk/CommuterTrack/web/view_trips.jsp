@@ -35,16 +35,16 @@
 
     System.out.println("viewing trips");
         CtUser userBean = (CtUser) session.getAttribute("user");
-        if (userBean.getRole() != 1) {
+        //if (userBean.getRole() != 1) {
                         // System.exit(1);
 %>
                <!-- you are not an admin -->
     <%
-        } else {
+        //} else {
             if (session.getAttribute("message") != null) {
                 out.print(session.getAttribute("message"));
                 session.setAttribute("message", "");
-           } %>
+          // } %>
         <form method="POST" action="CTTripController">
             <input type="hidden" name="method" value="viewAllTrips">
             <input type="submit" name="submit" value="View all trips">
