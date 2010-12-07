@@ -98,8 +98,6 @@ public class CTTripController extends HttpServlet {
         } catch (NamingException ex) {
             Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, null, ex);
             return false;
-        } finally {
-            // do stuff
         }
 
         return session.delTrip(tripId);
@@ -322,9 +320,17 @@ public class CTTripController extends HttpServlet {
             }
         } else if (method.equals("editTrip")) {
             Integer tripId = Integer.valueOf(request.getParameter("tripId"));
+            CtTrip trip = getTrip(tripId);
             // Make sure the user is an admin or owns the trip
-            if (userBean.getRole() != 1 && userBean.getUserId().intValue() !=
-                    getTrip(tripId).getCtRoute().getCtUser().getUserId()) {
+            if (trip == null) {
+                Logger.getLogger(CTRouteController.class.getName()).log(Level.WARNING, "Attempt to edit or delete a trip that does not exist");
+                currentMessage = (String) hsn.getAttribute("message");
+                currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
+                hsn.setAttribute("message", currentMessage + "<font color=red>That trip does not exist.</font><br>");
+            }
+            else if(userBean.getRole() != 1 && userBean.getUserId().intValue()
+                    !=
+                    trip.getCtRoute().getCtUser().getUserId()) {
                 Logger.getLogger(CTRouteController.class.getName()).log(Level.WARNING, "The user is trying to edit a trip that does not belong to him");
                 Logger.getLogger(CTRouteController.class.getName()).log(Level.WARNING, "(user is " + userBean.getUserId() + ", trip belongs to " + getTrip(tripId).getCtRoute().getCtUser().getUserId() + ")");
                 currentMessage = (String) hsn.getAttribute("message");
@@ -372,8 +378,23 @@ public class CTTripController extends HttpServlet {
                         Logger.getLogger(CTTripController.class.getName()).log(Level.SEVERE, "Could not parse dates " + start + ", " + end, ex);
                     }
                 }
-            } else { // discard trip
-                this.delTrip(tripId);
+            } else if (request.getParameter("button").equals("Discard Trip")) { // discard trip
+                if (this.delTrip(tripId)) {
+                    Logger.getLogger(CTRouteController.class.getName()).log(Level.INFO, "Trip deleted successfully");
+                    currentMessage = (String) hsn.getAttribute("message");
+                    currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
+                    hsn.setAttribute("message", currentMessage + "<font color=green>Your trip has been deleted.</font><br>");
+                } else {
+                    Logger.getLogger(CTRouteController.class.getName()).log(Level.WARNING, "Attempt to delete a trip failed");
+                    currentMessage = (String) hsn.getAttribute("message");
+                    currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
+                    hsn.setAttribute("message", currentMessage + "<font color=red>Unable to delete the trip.</font><br>");
+                }
+            } else {
+                Logger.getLogger(CTRouteController.class.getName()).log(Level.WARNING, "Invalid edit sub-action");
+                currentMessage = (String) hsn.getAttribute("message");
+                currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
+                hsn.setAttribute("message", currentMessage + "<font color=red>Unknown edit action type.</font><br>");
             }
             Logger.getLogger(CTRouteController.class.getName()).log(Level.SEVERE, "about to set ctTrips attribute to " + this.getUserTrips(userBean.getUserId()).toString());
             hsn.setAttribute("ctTrips", this.getUserTrips(userBean.getUserId()));
