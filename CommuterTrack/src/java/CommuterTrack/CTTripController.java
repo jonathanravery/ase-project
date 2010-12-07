@@ -304,7 +304,16 @@ public class CTTripController extends HttpServlet {
                 Logger.getLogger(CTRouteController.class.getName()).log(Level.SEVERE, "The trip the user is about to edit does not exist");
                 currentMessage = (String) hsn.getAttribute("message");
                 currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
-                hsn.setAttribute("message", currentMessage + "<font color=red>The trip you are trying to edit does not exist</font");
+                hsn.setAttribute("message", currentMessage + "<font color=red>The trip you are trying to edit does not exist</font>");
+                view = "view_trips.jsp";
+            // Make sure the trip actually belongs to the user
+            } else if (!trip.getCtRoute().getCtUser().getUserId().equals(userBean.getUserId())) {
+                Logger.getLogger(CTRouteController.class.getName()).log(Level.WARNING, "The user is trying to edit a trip that does not belong to him");
+                Logger.getLogger(CTRouteController.class.getName()).log(Level.WARNING, "(user is " + userBean.getUserId() + ", trip belongs to " + trip.getCtRoute().getCtUser().getUserId() + ")");
+                currentMessage = (String) hsn.getAttribute("message");
+                currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
+                hsn.setAttribute("message", currentMessage + "<font color=red>That trip does not belong to you.</font><br>");
+                hsn.setAttribute("ctTrips", this.getUserTrips(userBean.getUserId()));
                 view = "view_trips.jsp";
             } else {
                 hsn.setAttribute("ctRoutes", this.getUserRoutes(userBean));
