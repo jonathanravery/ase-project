@@ -66,6 +66,7 @@ public class CTSessionTest {
             stmt.addBatch("CREATE TABLE CT_TRIPS(trip_id INTEGER PRIMARY KEY NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),route_id INTEGER NOT NULL CONSTRAINT ct_routes_foreign_key \n REFERENCES CT_ROUTES ON DELETE CASCADE ON UPDATE RESTRICT,start_time TIMESTAMP,end_time TIMESTAMP,status INTEGER)");
             stmt.addBatch("INSERT INTO CT_USERS (username, password, role, active) VALUES ('admin', '21232f297a57a5a743894a0e4a801fc3', 1, 1)");
             stmt.addBatch("INSERT INTO CT_ROUTES (user_id, description, route_start, route_end) VALUES (1, 'ADMIN TEST ROUTE', 'rstart', 'rend')");
+            stmt.addBatch("INSERT INTO CT_ROUTES (user_id, description, route_start, route_end) VALUES (1, 'ADMIN TEST ROUTE No 2', 'rstart', 'rend')");
             stmt.addBatch("INSERT INTO CT_TRIPS (route_id, start_time, end_time, status) VALUES (1, '2010-11-03 16:32:11.132', '2010-11-03 17:55:13.909',0)");
             stmt.executeBatch();
             stmt.close();
@@ -144,7 +145,7 @@ public class CTSessionTest {
         result = instance.delRoute(routeId);
         assertEquals(expResult, result);
 
-        routeId = new Integer(2);
+        routeId = new Integer(3);
         expResult = false;
         result = instance.delRoute(routeId);
         assertEquals(expResult, result);
@@ -178,11 +179,25 @@ public class CTSessionTest {
     @Test
     public void testGetAllRoutes() throws Exception {
         System.out.println("getAllRoutes");
-        List expResult = null;
+        //List expResult = null;
         List result = instance.getAllRoutes();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+
+        CtRoute r1 = new CtRoute();
+        r1.setRouteId(1);
+        r1.setDescription("ADMIN TEST ROUTE");
+        r1.setRouteStart("rstart");
+        r1.setRouteEnd("rend");
+
+        CtRoute r2 = new CtRoute();
+        r2.setRouteId(2);
+        r2.setDescription("ADMIN TEST ROUTE No 2");
+        r2.setRouteStart("rstart");
+        r2.setRouteEnd("rend");
+
+        assertEquals(2, result.size());
+        assertTrue(result.contains(r1));
+        assertTrue(result.contains(r2));
+        
     }
 
     /**
@@ -342,7 +357,7 @@ public class CTSessionTest {
         result = instance.getRoute(routeId);
         assertEquals(expResult, result);
 
-        routeId = new Integer(2);
+        routeId = new Integer(3);
         expResult = null;
         result = instance.getRoute(routeId);
         assertEquals(expResult, result);
@@ -355,10 +370,10 @@ public class CTSessionTest {
         expResult.setRouteStart("rstart");
         expResult.setRouteEnd("rend");
         result = instance.getRoute(routeId);
-        assertEquals(expResult, result);
-
-        assertEquals(null,instance.getRoute(routeId));
-
+        assertEquals(expResult.getDescription(), result.getDescription());
+        assertEquals(expResult.getRouteStart(), result.getRouteStart());
+        assertEquals(expResult.getRouteEnd(), result.getRouteEnd());
+        assertEquals(expResult.getRouteId(), result.getRouteId());
     }
 
     /**
