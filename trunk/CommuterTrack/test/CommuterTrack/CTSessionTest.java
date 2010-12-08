@@ -1,5 +1,8 @@
 package CommuterTrack;
 
+import java.util.ArrayList;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.sql.DriverManager;
 import java.sql.Statement;
 import java.sql.Connection;
@@ -69,10 +72,10 @@ public class CTSessionTest {
             stmt.addBatch("INSERT INTO CT_ROUTES (user_id, description, route_start, route_end) VALUES (1, 'ADMIN TEST ROUTE', 'rstart', 'rend')");
             stmt.addBatch("INSERT INTO CT_ROUTES (user_id, description, route_start, route_end) VALUES (1, 'ADMIN TEST ROUTE No 2', 'rstart', 'rend')");
             stmt.addBatch("INSERT INTO CT_ROUTES (user_id, description, route_start, route_end) VALUES (2, 'USER TEST ROUTE No 1', 'home', 'school')");
-            stmt.addBatch("INSERT INTO CT_TRIPS (route_id, start_time, end_time, status) VALUES (1, '2010-11-03 16:32:11.132', '2010-11-03 17:55:13.909',2)");
+            stmt.addBatch("INSERT INTO CT_TRIPS (route_id, start_time, end_time, status) VALUES (1, '2010-11-03 16:32:00.00', '2010-11-03 17:55:00.000',2)");
             stmt.addBatch("INSERT INTO CT_TRIPS (route_id, start_time, end_time, status) VALUES (3, '2010-12-06 10:32:11.132', '2010-11-06 11:05:13.909',2)");
             stmt.addBatch("INSERT INTO CT_TRIPS (route_id, start_time, end_time, status) VALUES (3, '2010-12-07 10:32:11.132', '2010-11-07 11:05:13.909',2)");
-            stmt.addBatch("INSERT INTO CT_TRIPS (route_id, start_time, end_time, status) VALUES (3, '2010-12-08 7:32:11.132', null,0)");
+            stmt.addBatch("INSERT INTO CT_TRIPS (route_id, start_time, end_time, status) VALUES (3, '2010-12-08 7:32:00.000', null,0)");
             stmt.executeBatch();
             stmt.close();
             //conn.commit();
@@ -268,16 +271,24 @@ public class CTSessionTest {
     @Test
     public void testEditUser() throws Exception {
         System.out.println("editUser");
-        int userId = 0;
-        String username = "";
-        String pass = "";
-        int role = 0;
-        int active = 0;
-        boolean expResult = false;
+        int userId = 2;
+        String username = "Dan";
+        String pass = "Mechanic";
+        int role = 2;
+        int active = 1;
+        
+        CtUser u = new CtUser();
+        u.setUserId(2);
+        u.setUsername(username);
+        u.setPassword("64eb669723cae1983f03e34cca705c80");
+        u.setRole(role);
+        u.setActive(active);
+
+        boolean expResult = true;
         boolean result = instance.editUser(userId, username, pass, role, active);
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        CtUser resUser = instance.getUser(userId);
+        assertEquals(u, resUser);
     }
 
     /**
@@ -379,59 +390,35 @@ public class CTSessionTest {
     @Test
     public void testGetTrip() throws Exception {
         System.out.println("getTrip");
-        Integer tripId = null;
+        Integer tripId = -1;
         CtTrip expResult = null;
         CtTrip result = instance.getTrip(tripId);
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
+        
+        CtRoute r = new CtRoute();
+        r.setRouteId(3);
+        r.setDescription("USER TEST ROUTE No 1");
+        r.setRouteStart("home");
+        r.setRouteEnd("school");
 
-    /**
-     * Test of addTrip method, of class CTSession.
-     */
-    @Test
-    public void testAddTrip() throws Exception {
-        System.out.println("addTrip");
-        Integer routeId = 1;
-        Date startDate = new Date('m');
-        Date endDate = new Date('d');
-        Integer status = 2;
-        boolean expResult = true;
-        boolean result = instance.addTrip(routeId, startDate, endDate, status);
-        assertEquals(expResult, result);
-    }
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
 
-    /**
-     * Test of editTrip method, of class CTSession.
-     */
-    @Test
-    public void testEditTrip() throws Exception {
-        System.out.println("editTrip");
-        Integer tripId = null;
-        CtRoute routeBean = null;
-        Date startDate = null;
-        Date endDate = null;
-        Integer status = null;
-        boolean expResult = false;
-        boolean result = instance.editTrip(tripId, routeBean, startDate, endDate, status);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
+        DateFormat format = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT);
 
-    /**
-     * Test of delTrip method, of class CTSession.
-     */
-    @Test
-    public void testDelTrip() throws Exception {
-        System.out.println("delTrip");
-        Integer tripId = null;
-        boolean expResult = false;
-        boolean result = instance.delTrip(tripId);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        CtTrip t = new CtTrip();
+        t.setTripId(4);
+        t.setCtRoute(r);
+        t.setStartTime(format.parse("Dec 8, 2010 7:32 AM"));
+        t.setEndTime(null);
+        t.setStatus(0);
+
+        tripId = 4;
+        CtTrip res = instance.getTrip(tripId);
+        assertEquals(t.getTripId(), res.getTripId());
+        assertEquals(t.getCtRoute(), res.getCtRoute());
+        assertEquals(t.getStartTime(), res.getStartTime());
+        assertEquals(t.getEndTime(), res.getEndTime());
+        assertEquals(t.getStatus(), res.getStatus());
     }
 
     /**
@@ -441,11 +428,122 @@ public class CTSessionTest {
     public void testGetUserTrips() throws Exception {
         System.out.println("getUserTrips");
         Integer userId = null;
-        List expResult = null;
+        List expResult = new ArrayList();
         List result = instance.getUserTrips(userId);
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+
+        userId = 4;
+        expResult = new ArrayList();
+        result = instance.getUserTrips(userId);
+        assertEquals(expResult, result);
+
+        CtRoute r = instance.getRoute(1);
+        DateFormat format = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT);
+
+        CtTrip t = new CtTrip();
+        t.setTripId(1);
+        t.setCtRoute(r);
+        t.setStartTime(format.parse("Nov 3, 2010 4:32 PM"));
+        t.setEndTime(format.parse("Nov 3, 2010 5:55 PM"));
+        t.setStatus(2);
+
+        userId = 1;
+        result = instance.getUserTrips(userId);
+        assertEquals(1, result.size());
+        
+        assertEquals(((CtTrip)result.get(0)).getTripId(), t.getTripId());
+        assertEquals(((CtTrip)result.get(0)).getCtRoute(), t.getCtRoute());
+        assertEquals(((CtTrip)result.get(0)).getStartTime(), t.getStartTime());
+        assertEquals(((CtTrip)result.get(0)).getEndTime(), t.getEndTime());
+        assertEquals(((CtTrip)result.get(0)).getStatus(), t.getStatus());        
+    }
+
+    /**
+     * Test of addTrip method, of class CTSession.
+     */
+    @Test
+    public void testAddTrip() throws Exception {
+        System.out.println("addTrip");
+        Integer routeId = 1;
+        DateFormat format = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT);
+        Date startDate = format.parse("Dec 8, 2010 11:30 AM");
+        Date endDate = format.parse("Dec 8, 2010 12:06 AM");
+        Integer status = 0; // if 2 the add fails
+        boolean expResult = true;
+        boolean result = instance.addTrip(routeId, startDate, endDate, status);
+        assertEquals(expResult, result);
+
+        CtTrip t = new CtTrip();
+        t.setTripId(5);
+        CtRoute r = instance.getRoute(routeId);
+        t.setCtRoute(r);
+        t.setStartTime(startDate);
+        t.setEndTime(endDate);
+        t.setStatus(status);
+        CtTrip resultTrip = instance.getTrip(5);
+        assertEquals(t.getTripId(), resultTrip.getTripId());
+        assertEquals(t.getCtRoute(), resultTrip.getCtRoute());
+        assertEquals(t.getStartTime(), resultTrip.getStartTime());
+        assertEquals(t.getEndTime(), resultTrip.getEndTime());
+        assertEquals(t.getStatus(), resultTrip.getStatus());
+    }
+
+    /**
+     * Test of editTrip method, of class CTSession.
+     */
+    @Test
+    public void testEditTrip() throws Exception {
+        System.out.println("editTrip");
+        Integer tripId = 1;
+        CtRoute routeBean = null;
+        Date startDate = null;
+        Date endDate = null;
+        Integer status = null;
+        
+        boolean expResult = false;
+        boolean result = instance.editTrip(tripId, routeBean, startDate, endDate, status);
+        assertEquals(expResult, result);
+        
+        routeBean = new CtRoute();
+        routeBean.setRouteId(3);
+        routeBean.setDescription("USER TEST ROUTE No 1");
+        routeBean.setRouteStart("home");
+        routeBean.setRouteEnd("school");
+
+        DateFormat format = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT);
+        tripId = 1;
+        Date start = format.parse("Dec 9, 2010 11:30 AM");
+        Date end = null;
+        Integer st = 0;
+
+
+        CtTrip t = new CtTrip();
+        t.setTripId(tripId);
+        t.setCtRoute(routeBean);
+        t.setStartTime(start);
+        t.setEndTime(end);
+        t.setStatus(st);
+
+        expResult = true;
+        result = instance.editTrip(tripId, routeBean, start, end, st);
+        assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of delTrip method, of class CTSession.
+     */
+    @Test
+    public void testDelTrip() throws Exception {
+        System.out.println("delTrip");
+        Integer tripId = -1;
+        boolean expResult = false;
+        boolean result = instance.delTrip(tripId);
+        assertEquals(expResult, result);
+
+        tripId = 2;
+        expResult = true;
+        result = instance.delTrip(tripId);
+        assertEquals(expResult, result);
     }
 
     /**
@@ -454,11 +552,8 @@ public class CTSessionTest {
     @Test
     public void testGetAllTrips() throws Exception {
         System.out.println("getAllTrips");
-        List expResult = null;
         List result = instance.getAllTrips();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(4, result.size());
     }
 
     /**
