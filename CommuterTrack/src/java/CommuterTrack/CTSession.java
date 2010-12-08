@@ -345,6 +345,9 @@ public class CTSession implements CTSessionRemote {
 
     @Override
     public boolean editTrip(Integer tripId, CtRoute routeBean, Date startDate, Date endDate, Integer status) {
+        if (routeBean == null) {
+            return false;
+        }
 
         // we are assuming that the right person is editing the right trip...
         // confirm that in the servlet level
