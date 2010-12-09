@@ -381,6 +381,36 @@ public class CTSessionTest {
         assertEquals(expResult, result);
 
 
+        //32 character route start should succeed
+        routeDescription = "xxxxxxx";
+       routeStart = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+       routeEnd = "xxxxx";
+
+        expResult = true;
+        try{
+        result = instance.addARoute(user, routeDescription, routeStart, routeEnd);
+        } catch(javax.ejb.EJBException xe){
+            assert(false);
+        }
+        assertEquals(expResult, result);
+
+
+        // 33 character route start should fail
+        routeDescription = "xxxxxxx";
+       routeStart = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+       routeEnd = "xxxxx";
+
+        expResult = false;
+        try{
+        result = instance.addARoute(user, routeDescription, routeStart, routeEnd);
+        //the above should cause exception.  If it doesn't...
+        result = true; //...this line will cause below assert to fail.  Yes it's sortof backward.
+        }catch(javax.ejb.EJBException x){
+        result = false;
+        }
+        assertEquals(expResult, result);
+
+
 
         /*
         // TODO: make this test return false instead of throwing an error
