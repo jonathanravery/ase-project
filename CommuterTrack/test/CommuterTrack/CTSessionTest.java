@@ -347,6 +347,41 @@ public class CTSessionTest {
         expResult = true;
         result = instance.addARoute(user, routeDescription, routeStart, routeEnd);
         assertEquals(expResult, result);
+
+
+
+        //256 character route description should succeed
+        routeDescription = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+       routeStart = "xxxxxxxxxxx";
+       routeEnd = "xxxxx";
+
+        expResult = true;
+        try{
+        result = instance.addARoute(user, routeDescription, routeStart, routeEnd);
+        } catch(javax.ejb.EJBException xe){
+            assert(false);
+        }
+        assertEquals(expResult, result);
+
+
+        // 257 character route Description should fail
+        //unfortunately, it fails with a DB exception
+        routeDescription = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+       routeStart = "xxxxxxxxxxx";
+       routeEnd = "xxxxx";
+
+        expResult = false;
+        try{
+        result = instance.addARoute(user, routeDescription, routeStart, routeEnd);
+        //the above should cause exception.  If it doesn't...
+        result = true; //...this line will cause below assert to fail.  Yes it's sortof backward.
+        }catch(javax.ejb.EJBException x){
+        result = false;
+        }
+        assertEquals(expResult, result);
+
+
+
         /*
         // TODO: make this test return false instead of throwing an error
         user.setUserId(new Integer(2));
@@ -358,6 +393,8 @@ public class CTSessionTest {
         expResult = false;
         result = instance.addARoute(user, routeDescription, routeStart, routeEnd);
         assertEquals(expResult, result);
+        
+
     }
 
     /**
