@@ -36,7 +36,7 @@ public class CTUserController extends HttpServlet {
             context = new InitialContext();
             session = (CTSessionRemote) context.lookup("CommuterTrack.CTSessionRemote");
         } catch (NamingException ex) {
-            Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CTUserController.class.getName()).log(Level.INFO, null, ex);
             return null;
         }
 
@@ -54,7 +54,7 @@ public class CTUserController extends HttpServlet {
             context = new InitialContext();
             session = (CTSessionRemote) context.lookup("CommuterTrack.CTSessionRemote");
         } catch (NamingException ex) {
-            Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CTUserController.class.getName()).log(Level.INFO, null, ex);
             return null;
         }
 
@@ -71,7 +71,7 @@ public class CTUserController extends HttpServlet {
             context = new InitialContext();
             session = (CTSessionRemote) context.lookup("CommuterTrack.CTSessionRemote");
         } catch (NamingException ex) {
-            Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CTUserController.class.getName()).log(Level.INFO, null, ex);
             return null;
         }
 
@@ -94,7 +94,7 @@ public class CTUserController extends HttpServlet {
             context = new InitialContext();
             session = (CTSessionRemote) context.lookup("CommuterTrack.CTSessionRemote");
         } catch (NamingException ex) {
-            Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CTUserController.class.getName()).log(Level.INFO, null, ex);
             return false;
         }
 
@@ -106,7 +106,7 @@ public class CTUserController extends HttpServlet {
         try {
             return session.addUser(user, pass, role);
         } catch (Exception e) {
-            Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, null, "Exception occurred while trying to add user: " + e);
+            Logger.getLogger(CTUserController.class.getName()).log(Level.INFO, null, "Exception occurred while trying to add user: " + e);
             return false;
         }
     }
@@ -126,7 +126,7 @@ public class CTUserController extends HttpServlet {
             context = new InitialContext();
             session = (CTSessionRemote) context.lookup("CommuterTrack.CTSessionRemote");
         } catch (NamingException ex) {
-            Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CTUserController.class.getName()).log(Level.INFO, null, ex);
             return false;
         }
 
@@ -154,7 +154,7 @@ public class CTUserController extends HttpServlet {
             context = new InitialContext();
             session = (CTSessionRemote) context.lookup("CommuterTrack.CTSessionRemote");
         } catch (NamingException ex) {
-            Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CTUserController.class.getName()).log(Level.INFO, null, ex);
             return false;
         }
 
@@ -196,7 +196,7 @@ public class CTUserController extends HttpServlet {
         //hsn.setAttribute("user", "none");
 
         //debug
-        Logger.getLogger(CTUserController.class.getName()).log(Level.WARNING, "method: " + method, "REACHED LOGOUT");
+        Logger.getLogger(CTUserController.class.getName()).log(Level.INFO, "method: " + method, "REACHED LOGOUT");
 
         // If the request is the initial load of the page
 
@@ -211,19 +211,19 @@ public class CTUserController extends HttpServlet {
 
             hsn.setAttribute("user", userBean);
             if (userBean == null || userBean.getActive() == 0) {
-                Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "USERBEAN IS NULL", "NULL USERBEAN");
+                Logger.getLogger(CTUserController.class.getName()).log(Level.INFO, "USERBEAN IS NULL", "NULL USERBEAN");
 
                 hsn.setAttribute("message", "<font color=red>Invalid username of password</font>");
                 view = "index.jsp";
             } else {
-                Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "USERBEAN IS NOT NULL");
+                Logger.getLogger(CTUserController.class.getName()).log(Level.INFO, "USERBEAN IS NOT NULL");
 
                 view = "timer.jsp";
             }
 
             // If the request is a log out request
         } else if (method.equals("logout")) {
-            Logger.getLogger(CTUserController.class.getName()).log(Level.WARNING, "REACHED LOGOUT", "REACHED LOGOUT");
+            Logger.getLogger(CTUserController.class.getName()).log(Level.INFO, "REACHED LOGOUT", "REACHED LOGOUT");
 
             try {
                 hsn = request.getSession();
@@ -233,11 +233,11 @@ public class CTUserController extends HttpServlet {
                 currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
                 hsn.setAttribute("message", currentMessage + "You have successfully logged out.");
             } catch (Exception e) {
-                Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "FAILED TO GET SEESION IN LOGOUT: " + e.toString(), e.toString());
+                Logger.getLogger(CTUserController.class.getName()).log(Level.INFO, "FAILED TO GET SEESION IN LOGOUT: " + e.toString(), e.toString());
             }
             view = "index.jsp";
         } else if (method.equals("new")) {
-            Logger.getLogger(CTUserController.class.getName()).log(Level.WARNING, "REACHED NEW", "REACHED new");
+            Logger.getLogger(CTUserController.class.getName()).log(Level.INFO, "REACHED NEW", "REACHED new");
             hsn.setAttribute("message", "<font color=green>Please enter your user values</font>");
 
             view = "new_user.jsp";
@@ -251,13 +251,13 @@ public class CTUserController extends HttpServlet {
                 role = Integer.parseInt(request.getParameter("role"));
                 // If role isn't a numeric value, that means that the post was manually edited (or we screwed up somewhere bad
             } catch (NumberFormatException nfe) {
-                Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, nfe.toString(), nfe.toString());
+                Logger.getLogger(CTUserController.class.getName()).log(Level.INFO, nfe.toString(), nfe.toString());
 
                 hsn.setAttribute("message", "<font color=red>Please select a role from the drop down menu when adding a user--don't manually edit the post and try to mess with us</font>");
                 view = "new_user.jsp";
                 // If the role was not posted, then create the new user with a non-admin role
             } catch (NullPointerException npe) {
-                Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, npe.toString(), npe.toString());
+                Logger.getLogger(CTUserController.class.getName()).log(Level.INFO, npe.toString(), npe.toString());
 
                 // Role 2 means regular user
                 role = 2;
@@ -281,10 +281,10 @@ public class CTUserController extends HttpServlet {
                 if (this.addUser(username, password, role)) {
                     hsn.setAttribute("message", "New user added successfully");
                     if (userBean == null) {
-                        Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "USERBEAN IS NULL", "USERBEAN IS NULL");
+                        Logger.getLogger(CTUserController.class.getName()).log(Level.INFO, "USERBEAN IS NULL", "USERBEAN IS NULL");
                         view = "index.jsp";
                     } else {
-                        Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "USERBEAN IS NOT NULL", "USERBEAN IS NOT  NULL");
+                        Logger.getLogger(CTUserController.class.getName()).log(Level.INFO, "USERBEAN IS NOT NULL", "USERBEAN IS NOT  NULL");
 
                         view = "timer.jsp";
                     }
@@ -303,17 +303,17 @@ public class CTUserController extends HttpServlet {
             // Make sure the user is admin or is editing himself
             userBean = (CtUser) hsn.getAttribute("user");
             if (userBean == null || (userBean.getRole() != 1 && userBean.getUserId() != Integer.parseInt(request.getParameter("userId")))) {
-                Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "USERBEAN IS NULL OR ROLE IS NOT 1 AND USERS DO NOT MATCH");
+                Logger.getLogger(CTUserController.class.getName()).log(Level.INFO, "USERBEAN IS NULL OR ROLE IS NOT 1 AND USERS DO NOT MATCH");
                 currentMessage = (String) hsn.getAttribute("message");
                 currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
                 hsn.setAttribute("message", currentMessage + "<font color=red>You are not authorized to do that</font>");
                 view = "timer.jsp";
             } else {
-                Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "About to edit user");
+                Logger.getLogger(CTUserController.class.getName()).log(Level.INFO, "About to edit user");
                 editee = this.getUser(Integer.parseInt(request.getParameter("userId")));
                 // Make sure we actually got something...
                 if (editee == null) {
-                    Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "Editee does not exist");
+                    Logger.getLogger(CTUserController.class.getName()).log(Level.INFO, "Editee does not exist");
                     currentMessage = (String) hsn.getAttribute("message");
                     currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
                     hsn.setAttribute("message", currentMessage + "<font color=red>The user you are trying to edit does not exist</font");
@@ -332,13 +332,13 @@ public class CTUserController extends HttpServlet {
             userBean = (CtUser) hsn.getAttribute("user");
             // if user isn't admin and the id is diff than curruser
             if (userBean == null || (userBean.getRole() != 1 && userBean.getUserId() != Integer.parseInt(request.getParameter("userId")))) {
-                Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "USERBEAN IS NULL OR ROLE IS NOT 1 AND USERS DO NOT MATCH");
+                Logger.getLogger(CTUserController.class.getName()).log(Level.INFO, "USERBEAN IS NULL OR ROLE IS NOT 1 AND USERS DO NOT MATCH");
                 currentMessage = (String) hsn.getAttribute("message");
                 currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
                 hsn.setAttribute("message", currentMessage + "<font color=red>You are not authorized to do that</font>");
                 view = "timer.jsp";
             } else {
-                Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "About to edit user");
+                Logger.getLogger(CTUserController.class.getName()).log(Level.INFO, "About to edit user");
                 Integer userid = Integer.parseInt(request.getParameter("userId"));
 
                 username = request.getParameter("user");
@@ -349,7 +349,7 @@ public class CTUserController extends HttpServlet {
                     // If role isn't a numeric value, that means that the post was manually edited (or we screwed up somewhere bad
                 } catch (NumberFormatException nfe) {
                     if (request.getParameter("role") != null) {
-                        Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, nfe.toString(), nfe.toString());
+                        Logger.getLogger(CTUserController.class.getName()).log(Level.INFO, nfe.toString(), nfe.toString());
 
                         hsn.setAttribute("message", "<font color=red>Please select a role from the drop down menu when editing a user--don't manually edit the post and try to mess with us</font>");
                         view = "timer.jsp";
@@ -360,7 +360,7 @@ public class CTUserController extends HttpServlet {
                     // If the role was not posted, then create the new user with a non-admin role
                     } else {
                         //role wasn't set... set it to regular user
-                        Logger.getLogger(CTUserController.class.getName()).log(Level.WARNING, "role was not set setting to 2");
+                        Logger.getLogger(CTUserController.class.getName()).log(Level.INFO, "role was not set setting to 2");
 
                         role = 2;
                     }
@@ -368,17 +368,17 @@ public class CTUserController extends HttpServlet {
 
                 if (role == 1 && userBean.getRole() != 1) {
                     // regular user trying to set someones role... BAD
-                    Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "role is reg user, but trying to set something else");
+                    Logger.getLogger(CTUserController.class.getName()).log(Level.INFO, "role is reg user, but trying to set something else");
                     hsn.setAttribute("message", "<font color=red>you tried something you shouldn't have!</font>");
                     view = "timer.jsp";
                 }
 
                 else if(this.editUser(userid, username, password, role)) {
-                    Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "edit user went good!");
+                    Logger.getLogger(CTUserController.class.getName()).log(Level.INFO, "edit user went good!");
                     hsn.setAttribute("message", "<font color=green>User Edit Successful</font>");
 
                     if (userid.intValue() == userBean.getUserId().intValue()) {
-                        Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "Updating bean in session");
+                        Logger.getLogger(CTUserController.class.getName()).log(Level.INFO, "Updating bean in session");
                         userBean=this.getUser(userBean.getUserId());
                         hsn.setAttribute("user",userBean);
                     }
@@ -390,7 +390,7 @@ public class CTUserController extends HttpServlet {
                         view = "timer.jsp";
                     }
                 } else {
-                    Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "edit user failed. ='( ");
+                    Logger.getLogger(CTUserController.class.getName()).log(Level.INFO, "edit user failed. ='( ");
                     currentMessage = (String) hsn.getAttribute("message");
                     currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
                     hsn.setAttribute("message", currentMessage + "<font color=red>Unable to edit user.</font>");
@@ -402,7 +402,7 @@ public class CTUserController extends HttpServlet {
             userBean = (CtUser)hsn.getAttribute("user");
             // Make sure the user is logged in
             if (userBean == null) {
-                Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "Unauthenticated user attempting delete/undelete");
+                Logger.getLogger(CTUserController.class.getName()).log(Level.INFO, "Unauthenticated user attempting delete/undelete");
                 currentMessage = (String) hsn.getAttribute("message");
                 currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
                 hsn.setAttribute("message", currentMessage + "<font color=red>You are not authorized to do that.</font>");
@@ -410,7 +410,7 @@ public class CTUserController extends HttpServlet {
             }
             // Make sure the user is an admin
             else if(userBean.getRole() != 1) {
-                Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "Non-admin user trying to deactivate user.");
+                Logger.getLogger(CTUserController.class.getName()).log(Level.INFO, "Non-admin user trying to deactivate user.");
                 currentMessage = (String) hsn.getAttribute("message");
                 currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
                 hsn.setAttribute("message", currentMessage + "<font color=red>You are not authorized to do that</font");
@@ -437,7 +437,7 @@ public class CTUserController extends HttpServlet {
                         }
                     }
                 } catch (Exception e) {
-                    Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "Unable to change user active status because of exception or something. (Real helpful, I know)");
+                    Logger.getLogger(CTUserController.class.getName()).log(Level.INFO, "Unable to change user active status because of exception or something. (Real helpful, I know)");
                     currentMessage = (String) hsn.getAttribute("message");
                     currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
                     hsn.setAttribute("message", currentMessage + "<font color=red>Unable to change the user's status</font");
@@ -452,12 +452,12 @@ public class CTUserController extends HttpServlet {
         rd.forward(request, response);
 
         } else if (method.equals("new")) {
-        Logger.getLogger(CTUserController.class.getName()).log(Level.WARNING, "REACHED NEW ACCOUNT", "REACHED LOGOUT");
+        Logger.getLogger(CTUserController.class.getName()).log(Level.INFO, "REACHED NEW ACCOUNT", "REACHED LOGOUT");
         RequestDispatcher rd = request.getRequestDispatcher("new_user.jsp");
         rd.forward(request, response);
         }
          */
-        Logger.getLogger(CTUserController.class.getName()).log(Level.WARNING, "about to forward you to: " + view);
+        Logger.getLogger(CTUserController.class.getName()).log(Level.INFO, "about to forward you to: " + view);
 
         RequestDispatcher rd = request.getRequestDispatcher(view);
         rd.forward(request, response);
