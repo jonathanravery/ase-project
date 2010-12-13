@@ -1,0 +1,96 @@
+timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,bytes,grpThreads,allThreads,Latency,SampleCount,ErrorCount
+2010-12-13 00:30:41,336,FRONT_PAGE,200,OK,Thread Group 1-1,text,true,3588,1,1,289,1,0
+2010-12-13 00:30:41,83,LOGIN,200,OK,Thread Group 1-1,text,true,17695,1,1,56,1,0
+2010-12-13 00:31:11,55,FRONT_PAGE,200,OK,Thread Group 1-2,text,true,3588,2,2,44,1,0
+2010-12-13 00:31:11,103,LOGIN,200,OK,Thread Group 1-2,text,true,17695,2,2,80,1,0
+2010-12-13 00:30:41,39493,VIEWALLROUTES,200,OK,Thread Group 1-1,text,true,6518737,2,2,36878,1,0
+2010-12-13 00:31:26,21,LOGOUT,200,OK,Thread Group 1-1,text,true,3622,2,2,11,1,0
+2010-12-13 00:31:26,22,FRONT_PAGE,200,OK,Thread Group 1-1,text,true,3589,2,2,11,1,0
+2010-12-13 00:31:26,87,LOGIN,200,OK,Thread Group 1-1,text,true,17695,2,2,58,1,0
+2010-12-13 00:31:41,53,FRONT_PAGE,200,OK,Thread Group 1-3,text,true,3588,3,3,46,1,0
+2010-12-13 00:31:41,93,LOGIN,200,OK,Thread Group 1-3,text,true,17695,3,3,68,1,0
+2010-12-13 00:31:11,57367,VIEWALLROUTES,200,OK,Thread Group 1-2,text,true,6518737,3,3,53225,1,0
+2010-12-13 00:32:11,52,FRONT_PAGE,200,OK,Thread Group 1-4,text,true,3588,4,4,42,1,0
+2010-12-13 00:32:11,92,LOGIN,200,OK,Thread Group 1-4,text,true,17695,4,4,66,1,0
+2010-12-13 00:32:14,131,LOGOUT,200,OK,Thread Group 1-2,text,true,3622,4,4,117,1,0
+2010-12-13 00:32:14,24,FRONT_PAGE,200,OK,Thread Group 1-2,text,true,3589,4,4,12,1,0
+2010-12-13 00:32:14,249,LOGIN,200,OK,Thread Group 1-2,text,true,17695,4,4,219,1,0
+2010-12-13 00:31:26,64865,VIEWALLROUTES,200,OK,Thread Group 1-1,text,true,6518737,4,4,62263,1,0
+2010-12-13 00:32:41,31033,FRONT_PAGE,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-5,text,false,1821,6,6,0,1,1
+2010-12-13 00:33:11,31049,FRONT_PAGE,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-6,text,false,1821,7,7,0,1,1
+2010-12-13 00:33:12,31024,LOGIN,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-5,text,false,1835,7,7,0,1,1
+2010-12-13 00:33:41,31031,FRONT_PAGE,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-7,text,false,1821,8,8,0,1,1
+2010-12-13 00:33:42,30996,LOGIN,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-6,text,false,1835,8,8,0,1,1
+2010-12-13 00:33:43,30998,VIEWALLROUTES,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-5,text,false,1835,8,8,0,1,1
+2010-12-13 00:34:11,31031,FRONT_PAGE,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-8,text,false,1821,9,9,0,1,1
+2010-12-13 00:34:12,31008,LOGIN,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-7,text,false,1835,9,9,0,1,1
+2010-12-13 00:34:13,31006,VIEWALLROUTES,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-6,text,false,1835,9,9,0,1,1
+2010-12-13 00:34:15,30787,LOGOUT,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-5,text,false,1821,9,9,0,1,1
+2010-12-13 00:34:41,31030,FRONT_PAGE,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-9,text,false,1821,10,10,0,1,1
+2010-12-13 00:34:42,31012,LOGIN,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-8,text,false,1835,10,10,0,1,1
+2010-12-13 00:34:43,31012,VIEWALLROUTES,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-7,text,false,1835,10,10,0,1,1
+2010-12-13 00:34:44,31018,LOGOUT,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-6,text,false,1821,10,10,0,1,1
+2010-12-13 00:34:46,30028,FRONT_PAGE,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-5,text,false,1821,10,10,0,1,1
+2010-12-13 00:35:11,31032,FRONT_PAGE,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-10,text,false,1821,11,11,0,1,1
+2010-12-13 00:35:12,31012,LOGIN,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-9,text,false,1835,11,11,0,1,1
+2010-12-13 00:35:13,31010,VIEWALLROUTES,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-8,text,false,1835,11,11,0,1,1
+2010-12-13 00:35:14,31008,LOGOUT,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-7,text,false,1821,11,11,0,1,1
+2010-12-13 00:35:15,30987,FRONT_PAGE,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-6,text,false,1821,11,11,0,1,1
+2010-12-13 00:35:16,30984,LOGIN,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-5,text,false,1835,11,11,0,1,1
+2010-12-13 00:35:41,31028,FRONT_PAGE,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-11,text,false,1821,12,12,0,1,1
+2010-12-13 00:35:42,31006,LOGIN,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-10,text,false,1835,12,12,0,1,1
+2010-12-13 00:35:43,31006,VIEWALLROUTES,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-9,text,false,1835,12,12,0,1,1
+2010-12-13 00:35:44,31005,LOGOUT,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-8,text,false,1821,12,12,0,1,1
+2010-12-13 00:35:45,31007,FRONT_PAGE,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-7,text,false,1821,12,12,0,1,1
+2010-12-13 00:35:46,31009,LOGIN,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-6,text,false,1835,12,12,0,1,1
+2010-12-13 00:35:47,31010,VIEWALLROUTES,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-5,text,false,1835,12,12,0,1,1
+2010-12-13 00:36:11,31027,FRONT_PAGE,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-12,text,false,1821,13,13,0,1,1
+2010-12-13 00:36:12,31009,LOGIN,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-11,text,false,1835,13,13,0,1,1
+2010-12-13 00:36:13,31006,VIEWALLROUTES,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-10,text,false,1835,13,13,0,1,1
+2010-12-13 00:36:14,31005,LOGOUT,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-9,text,false,1821,13,13,0,1,1
+2010-12-13 00:36:15,31007,FRONT_PAGE,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-8,text,false,1821,13,13,0,1,1
+2010-12-13 00:36:16,31007,LOGIN,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-7,text,false,1835,13,13,0,1,1
+2010-12-13 00:36:17,31005,VIEWALLROUTES,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-6,text,false,1835,13,13,0,1,1
+2010-12-13 00:36:18,31005,LOGOUT,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-5,text,false,1821,13,13,0,1,1
+2010-12-13 00:36:41,31031,FRONT_PAGE,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-13,text,false,1821,14,14,0,1,1
+2010-12-13 00:36:42,31015,LOGIN,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-12,text,false,1835,14,14,0,1,1
+2010-12-13 00:36:43,31014,VIEWALLROUTES,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-11,text,false,1835,14,14,0,1,1
+2010-12-13 00:36:44,31014,LOGOUT,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-10,text,false,1821,14,14,0,1,1
+2010-12-13 00:36:45,31014,FRONT_PAGE,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-9,text,false,1821,14,14,0,1,1
+2010-12-13 00:36:46,31014,LOGIN,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-8,text,false,1835,14,14,0,1,1
+2010-12-13 00:36:47,31015,VIEWALLROUTES,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-7,text,false,1835,14,14,0,1,1
+2010-12-13 00:36:49,30004,FRONT_PAGE,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-5,text,false,1821,14,14,0,1,1
+2010-12-13 00:36:49,31016,LOGOUT,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-6,text,false,1821,14,14,0,1,1
+2010-12-13 00:37:11,31029,FRONT_PAGE,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-14,text,false,1821,15,15,0,1,1
+2010-12-13 00:37:12,31007,LOGIN,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-13,text,false,1835,15,15,0,1,1
+2010-12-13 00:37:13,31006,VIEWALLROUTES,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-12,text,false,1835,15,15,0,1,1
+2010-12-13 00:37:14,31005,LOGOUT,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-11,text,false,1821,15,15,0,1,1
+2010-12-13 00:37:15,31004,FRONT_PAGE,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-10,text,false,1821,15,15,0,1,1
+2010-12-13 00:37:16,31005,LOGIN,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-9,text,false,1835,15,15,0,1,1
+2010-12-13 00:37:17,31005,VIEWALLROUTES,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-8,text,false,1835,15,15,0,1,1
+2010-12-13 00:37:18,31004,LOGOUT,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-7,text,false,1821,15,15,0,1,1
+2010-12-13 00:37:19,31003,LOGIN,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-5,text,false,1835,15,15,0,1,1
+2010-12-13 00:37:19,31001,FRONT_PAGE,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-6,text,false,1821,15,15,0,1,1
+2010-12-13 00:37:41,31031,FRONT_PAGE,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-15,text,false,1821,16,16,0,1,1
+2010-12-13 00:37:42,31011,LOGIN,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-14,text,false,1835,16,16,0,1,1
+2010-12-13 00:37:43,31010,VIEWALLROUTES,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-13,text,false,1835,16,16,0,1,1
+2010-12-13 00:37:44,31012,LOGOUT,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-12,text,false,1821,16,16,0,1,1
+2010-12-13 00:37:45,31013,FRONT_PAGE,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-11,text,false,1821,16,16,0,1,1
+2010-12-13 00:37:46,31014,LOGIN,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-10,text,false,1835,16,16,0,1,1
+2010-12-13 00:37:47,31012,VIEWALLROUTES,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-9,text,false,1835,16,16,0,1,1
+2010-12-13 00:37:48,31016,LOGOUT,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-8,text,false,1821,16,16,0,1,1
+2010-12-13 00:37:49,30003,FRONT_PAGE,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-7,text,false,1821,16,16,0,1,1
+2010-12-13 00:37:50,30004,VIEWALLROUTES,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-5,text,false,1835,16,16,0,1,1
+2010-12-13 00:37:50,30005,LOGIN,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-6,text,false,1835,16,16,0,1,1
+2010-12-13 00:38:11,31029,FRONT_PAGE,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-16,text,false,1821,17,17,0,1,1
+2010-12-13 00:38:12,31009,LOGIN,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-15,text,false,1835,17,17,0,1,1
+2010-12-13 00:38:13,31011,VIEWALLROUTES,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-14,text,false,1835,17,17,0,1,1
+2010-12-13 00:38:14,31009,LOGOUT,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-13,text,false,1821,17,17,0,1,1
+2010-12-13 00:38:15,31007,FRONT_PAGE,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-12,text,false,1821,17,17,0,1,1
+2010-12-13 00:38:16,31009,LOGIN,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-11,text,false,1835,17,17,0,1,1
+2010-12-13 00:38:17,31011,VIEWALLROUTES,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-10,text,false,1835,17,17,0,1,1
+2010-12-13 00:38:18,31008,LOGOUT,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-9,text,false,1821,17,17,0,1,1
+2010-12-13 00:38:19,31005,FRONT_PAGE,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-8,text,false,1821,17,17,0,1,1
+2010-12-13 00:38:19,31002,LOGIN,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-7,text,false,1835,17,17,0,1,1
+2010-12-13 00:38:20,31000,LOGOUT,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-5,text,false,1821,17,17,0,1,1
+2010-12-13 00:38:20,30997,VIEWALLROUTES,Non HTTP response code: javax.net.ssl.SSLHandshakeException,Non HTTP response message: Remote host closed connection during handshake,Thread Group 1-6,text,false,1835,17,17,0,1,1
