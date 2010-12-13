@@ -174,6 +174,7 @@ public class CTSession implements CTSessionRemote {
     public boolean addUser(String username, String pass, int role) {
 
         if (!this.isLegalInput(username)){ return false; }
+        if (pass.length() == 0) { return false; }
 
         MessageDigest m;
         try {
@@ -207,6 +208,7 @@ public class CTSession implements CTSessionRemote {
     public boolean editUser(int userId, String username, String pass, int role, int active) {
 
         if (!this.isLegalInput(username)){ return false; }
+        if (pass.length() == 0) { return false; }
 
         Logger.getLogger(CTSession.class.getName()).log(Level.WARNING, "in session.edituser userID: "+userId+" username: "+username+" pass: "+pass+" active: "+active+" role: "+role);
 
@@ -477,6 +479,11 @@ public class CTSession implements CTSessionRemote {
 
     private boolean isLegalInput(String s){
 
+        if (s.length() == 0)
+        {
+            return false;
+        }
+        
         // this method returns true if s contains nothing but chars
         String alphachars = "^([a-zA-Z]|\\s|[0-9])*$";
         Pattern validinput = Pattern.compile(alphachars);
