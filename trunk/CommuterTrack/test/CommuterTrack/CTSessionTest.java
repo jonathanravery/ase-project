@@ -449,6 +449,35 @@ public class CTSessionTest {
         route.setRouteEnd(routeEnd);
         route.setDescription(routeDescription);
         assertEquals(route,instance.getRoute(routeId));
+
+        //257 length string
+        routeDescription = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+        routeStart = "xxxxxxxxxxx";
+        routeEnd = "xxxxx";
+
+        expResult = false;
+        try{
+        result = instance.updateRoute(routeId, routeDescription, routeStart, routeEnd);
+        //the above should cause exception.  If it doesn't...
+        result = true; //...this line will cause below assert to fail.  Yes it's sortof backward.
+        }catch(javax.ejb.EJBException x){
+        result = false;
+        }
+        assertEquals(expResult, result);
+
+        routeDescription = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+        routeStart = "xxxxxxxxxxx";
+        routeEnd = "xxxxx";
+
+        expResult = true;
+        try{
+        result = instance.updateRoute(routeId, routeDescription, routeStart, routeEnd);
+        }catch(javax.ejb.EJBException x){
+        assert(false);
+        }
+        assertEquals(expResult, result);
+
+
     }
 
     /**
