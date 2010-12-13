@@ -77,8 +77,8 @@ public class CTSessionTest {
             stmt.addBatch("INSERT INTO CT_TRIPS (route_id, start_time, end_time, status) VALUES (3, '2010-12-07 10:32:11.132', '2010-11-07 11:05:13.909',2)");
             stmt.addBatch("INSERT INTO CT_TRIPS (route_id, start_time, end_time, status) VALUES (3, '2010-12-08 7:32:00.000', null,0)");
             stmt.executeBatch();
-            stmt.close();
-            //conn.commit();
+            conn.commit();
+            stmt.close();            
             conn.close();
         }
         catch (Exception except)
@@ -337,7 +337,12 @@ public class CTSessionTest {
     public void testAddARoute() throws Exception {
         System.out.println("addARoute");
         CtUser user = new CtUser();
-        user.setUserId(new Integer(1));
+        user.setUserId(1);
+        user.setRole(1);
+        user.setUsername("admin");
+        user.setPassword("21232f297a57a5a743894a0e4a801fc3");
+        user.setActive(1);
+
         String routeDescription = "route added by test suite";
         String routeStart = "starting point by test";
         String routeEnd = "ending point by test";
@@ -348,7 +353,12 @@ public class CTSessionTest {
         result = instance.addARoute(user, routeDescription, routeStart, routeEnd);
         assertEquals(expResult, result);
 
-
+        // assert the new route is stored in the database
+        CtRoute r = instance.getRoute(4);
+        assertEquals(routeDescription, r.getDescription());
+        assertEquals(routeStart, r.getRouteStart());
+        assertEquals(routeEnd, r.getRouteEnd());
+        assertEquals(user, r.getCtUser());
 
         //256 character route description should succeed
         routeDescription = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
@@ -357,7 +367,7 @@ public class CTSessionTest {
 
         expResult = true;
         try{
-        result = instance.addARoute(user, routeDescription, routeStart, routeEnd);
+            result = instance.addARoute(user, routeDescription, routeStart, routeEnd);
         } catch(javax.ejb.EJBException xe){
             assert(false);
         }
@@ -374,21 +384,21 @@ public class CTSessionTest {
         try{
         result = instance.addARoute(user, routeDescription, routeStart, routeEnd);
         //the above should cause exception.  If it doesn't...
-        result = true; //...this line will cause below assert to fail.  Yes it's sortof backward.
+            result = true; //...this line will cause below assert to fail.  Yes it's sortof backward.
         }catch(javax.ejb.EJBException x){
-        result = false;
+            result = false;
         }
         assertEquals(expResult, result);
 
 
         //32 character route start should succeed
         routeDescription = "xxxxxxx";
-       routeStart = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
-       routeEnd = "xxxxx";
+        routeStart = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+        routeEnd = "xxxxx";
 
         expResult = true;
         try{
-        result = instance.addARoute(user, routeDescription, routeStart, routeEnd);
+            result = instance.addARoute(user, routeDescription, routeStart, routeEnd);
         } catch(javax.ejb.EJBException xe){
             assert(false);
         }
@@ -397,28 +407,29 @@ public class CTSessionTest {
 
         // 33 character route start should fail
         routeDescription = "xxxxxxx";
-       routeStart = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
-       routeEnd = "xxxxx";
+        routeStart = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+        routeEnd = "xxxxx";
 
         expResult = false;
         try{
-        result = instance.addARoute(user, routeDescription, routeStart, routeEnd);
-        //the above should cause exception.  If it doesn't...
-        result = true; //...this line will cause below assert to fail.  Yes it's sortof backward.
+            result = instance.addARoute(user, routeDescription, routeStart, routeEnd);
+            //the above should cause exception.  If it doesn't...
+            result = true; //...this line will cause below assert to fail.  Yes it's sortof backward.
         }catch(javax.ejb.EJBException x){
-        result = false;
+            result = false;
         }
         assertEquals(expResult, result);
 
-
-
-        /*
-        // TODO: make this test return false instead of throwing an error
-        user.setUserId(new Integer(2));
+        user.setUserId(3);
         expResult = false;
-        result = instance.addARoute(user, routeDescription, routeStart, routeEnd);
+        try{
+            result = instance.addARoute(user, routeDescription, routeStart, routeEnd);
+            result = true;
+        }catch(javax.ejb.EJBException x){
+            result = false;
+        }
         assertEquals(expResult, result);
-        */
+        
         user = null;
         expResult = false;
         result = instance.addARoute(user, routeDescription, routeStart, routeEnd);
@@ -457,11 +468,11 @@ public class CTSessionTest {
 
         expResult = false;
         try{
-        result = instance.updateRoute(routeId, routeDescription, routeStart, routeEnd);
-        //the above should cause exception.  If it doesn't...
-        result = true; //...this line will cause below assert to fail.  Yes it's sortof backward.
+            result = instance.updateRoute(routeId, routeDescription, routeStart, routeEnd);
+            //the above should cause exception.  If it doesn't...
+            result = true; //...this line will cause below assert to fail.  Yes it's sortof backward.
         }catch(javax.ejb.EJBException x){
-        result = false;
+            result = false;
         }
         assertEquals(expResult, result);
 
@@ -471,9 +482,9 @@ public class CTSessionTest {
 
         expResult = true;
         try{
-        result = instance.updateRoute(routeId, routeDescription, routeStart, routeEnd);
+            result = instance.updateRoute(routeId, routeDescription, routeStart, routeEnd);
         }catch(javax.ejb.EJBException x){
-        assert(false);
+            assert(false);
         }
         assertEquals(expResult, result);
 
