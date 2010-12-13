@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package CommuterTrack;
 
 import java.io.IOException;
@@ -25,8 +21,9 @@ import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author dm2474
+ * @author Travel Timers
  */
+
 @WebServlet(name = "CTTripController", urlPatterns = {"/CTTripController"})
 public class CTTripController extends HttpServlet {
 
@@ -41,9 +38,7 @@ public class CTTripController extends HttpServlet {
         } catch (NamingException ex) {
             Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, null, ex);
             return null;
-        } finally {
-            // do stuff
-        }
+        } 
         return session.getTrip(tripId);
     }
 
@@ -58,8 +53,6 @@ public class CTTripController extends HttpServlet {
         } catch (NamingException ex) {
             Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, null, ex);
             return false;
-        } finally {
-            // do stuff
         }
 
         return session.addTrip(routeId, startTime, endTime, status);
@@ -76,8 +69,6 @@ public class CTTripController extends HttpServlet {
         } catch (NamingException ex) {
             Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, null, ex);
             return false;
-        } finally {
-            // do stuff
         }
 
         CtRoute route = session.getRoute(routeId);
@@ -114,9 +105,7 @@ public class CTTripController extends HttpServlet {
         } catch (NamingException ex) {
             Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, null, ex);
             return null;
-        } finally {
-            // do stuff
-        }
+        } 
 
         return session.getUserTrips(userId);
     }
@@ -132,9 +121,7 @@ public class CTTripController extends HttpServlet {
         } catch (NamingException ex) {
             Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, null, ex);
             return null;
-        } finally {
-            // do stuff
-        }
+        } 
 
         return session.getAllTrips();
     }
@@ -226,13 +213,11 @@ public class CTTripController extends HttpServlet {
                     hsn.setAttribute("message", currentMessage + "<font color=red>Unable to start your trip.</font>");
                 }
             } catch (Exception e) {
-                Logger.getLogger(CTTripController.class.getName()).log(Level.WARNING, "Unable to add trip ");
+                Logger.getLogger(CTTripController.class.getName()).log(Level.WARNING, "Unable to add trip (Exception: " + e.toString() + ")");
                 currentMessage = (String) hsn.getAttribute("message");
                 currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
-                hsn.setAttribute("message", currentMessage + "<font color=red>Unable to start your trip. (Exception: " + e.toString() + "</font>");
-            } finally {
-            // do stuff
-            }
+                hsn.setAttribute("message", currentMessage + "<font color=red>Unable to start your trip. </font>");
+            } 
 
             view = "timer.jsp";
         } else if (method.equals("stop")) {
@@ -253,17 +238,14 @@ public class CTTripController extends HttpServlet {
                     view = "edit_trip.jsp";
                 }
             } catch (Exception e) {
-                Logger.getLogger(CTTripController.class.getName()).log(Level.WARNING, "Unable to stop a trip ");
+                Logger.getLogger(CTTripController.class.getName()).log(Level.WARNING, "Unable to stop a trip (Exception: " + e.toString() + ")");
                 currentMessage = (String) hsn.getAttribute("message");
                 currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
-                hsn.setAttribute("message", currentMessage + "<font color=red>Unable to stop your trip. (Exception: " + e.toString() + "</font>");
+                hsn.setAttribute("message", currentMessage + "<font color=red>Unable to stop your trip. </font>");
                 view = "timer.jsp";
-            } finally {
-            // do stuff
             }
             
         } else if (method.equals("viewUserTrips")) {
-            // Make sure if they are setting the role to 1, the user is an admin
             if (userBean == null) {
                 Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "USERBEAN IS NULL");
 
@@ -273,7 +255,6 @@ public class CTTripController extends HttpServlet {
                 view = "index.jsp";
 
             } else {
-                //Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "about to set ctTrips attribute to " + this.getUserTrips(userBean).toString());
                 hsn.setAttribute("ctTrips", this.getUserTrips(userBean.getUserId()));
                 view = "view_trips.jsp";
             }
@@ -288,7 +269,6 @@ public class CTTripController extends HttpServlet {
                 view = "index.jsp";
 
             } else {
-                //Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "about to set ctTrips attribute to " + this.getUserTrips(userBean).toString());
                 hsn.setAttribute("ctTrips", this.getAllTrips());
                 view = "view_trips.jsp";
             }
@@ -388,7 +368,7 @@ public class CTTripController extends HttpServlet {
                         Logger.getLogger(CTTripController.class.getName()).log(Level.SEVERE, "Could not parse dates " + start + ", " + end, ex);
                     }
                 }
-            } else if (request.getParameter("button").equals("Discard Trip")) { // discard trip
+            } else if (request.getParameter("button").equals("Discard Trip")) { 
                 if (this.delTrip(tripId)) {
                     Logger.getLogger(CTRouteController.class.getName()).log(Level.INFO, "Trip deleted successfully");
                     currentMessage = (String) hsn.getAttribute("message");
@@ -411,7 +391,6 @@ public class CTTripController extends HttpServlet {
             view = "view_trips.jsp";
         }
 
-        //Logger.getLogger(CTTripController.class.getName()).log(Level.WARNING, "CTTripController is about to forward you to: " + view);
 
         RequestDispatcher rd = request.getRequestDispatcher(view);
         rd.forward(request, response);
