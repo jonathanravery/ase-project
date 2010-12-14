@@ -1,7 +1,7 @@
 <%-- 
     Document   : view_users
     Created on : Oct 28, 2010, 12:23:32 AM
-    Author     : dm2474
+    Author     : Travel Timers
 --%>
 
 <% if (session.getAttribute("user") == null) {
@@ -21,6 +21,7 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="CommuterTrack.CtUser"%>
+<%@page import="CommuterTrack.CTConsts"%>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
     "http://www.w3.org/TR/html4/loose.dtd">
@@ -38,10 +39,8 @@
         <h1>View All Users</h1>
 
 
-    <%
-    System.out.println("here");
-        if (((CtUser) session.getAttribute("user")).getRole() != 1) {
-                        // System.exit(1);
+<%
+        if (((CtUser) session.getAttribute("user")).getRole() != CTConsts.ADMIN_USER) {
 %>
                 you are not an admin
     <%
@@ -102,7 +101,7 @@
                             <form method="POST" action="CTUserController">
                                 <input type="hidden" name="method" value="delete">
                                 <input type="hidden" name="userId" value="<%= indexUser.getUserId() %>">
-                                <% if (indexUser.getActive() == 1) { %>
+                                <% if (indexUser.getActive() == CTConsts.ACTIVE_USER) { %>
                                     <input type="submit" name="submit" value="Deactivate">
                                 <% } else { %>
                                     <input type="submit" name="submit" value="Activate">
