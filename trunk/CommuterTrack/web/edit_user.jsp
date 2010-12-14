@@ -1,7 +1,7 @@
 <%-- 
     Document   : edit_user
     Created on : Oct 24, 2010, 10:26:09 PM
-    Author     : dm2474
+    Author     : Travel Timers
 --%>
 
 <% if (session.getAttribute("user") == null) {
@@ -9,6 +9,7 @@
    } else {
 %>
 
+<%@page import="CommuterTrack.CTConsts"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
@@ -38,10 +39,10 @@
              <input type="hidden" name="userId" value="<%= user.getUserId() %>">
              <label for="user">Username:</label><input id="user" name="user" type="text" value="<%= user.getUsername() %>"><br>
              <label for="newpass">New Password:</label><input id="newpass" name="newpass" type="password" value=""><br>
-             <% if (userBean.getRole() == 1) { %>
+             <% if (userBean.getRole() == CTConsts.ADMIN_USER) { %>
                 <select name="role">
-                    <option value="1" <% if ( user.getRole() == 1) { %>selected="1" <% } %> >Admin</option>
-                    <option value="2" <% if ( user.getRole() != 1) { %>selected="1" <% } %> >Regular User</option>
+                    <option value="<%=CTConsts.ADMIN_USER%>" <% if ( user.getRole() == CTConsts.ADMIN_USER) { %>selected="1" <% } %> >Admin</option>
+                    <option value="<%=CTConsts.REGULAR_USER%>" <% if ( user.getRole() != CTConsts.ADMIN_USER) { %>selected="1" <% } %> >Regular User</option>
                 </select><br>
              <% } %>
         <input type="hidden" name="method" value="edituser">

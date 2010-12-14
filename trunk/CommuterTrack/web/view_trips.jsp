@@ -11,6 +11,7 @@
 
 <%@page import="java.util.Calendar"%>
 <%@page import="CommuterTrack.CtTrip"%>
+<%@page import="CommuterTrack.CTConsts"%>
 <%@page import="java.util.Iterator"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.List"%>
@@ -31,20 +32,21 @@
         <h1>View all trips</h1>
 
         <%
-            String[] days = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
+        if (session.getAttribute("message") != null) {
+            out.print(session.getAttribute("message"));
+            session.setAttribute("message", "");
+        }
 
-    System.out.println("viewing trips");
+        String[] days = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
+
+        System.out.println("viewing trips");
         CtUser userBean = (CtUser) session.getAttribute("user");
-        //if (userBean.getRole() != 1) {
-                        // System.exit(1);
+        if (userBean.getRole() != CTConsts.ADMIN_USER) {
 %>
                <!-- you are not an admin -->
     <%
-        //} else {
-            if (session.getAttribute("message") != null) {
-                out.print(session.getAttribute("message"));
-                session.setAttribute("message", "");
-          // } %>
+        } else {
+     %>
         <form method="POST" action="CTTripController">
             <input type="hidden" name="method" value="viewAllTrips">
             <input type="submit" name="submit" value="View all trips">

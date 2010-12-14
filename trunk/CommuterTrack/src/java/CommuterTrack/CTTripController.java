@@ -19,8 +19,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import CommuterTrack.CTConsts;
-
 /**
  *
  * @author Travel Timers
@@ -28,6 +26,12 @@ import CommuterTrack.CTConsts;
 
 @WebServlet(name = "CTTripController", urlPatterns = {"/CTTripController"})
 public class CTTripController extends HttpServlet {
+    void notifyUser(HttpSession hsn, String color, String message) {
+        Logger.getLogger(CTTripController.class.getName()).log(Level.WARNING, "Trying to add trip to another user ");
+        String currentMessage = (String) hsn.getAttribute("message");
+        currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
+        hsn.setAttribute("message", currentMessage + "<font color=" + color + ">" + message + "</font>");
+    }
 
     CtTrip getTrip(Integer tripId) {
         final Context context;
@@ -202,23 +206,15 @@ public class CTTripController extends HttpServlet {
 
                 if (!route.getCtUser().equals((CtUser) hsn.getAttribute("user"))) {
                     Logger.getLogger(CTTripController.class.getName()).log(Level.WARNING, "Trying to add trip to another user ");
-                    currentMessage = (String) hsn.getAttribute("message");
-                    currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
-                    hsn.setAttribute("message", currentMessage + "<font color=red>You are not allowed to do that. Stop playing with the POST.</font>");
+                    notifyUser(hsn, "red", "You are not allowed to do that. Stop playing with the POST.");
                 } else if(this.addTrip(routeId, starttime, null, CTConsts.STARTED_TRIP)) {
-                    currentMessage = (String) hsn.getAttribute("message");
-                    currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
-                    hsn.setAttribute("message", currentMessage + "<font color=green>Your trip has been started.</font>");
+                    notifyUser(hsn, "green", "Your trip has been started.");
                 } else {
-                    currentMessage = (String) hsn.getAttribute("message");
-                    currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
-                    hsn.setAttribute("message", currentMessage + "<font color=red>Unable to start your trip.</font>");
+                    notifyUser(hsn, "red", "Unable to start your trip.");
                 }
             } catch (Exception e) {
                 Logger.getLogger(CTTripController.class.getName()).log(Level.WARNING, "Unable to add trip (Exception: " + e.toString() + ")");
-                currentMessage = (String) hsn.getAttribute("message");
-                currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
-                hsn.setAttribute("message", currentMessage + "<font color=red>Unable to start your trip. </font>");
+                notifyUser(hsn, "red", "Unable to start your trip.");
             } 
 
             view = "timer.jsp";
@@ -228,9 +224,7 @@ public class CTTripController extends HttpServlet {
                 CtTrip curTrip = this.getActiveTrip(userBean);
                 if (curTrip == null) {
                     Logger.getLogger(CTTripController.class.getName()).log(Level.WARNING, "Stopping a non-existing trip ");
-                    currentMessage = (String) hsn.getAttribute("message");
-                    currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
-                    hsn.setAttribute("message", currentMessage + "<font color=red>Trying to stop a non-existing trip.</font>");
+                    notifyUser(hsn, "red", "Trying to stop a non-existing trip.");
                     view = "timer.jsp";
                 } else {
                     curTrip.setEndTime(stopTime);
@@ -242,27 +236,20 @@ public class CTTripController extends HttpServlet {
                         view = "edit_trip.jsp";
                     } else {
                         Logger.getLogger(CTTripController.class.getName()).log(Level.WARNING, "Could not change the status of a trip to stopped.");
-                        currentMessage = (String) hsn.getAttribute("message");
-                        currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
-                        hsn.setAttribute("message", currentMessage + "<font color=red>Could not stop the trip.</font>");
+                        notifyUser(hsn, "red", "Could not stop the trip.");
                         view = "timer.jsp";
                     }
                 }
             } catch (Exception e) {
                 Logger.getLogger(CTTripController.class.getName()).log(Level.WARNING, "Unable to stop a trip (Exception: " + e.toString() + ")");
-                currentMessage = (String) hsn.getAttribute("message");
-                currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
-                hsn.setAttribute("message", currentMessage + "<font color=red>Unable to stop your trip. </font>");
+                notifyUser(hsn, "red", "Unable to stop your trip.");
                 view = "timer.jsp";
             }
             
         } else if (method.equals("viewUserTrips")) {
             if (userBean == null) {
                 Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "USERBEAN IS NULL");
-
-                currentMessage = (String) hsn.getAttribute("message");
-                currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
-                hsn.setAttribute("message", currentMessage + "<font color=red>You are not authorized to do that</font>");
+                notifyUser(hsn, "red", "You are not authorized to do that.");
                 view = "index.jsp";
 
             } else {
@@ -274,9 +261,7 @@ public class CTTripController extends HttpServlet {
             if (userBean == null || userBean.getRole() != CTConsts.ADMIN_USER) {
                 Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "USERBEAN IS NULL");
 
-                currentMessage = (String) hsn.getAttribute("message");
-                currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
-                hsn.setAttribute("message", currentMessage + "<font color=red>You are not authorized to do that</font>");
+                notifyUser(hsn, "red", "You are not authorized to do that.");
                 view = "index.jsp";
 
             } else {
@@ -291,17 +276,13 @@ public class CTTripController extends HttpServlet {
             // Make sure we actually got something...
             if (trip == null) {
                 Logger.getLogger(CTRouteController.class.getName()).log(Level.SEVERE, "The trip the user is about to edit does not exist");
-                currentMessage = (String) hsn.getAttribute("message");
-                currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
-                hsn.setAttribute("message", currentMessage + "<font color=red>The trip you are trying to edit does not exist</font>");
+                notifyUser(hsn, "red", "The trip you are trying to edit does not exist.");
                 view = "view_trips.jsp";
             // Make sure the trip actually belongs to the user
             } else if (!trip.getCtRoute().getCtUser().getUserId().equals(userBean.getUserId())) {
                 Logger.getLogger(CTRouteController.class.getName()).log(Level.WARNING, "The user is trying to edit a trip that does not belong to him");
                 Logger.getLogger(CTRouteController.class.getName()).log(Level.WARNING, "(user is " + userBean.getUserId() + ", trip belongs to " + trip.getCtRoute().getCtUser().getUserId() + ")");
-                currentMessage = (String) hsn.getAttribute("message");
-                currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
-                hsn.setAttribute("message", currentMessage + "<font color=red>That trip does not belong to you.</font><br>");
+                notifyUser(hsn, "red", "That trip does not belong to you.");
                 hsn.setAttribute("ctTrips", this.getUserTrips(userBean.getUserId()));
                 view = "view_trips.jsp";
             } else {
@@ -315,18 +296,14 @@ public class CTTripController extends HttpServlet {
             // Make sure the user is an admin or owns the trip
             if (trip == null) {
                 Logger.getLogger(CTRouteController.class.getName()).log(Level.WARNING, "Attempt to edit or delete a trip that does not exist");
-                currentMessage = (String) hsn.getAttribute("message");
-                currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
-                hsn.setAttribute("message", currentMessage + "<font color=red>That trip does not exist.</font><br>");
+                notifyUser(hsn, "red", "That trip does not exist.");
             }
             else if(userBean.getRole() != CTConsts.ADMIN_USER && userBean.getUserId().intValue()
                     !=
                     trip.getCtRoute().getCtUser().getUserId()) {
                 Logger.getLogger(CTRouteController.class.getName()).log(Level.WARNING, "The user is trying to edit a trip that does not belong to him");
                 Logger.getLogger(CTRouteController.class.getName()).log(Level.WARNING, "(user is " + userBean.getUserId() + ", trip belongs to " + getTrip(tripId).getCtRoute().getCtUser().getUserId() + ")");
-                currentMessage = (String) hsn.getAttribute("message");
-                currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
-                hsn.setAttribute("message", currentMessage + "<font color=red>That trip does not belong to you.</font><br>");
+                notifyUser(hsn, "red", "That trip does not belong to you.");
                 hsn.setAttribute("ctTrips", this.getUserTrips(userBean.getUserId()));
                 view = "view_trips.jsp";
             }
@@ -342,9 +319,7 @@ public class CTTripController extends HttpServlet {
                 }
                 if (ownsRoute != true) {
                     Logger.getLogger(CTRouteController.class.getName()).log(Level.WARNING, "The user does not own that route");
-                    currentMessage = (String) hsn.getAttribute("message");
-                    currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
-                    hsn.setAttribute("message", currentMessage + "<font color=red>That route does not belong to you.</font><br>");
+                    notifyUser(hsn, "red", "That trip does not belong to you.");
                     hsn.setAttribute("ctTrips", this.getUserTrips(userBean.getUserId()));
                     view = "view_trips.jsp";
                 }
@@ -364,14 +339,10 @@ public class CTTripController extends HttpServlet {
                         Integer status = CTConsts.COMPLETED_TRIP;
                         if (this.editTrip(tripId, routeId, startTime, endTime, status)) {
                             Logger.getLogger(CTRouteController.class.getName()).log(Level.INFO, "Successfully edited a trip");
-                            currentMessage = (String) hsn.getAttribute("message");
-                            currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
-                            hsn.setAttribute("message", currentMessage + "<font color=green>Trip edited.</font><br>");
+                            notifyUser(hsn, "green", "Trip edited.");
                         } else {
                             Logger.getLogger(CTRouteController.class.getName()).log(Level.WARNING, "Edit trip failed.");
-                            currentMessage = (String) hsn.getAttribute("message");
-                            currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
-                            hsn.setAttribute("message", currentMessage + "<font color=red>Unable to edit the trip.</font><br>");
+                            notifyUser(hsn, "red", "Unable to edit the trip.");
                         }
                         Logger.getLogger(CTTripController.class.getName()).log(Level.SEVERE, "setting new dates " + start + ", " + end);
                         Logger.getLogger(CTTripController.class.getName()).log(Level.SEVERE, "setting routeId " + routeId.toString());
@@ -382,20 +353,14 @@ public class CTTripController extends HttpServlet {
             } else if (request.getParameter("button").equals("Discard Trip")) { 
                 if (this.delTrip(tripId)) {
                     Logger.getLogger(CTRouteController.class.getName()).log(Level.INFO, "Trip deleted successfully");
-                    currentMessage = (String) hsn.getAttribute("message");
-                    currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
-                    hsn.setAttribute("message", currentMessage + "<font color=green>Your trip has been deleted.</font><br>");
+                    notifyUser(hsn, "green", "Your trip has been deleted.");
                 } else {
                     Logger.getLogger(CTRouteController.class.getName()).log(Level.WARNING, "Attempt to delete a trip failed");
-                    currentMessage = (String) hsn.getAttribute("message");
-                    currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
-                    hsn.setAttribute("message", currentMessage + "<font color=red>Unable to delete the trip.</font><br>");
+                    notifyUser(hsn, "red", "Unable to delete the trip.");
                 }
             } else {
                 Logger.getLogger(CTRouteController.class.getName()).log(Level.WARNING, "Invalid edit sub-action");
-                currentMessage = (String) hsn.getAttribute("message");
-                currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
-                hsn.setAttribute("message", currentMessage + "<font color=red>Unknown edit action type.</font><br>");
+                notifyUser(hsn, "red", "Unknown edit action type.");
             }
             Logger.getLogger(CTRouteController.class.getName()).log(Level.SEVERE, "about to set ctTrips attribute to " + this.getUserTrips(userBean.getUserId()).toString());
             hsn.setAttribute("ctTrips", this.getUserTrips(userBean.getUserId()));
