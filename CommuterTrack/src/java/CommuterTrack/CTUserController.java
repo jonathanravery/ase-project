@@ -20,9 +20,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import CommuterTrack.CTConsts;
+
 /**
  *
- * @author dm2474
+ * @author Travel Timers
  */
 @WebServlet(name = "CTUserController", urlPatterns = {"/CTUserController"})
 public class CTUserController extends HttpServlet {
@@ -98,8 +100,8 @@ public class CTUserController extends HttpServlet {
             return false;
         }
 
-        // Make sure the role is 1 (admin) or 2 (regular user)
-        if (role < 1 || role > 2) {
+        // Make sure the role is either admin or regular user
+        if (role != CTConsts.ADMIN_USER && role != CTConsts.REGULAR_USER) {
             return false;
         }
 
@@ -113,7 +115,7 @@ public class CTUserController extends HttpServlet {
 
     boolean editUser(int userId, String username, String pass, int role) {
 
-        if (role != 1 && role != 2) {
+        if (role != CTConsts.ADMIN_USER && role != CTConsts.REGULAR_USER) {
             return false;
         }
 
@@ -132,7 +134,7 @@ public class CTUserController extends HttpServlet {
 
         // Attempt to get the bean for the user who matches
         try {
-            return session.editUser(userId,username,pass,role,1);
+            return session.editUser(userId,username,pass,role,CTConsts.ACTIVE_USER);
         } catch (Exception e) {
             return false;
         }
@@ -159,7 +161,7 @@ public class CTUserController extends HttpServlet {
         }
 
         // Attempt to edit the bean with all the original values except the active value
-        return session.editUser(userId,userBean.getUsername(),"",userBean.getRole(),0);
+        return session.editUser(userId,userBean.getUsername(),"",userBean.getRole(),CTConsts.DEACTIVATED_USER);
     }
 
     /**
@@ -210,7 +212,7 @@ public class CTUserController extends HttpServlet {
             userBean = (CtUser) this.loginUser(username, password);
 
             hsn.setAttribute("user", userBean);
-            if (userBean == null || userBean.getActive() == 0) {
+            if (userBean == null || userBean.getActive() == CTConsts.DEACTIVATED_USER) {
                 Logger.getLogger(CTUserController.class.getName()).log(Level.INFO, "USERBEAN IS NULL", "NULL USERBEAN");
 
                 hsn.setAttribute("message", "<font color=red>Invalid username of password</font>");
@@ -245,7 +247,7 @@ public class CTUserController extends HttpServlet {
             // Get the values out of the session
             username = request.getParameter("user");
             password = request.getParameter("pass");
-            role = 0;
+            role = CTConsts.REGULAR_USER;
 
             try {
                 role = Integer.parseInt(request.getParameter("role"));
@@ -259,16 +261,16 @@ public class CTUserController extends HttpServlet {
             } catch (NullPointerException npe) {
                 Logger.getLogger(CTUserController.class.getName()).log(Level.INFO, npe.toString(), npe.toString());
 
-                // Role 2 means regular user
-                role = 2;
+                // regular user
+                role = CTConsts.REGULAR_USER;
 
             }
 
             userBean = (CtUser) hsn.getAttribute("user");
 
-            // Make sure if they are setting the role to 1, the user is an admin
-            if (role == 1) {
-                if (userBean == null || userBean.getRole() != 1) {
+            // Make sure if they are setting the role to admin, the user is an admin
+            if (role == CTConsts.ADMIN_USER) {
+                if (userBean == null || userBean.getRole() != CTConsts.ADMIN_USER) {
                     currentMessage = (String) hsn.getAttribute("message");
                     currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
                     hsn.setAttribute("message", currentMessage + "<font color=red>You are not authorized to do that</font>");
@@ -302,8 +304,8 @@ public class CTUserController extends HttpServlet {
         } else if (method.equals("viewEditPage")) {
             // Make sure the user is admin or is editing himself
             userBean = (CtUser) hsn.getAttribute("user");
-            if (userBean == null || (userBean.getRole() != 1 && userBean.getUserId() != Integer.parseInt(request.getParameter("userId")))) {
-                Logger.getLogger(CTUserController.class.getName()).log(Level.INFO, "USERBEAN IS NULL OR ROLE IS NOT 1 AND USERS DO NOT MATCH");
+            if (userBean == null || (userBean.getRole() != CTConsts.ADMIN_USER && userBean.getUserId() != Integer.parseInt(request.getParameter("userId")))) {
+                Logger.getLogger(CTUserController.class.getName()).log(Level.INFO, "USERBEAN IS NULL OR ROLE IS NOT ADMIN AND USERS DO NOT MATCH");
                 currentMessage = (String) hsn.getAttribute("message");
                 currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
                 hsn.setAttribute("message", currentMessage + "<font color=red>You are not authorized to do that</font>");
@@ -317,7 +319,7 @@ public class CTUserController extends HttpServlet {
                     currentMessage = (String) hsn.getAttribute("message");
                     currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
                     hsn.setAttribute("message", currentMessage + "<font color=red>The user you are trying to edit does not exist</font");
-                    if (userBean.getRole() == 1) {
+                    if (userBean.getRole() == CTConsts.ADMIN_USER) {
                         view = "view_users.jsp";
                     } else {
                         view = "timer.jsp";
@@ -331,8 +333,8 @@ public class CTUserController extends HttpServlet {
             // Make sure the user is admin or is editing himself
             userBean = (CtUser) hsn.getAttribute("user");
             // if user isn't admin and the id is diff than curruser
-            if (userBean == null || (userBean.getRole() != 1 && userBean.getUserId() != Integer.parseInt(request.getParameter("userId")))) {
-                Logger.getLogger(CTUserController.class.getName()).log(Level.INFO, "USERBEAN IS NULL OR ROLE IS NOT 1 AND USERS DO NOT MATCH");
+            if (userBean == null || (userBean.getRole() != CTConsts.ADMIN_USER && userBean.getUserId() != Integer.parseInt(request.getParameter("userId")))) {
+                Logger.getLogger(CTUserController.class.getName()).log(Level.INFO, "USERBEAN IS NULL OR ROLE IS NOT ADMIN AND USERS DO NOT MATCH");
                 currentMessage = (String) hsn.getAttribute("message");
                 currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
                 hsn.setAttribute("message", currentMessage + "<font color=red>You are not authorized to do that</font>");
@@ -343,7 +345,7 @@ public class CTUserController extends HttpServlet {
 
                 username = request.getParameter("user");
                 password = request.getParameter("newpass");
-                role = 2;
+                role = CTConsts.REGULAR_USER;
                 try {
                     role = Integer.parseInt(request.getParameter("role"));
                     // If role isn't a numeric value, that means that the post was manually edited (or we screwed up somewhere bad
@@ -360,13 +362,13 @@ public class CTUserController extends HttpServlet {
                     // If the role was not posted, then create the new user with a non-admin role
                     } else {
                         //role wasn't set... set it to regular user
-                        Logger.getLogger(CTUserController.class.getName()).log(Level.INFO, "role was not set setting to 2");
+                        Logger.getLogger(CTUserController.class.getName()).log(Level.INFO, "role was not set, setting to " + CTConsts.REGULAR_USER);
 
-                        role = 2;
+                        role = CTConsts.REGULAR_USER;
                     }
                 }
 
-                if (role == 1 && userBean.getRole() != 1) {
+                if (role == CTConsts.ADMIN_USER && userBean.getRole() != CTConsts.ADMIN_USER) {
                     // regular user trying to set someones role... BAD
                     Logger.getLogger(CTUserController.class.getName()).log(Level.INFO, "role is reg user, but trying to set something else");
                     hsn.setAttribute("message", "<font color=red>you tried something you shouldn't have!</font>");
@@ -383,7 +385,7 @@ public class CTUserController extends HttpServlet {
                         hsn.setAttribute("user",userBean);
                     }
 
-                    if (userBean.getRole() == 1) {
+                    if (userBean.getRole() == CTConsts.ADMIN_USER) {
                         //you are an admin go back to viewall
                         view = "view_users.jsp";
                    } else {
@@ -409,7 +411,7 @@ public class CTUserController extends HttpServlet {
                 view = "index.jsp";
             }
             // Make sure the user is an admin
-            else if(userBean.getRole() != 1) {
+            else if(userBean.getRole() != CTConsts.ADMIN_USER) {
                 Logger.getLogger(CTUserController.class.getName()).log(Level.INFO, "Non-admin user trying to deactivate user.");
                 currentMessage = (String) hsn.getAttribute("message");
                 currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");

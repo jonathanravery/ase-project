@@ -23,9 +23,11 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import CommuterTrack.CTConsts;
+
 /**
  *
- * @author dm2474
+ * @author Travel Timers
  */
 @Stateful
 public class CTSession implements CTSessionRemote {
@@ -62,7 +64,7 @@ public class CTSession implements CTSessionRemote {
         try {
             curUser = (CtUser) q.getSingleResult();
             // if the password passed in matches the one in the db
-            if ((curUser.getPassword().compareTo(password) == 0) && curUser.getActive() == 1) {
+            if ((curUser.getPassword().compareTo(password) == 0) && curUser.getActive() == CTConsts.ACTIVE_USER) {
                 return curUser;
             } else {
                 return null;
@@ -194,7 +196,7 @@ public class CTSession implements CTSessionRemote {
             newUser.setUsername(username);
             newUser.setPassword(pass);
             newUser.setRole(role);
-            newUser.setActive(1);
+            newUser.setActive(CTConsts.ACTIVE_USER);
             em.persist(newUser);
         } catch (Exception e) {
             Logger.getLogger(CTSession.class.getName()).log(Level.SEVERE, null, "Exception occurred in the SESSION add user method: " + e.toString());
@@ -237,12 +239,6 @@ public class CTSession implements CTSessionRemote {
 
     @Override
     public boolean addARoute(CtUser user, String routeDescription, String routeStart, String routeEnd){
-
-        /*
-         TODO: sanatize input
-         */
-       // if (user_id <= 0) user_id = new Integer(2);
-
 
         //check our inputs
         if (!this.isLegalInput(routeDescription+routeStart+routeEnd)){
@@ -329,7 +325,7 @@ public class CTSession implements CTSessionRemote {
         CtTrip trip = new CtTrip();
         trip.setStartTime(startDate);
         trip.setEndTime(endDate);
-        trip.setStatus(0);
+        trip.setStatus(CTConsts.STARTED_TRIP);
 
         Query q = em.createNamedQuery("CtRoute.findByRouteId");
         q.setParameter("routeId", routeId);
@@ -445,7 +441,7 @@ public class CTSession implements CTSessionRemote {
     public CtTrip getActiveTrip(Integer userId) {
         Query q = em.createNamedQuery("CtTrip.findByUserAndStatus");
         q.setParameter("userId", userId);
-        q.setParameter("status", 0);
+        q.setParameter("status", CTConsts.STARTED_TRIP);
         try {
             return (CtTrip) q.getResultList().get(0);
         } catch (Exception ex) {
@@ -461,20 +457,6 @@ public class CTSession implements CTSessionRemote {
         } else {
             return true;
         }
-        /*
-        Query q = em.createNamedQuery("CtTrip.findByUserAndStatus");
-        q.setParameter("userId", userId);
-        q.setParameter("status", 0);
-        try {
-            List CtTripList = q.getResultList();
-            Logger.getLogger(CTUserController.class.getName()).log(Level.WARNING, "Size of result (in userInTrip) is " + CtTripList.size());
-            return CtTripList.size() > 0;
-        } catch (Exception ex) {
-            Logger.getLogger(CTUserController.class.getName()).log(Level.WARNING, ex.toString(), "caught exception trying to get unfinished trips " + ex.toString());
-            return false;
-        }
-         *
-         */
     }
 
     private boolean isLegalInput(String s){

@@ -20,9 +20,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import CommuterTrack.CTConsts;
+
 /**
  *
- * @author jdm
+ * @author Travel Timers
  */
 @WebServlet(name = "CTRouteController", urlPatterns = {"/CTRouteController"})
 public class CTRouteController extends HttpServlet {
@@ -84,7 +86,7 @@ public class CTRouteController extends HttpServlet {
             hsn.setAttribute("ctRoutes", this.getUserRoutes(userBean));
             view = "view_routes.jsp";
         } else if (method.equals("viewAllRoutes")) {
-            if (userBean.getRole() != 1) {
+            if (userBean.getRole() != CTConsts.ADMIN_USER) {
                 Logger.getLogger(CTRouteController.class.getName()).log(Level.INFO, "Non-admin user trying to access all routes.");
                 currentMessage = (String) hsn.getAttribute("message");
                 currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
