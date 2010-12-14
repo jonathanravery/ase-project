@@ -135,6 +135,18 @@ public class CtUser implements Serializable {
         if ((this.userId == null && other.userId != null) || (this.userId != null && !this.userId.equals(other.userId))) {
             return false;
         }
+        if (this.active != other.active) {
+            return false;
+        }
+        if (this.username.compareTo(other.username) != 0) {
+            return false;
+        }
+        if (this.password.compareTo(other.password) != 0) {
+            return false;
+        }
+        if (this.role != other.role) {
+            return false;
+        }
         return true;
     }
 

@@ -118,6 +118,18 @@ public class CtTrip implements Serializable {
         if ((this.tripId == null && other.tripId != null) || (this.tripId != null && !this.tripId.equals(other.tripId))) {
             return false;
         }
+        if ((this.ctRoute == null && other.ctRoute != null) || (this.ctRoute != null && !this.ctRoute.equals(other.ctRoute))) {
+            return false;
+        }
+        if ((this.startTime == null && other.startTime != null) || (this.startTime != null && !this.startTime.equals(other.startTime))) {
+            return false;
+        }
+        if ((this.endTime == null && other.endTime != null) || (this.endTime != null && !this.endTime.equals(other.endTime))) {
+            return false;
+        }
+        if (this.status != other.status) {
+            return false;
+        }
         return true;
     }
 

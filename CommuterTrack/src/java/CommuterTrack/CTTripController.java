@@ -19,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import CommuterTrack.CTConsts;
+
 /**
  *
  * @author Travel Timers
@@ -198,12 +200,12 @@ public class CTTripController extends HttpServlet {
                 session = (CTSessionRemote) context.lookup("CommuterTrack.CTSessionRemote");
                 CtRoute route = session.getRoute(routeId);
 
-                if (route.getCtUser().getUserId().intValue() != ((CtUser) hsn.getAttribute("user")).getUserId().intValue()) {
+                if (!route.getCtUser().equals((CtUser) hsn.getAttribute("user"))) {
                     Logger.getLogger(CTTripController.class.getName()).log(Level.WARNING, "Trying to add trip to another user ");
                     currentMessage = (String) hsn.getAttribute("message");
                     currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
                     hsn.setAttribute("message", currentMessage + "<font color=red>You are not allowed to do that. Stop playing with the POST.</font>");
-                } else if(this.addTrip(routeId, starttime, null, 0)) {
+                } else if(this.addTrip(routeId, starttime, null, CTConsts.STARTED_TRIP)) {
                     currentMessage = (String) hsn.getAttribute("message");
                     currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
                     hsn.setAttribute("message", currentMessage + "<font color=green>Your trip has been started.</font>");
@@ -232,10 +234,19 @@ public class CTTripController extends HttpServlet {
                     view = "timer.jsp";
                 } else {
                     curTrip.setEndTime(stopTime);
-                    this.editTrip(curTrip.getTripId(), curTrip.getCtRoute().getRouteId(), curTrip.getStartTime(), stopTime, new Integer(1));
-                    hsn.setAttribute("ctRoutes", this.getUserRoutes(userBean));
-                    hsn.setAttribute("editTrip", curTrip);
-                    view = "edit_trip.jsp";
+                    boolean changed;
+                    changed = this.editTrip(curTrip.getTripId(), curTrip.getCtRoute().getRouteId(), curTrip.getStartTime(), stopTime, CTConsts.STOPPED_TRIP);
+                    if (changed) {
+                        hsn.setAttribute("ctRoutes", this.getUserRoutes(userBean));
+                        hsn.setAttribute("editTrip", curTrip);
+                        view = "edit_trip.jsp";
+                    } else {
+                        Logger.getLogger(CTTripController.class.getName()).log(Level.WARNING, "Could not change the status of a trip to stopped.");
+                        currentMessage = (String) hsn.getAttribute("message");
+                        currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
+                        hsn.setAttribute("message", currentMessage + "<font color=red>Could not stop the trip.</font>");
+                        view = "timer.jsp";
+                    }
                 }
             } catch (Exception e) {
                 Logger.getLogger(CTTripController.class.getName()).log(Level.WARNING, "Unable to stop a trip (Exception: " + e.toString() + ")");
@@ -259,8 +270,8 @@ public class CTTripController extends HttpServlet {
                 view = "view_trips.jsp";
             }
         } else if (method.equals("viewAllTrips")) {
-            // Make sure if they are setting the role to 1, the user is an admin
-            if (userBean == null || userBean.getRole() != 1) {
+            // Make sure the user is an admin
+            if (userBean == null || userBean.getRole() != CTConsts.ADMIN_USER) {
                 Logger.getLogger(CTUserController.class.getName()).log(Level.SEVERE, "USERBEAN IS NULL");
 
                 currentMessage = (String) hsn.getAttribute("message");
@@ -308,7 +319,7 @@ public class CTTripController extends HttpServlet {
                 currentMessage = (currentMessage == null ? "" : currentMessage + "<br>");
                 hsn.setAttribute("message", currentMessage + "<font color=red>That trip does not exist.</font><br>");
             }
-            else if(userBean.getRole() != 1 && userBean.getUserId().intValue()
+            else if(userBean.getRole() != CTConsts.ADMIN_USER && userBean.getUserId().intValue()
                     !=
                     trip.getCtRoute().getCtUser().getUserId()) {
                 Logger.getLogger(CTRouteController.class.getName()).log(Level.WARNING, "The user is trying to edit a trip that does not belong to him");
@@ -344,13 +355,13 @@ public class CTTripController extends HttpServlet {
                     try {
                         Date startTime = new Date();
                         Date endTime = new Date();
-                        if (start.compareTo("") != 0) {
+                        if (!start.isEmpty()) {
                             startTime = formatter.parse(start);
                         }
-                        if (end.compareTo("") != 0) {
+                        if (!end.isEmpty()) {
                             endTime = formatter.parse(end);
                         }
-                        Integer status = new Integer(2);
+                        Integer status = CTConsts.COMPLETED_TRIP;
                         if (this.editTrip(tripId, routeId, startTime, endTime, status)) {
                             Logger.getLogger(CTRouteController.class.getName()).log(Level.INFO, "Successfully edited a trip");
                             currentMessage = (String) hsn.getAttribute("message");
