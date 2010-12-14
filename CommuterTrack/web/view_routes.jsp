@@ -1,7 +1,7 @@
 <%-- 
     Document   : view_routes
     Created on : Oct 30, 2010, 11:54:19 PM
-    Author     : maria
+    Author     : Travel Timers
 --%>
 
 <% if (session.getAttribute("user") == null) {
@@ -10,6 +10,7 @@
 %>
 
 <%@page import="CommuterTrack.CtRoute"%>
+<%@page import="CommuterTrack.CTConsts"%>
 <%@page import="java.util.Iterator"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.List"%>
@@ -33,9 +34,7 @@
             session.setAttribute("message", "");
            } %>
         <%
-            //System.out.println("viewing routes");
-            if (((CtUser) session.getAttribute("user")).getRole() != 1) {
-                        // System.exit(1);
+            if (((CtUser) session.getAttribute("user")).getRole() != CTConsts.ADMIN_USER) {
 %>
                <!-- you are not an admin -->
     <%

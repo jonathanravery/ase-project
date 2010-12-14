@@ -1,4 +1,5 @@
 <%@page import="CommuterTrack.CtUser"%>
+<%@page import="CommuterTrack.CTConsts"%>
 <%
     if (session.getAttribute("user") == null)
     {
@@ -14,13 +15,11 @@
                         <li><a href="/CommuterTrack/CTTripController?method=viewUserTrips">Trips</a></li>
 			<li><a href="/CommuterTrack/CTUserController?method=viewEditPage&userId=<%= ((CtUser)session.getAttribute("user")).getUserId() %>">Account</a></li>
                         <%
-                        if(((CtUser)session.getAttribute("user")).getRole()==1){
-
-
+                     if(((CtUser)session.getAttribute("user")).getRole()==CTConsts.ADMIN_USER){
                         %>
                         <li><a href="/CommuterTrack/CTUserController?method=viewall">View All Users</a></li>
                         <%
-                        }
+                     }
                         %>
 			<li><a href="/CommuterTrack/CTUserController?method=logout">Logout</a></li>
 		</ul>
